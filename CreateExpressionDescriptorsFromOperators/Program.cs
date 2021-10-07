@@ -7,6 +7,8 @@ namespace CreateExpressionDescriptorsFromOperators
         static void Main(string[] args)
         {
             CreateExpressionDescriptorClasses.Write();/*perfect match with source control.*/
+            CreateParameterToDescriptorMappingProfile.Write();/*perfect match with source control.*/
+            CreateDescriptorToOperatorMappingProfile.Write();/*perfect match with source control.*/
         }
     }
 }
