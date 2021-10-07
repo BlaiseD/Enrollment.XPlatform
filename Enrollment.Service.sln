@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enrollment.Forms.Parameters
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enrollment.Parameters", "Enrollment.Parameters\Enrollment.Parameters.csproj", "{C8254B7A-3472-4B12-A987-88067C900638}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enrollment.Utils", "Enrollment.Utils\Enrollment.Utils.csproj", "{0645A5AA-9BE7-416B-8547-01F7BE7B572A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -213,6 +215,18 @@ Global
 		{C8254B7A-3472-4B12-A987-88067C900638}.Release|iPhone.Build.0 = Release|Any CPU
 		{C8254B7A-3472-4B12-A987-88067C900638}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{C8254B7A-3472-4B12-A987-88067C900638}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Release|iPhone.Build.0 = Release|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -227,6 +241,7 @@ Global
 		{1C552D6C-8EF4-4355-BD87-AD93BE5226D6} = {A891B227-EFBC-4C14-8C09-4E9FFC17A240}
 		{8724CA36-301C-4174-A7EC-A22EBBDA4DF3} = {A891B227-EFBC-4C14-8C09-4E9FFC17A240}
 		{C8254B7A-3472-4B12-A987-88067C900638} = {A891B227-EFBC-4C14-8C09-4E9FFC17A240}
+		{0645A5AA-9BE7-416B-8547-01F7BE7B572A} = {A891B227-EFBC-4C14-8C09-4E9FFC17A240}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F330B2A9-5D10-4D0E-8A18-3B690BBB4AA0}
