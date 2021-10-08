@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enrollment.Bsl.Flow", "Enro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enrollment.BSL.AutoMapperProfiles", "Enrollment.BSL.AutoMapperProfiles\Enrollment.BSL.AutoMapperProfiles.csproj", "{454B2459-11B2-479C-AA0A-01857819818C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enrollment.Bsl.Flow.Integration.Tests", "Enrollment.Bsl.Flow.Integration.Tests\Enrollment.Bsl.Flow.Integration.Tests.csproj", "{B1B39605-8262-49DF-AB3E-A7C5C4400F91}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -293,6 +295,18 @@ Global
 		{454B2459-11B2-479C-AA0A-01857819818C}.Release|iPhone.Build.0 = Release|Any CPU
 		{454B2459-11B2-479C-AA0A-01857819818C}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{454B2459-11B2-479C-AA0A-01857819818C}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Release|iPhone.Build.0 = Release|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -317,6 +331,7 @@ Global
 		{529B5012-8CDF-4A21-9FF5-8407AEFA7BB7} = {6EA83F86-8ACA-4150-801D-E1BBF30C7D13}
 		{C87AEE07-EBFE-4630-941B-E6ED9F930BA2} = {6EA83F86-8ACA-4150-801D-E1BBF30C7D13}
 		{454B2459-11B2-479C-AA0A-01857819818C} = {6EA83F86-8ACA-4150-801D-E1BBF30C7D13}
+		{B1B39605-8262-49DF-AB3E-A7C5C4400F91} = {DD3DB3A0-B4A5-4EA2-B776-4DBCA0939A8B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F330B2A9-5D10-4D0E-8A18-3B690BBB4AA0}
