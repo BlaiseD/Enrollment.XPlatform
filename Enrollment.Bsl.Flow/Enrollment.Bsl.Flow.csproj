@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Enrollment.Bsl.Business\Enrollment.Bsl.Business.csproj" />
+    <ProjectReference Include="..\Enrollment.Bsl.Utils\Enrollment.Bsl.Utils.csproj" />
+    <ProjectReference Include="..\Enrollment.Parameters\Enrollment.Parameters.csproj" />
+    <ProjectReference Include="..\Enrollment.Repositories\Enrollment.Repositories.csproj" />
+  </ItemGroup>
+
+</Project>
