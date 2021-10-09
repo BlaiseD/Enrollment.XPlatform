@@ -1,6 +1,9 @@
 using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
 using Enrollment.AutoMapperProfiles;
+using Enrollment.Bsl.Flow;
+using Enrollment.Bsl.Flow.Cache;
+using Enrollment.Bsl.Flow.Services;
 using Enrollment.BSL.AutoMapperProfiles;
 using Enrollment.Common.Configuration.Json;
 using Enrollment.Contexts;
@@ -8,6 +11,7 @@ using Enrollment.Domain.Json;
 using Enrollment.Repositories;
 using Enrollment.Stores;
 using Enrollment.Utils;
+using LogicBuilder.RulesDirector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +27,21 @@ namespace Enrollment.BSL
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            System.Collections.Generic.List<System.Reflection.Assembly> assemblies = new System.Collections.Generic.List<System.Reflection.Assembly>
+            {
+                typeof(Parameters.Expansions.SelectExpandDefinitionParameters).Assembly,
+                typeof(Utils.TypeHelpers).Assembly,
+                typeof(Domain.BaseModelClass).Assembly,
+                typeof(Data.BaseDataClass).Assembly,
+                typeof(DirectorBase).Assembly,
+                typeof(string).Assembly
+            };
+
+            rulesCache = Bsl.Flow.Rules.RulesService.LoadRules().Result;
         }
 
         public IConfiguration Configuration { get; }
+        private readonly IRulesCache rulesCache;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -68,7 +84,15 @@ namespace Enrollment.BSL
                     cfg.AddProfile<ExpansionDescriptorToOperatorMappingProfile>();
                 })
             )
-            .AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService));
+            .AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService))
+            .AddScoped<IFlowManager, FlowManager>()
+            .AddScoped<FlowActivityFactory, FlowActivityFactory>()
+            .AddScoped<DirectorFactory, DirectorFactory>()
+            .AddScoped<ICustomActions, CustomActions>()
+            .AddScoped<FlowDataCache, FlowDataCache>()
+            .AddScoped<Progress, Progress>()
+            .AddScoped<IGetItemFilterBuilder, GetItemFilterBuilder>()
+            .AddSingleton<IRulesCache>(sp => rulesCache);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
