@@ -16,7 +16,7 @@ namespace Enrollment.Bsl.Flow
             IGetItemFilterBuilder getItemFilterBuilder,
             DirectorFactory directorFactory,
             FlowActivityFactory flowActivityFactory,
-            IEnrollmentRepository SchoolRepository,
+            IEnrollmentRepository enrollmentRepository,
             ILogger<FlowManager> logger, 
             Progress progress,
             FlowDataCache flowDataCache)
@@ -24,7 +24,7 @@ namespace Enrollment.Bsl.Flow
             this.CustomActions = customActions;
             this.GetItemFilterBuilder = getItemFilterBuilder;
             this.logger = logger;
-            this.SchoolRepository = SchoolRepository;
+            this.EnrollmentRepository = enrollmentRepository;
             this.Mapper = mapper;
             this.Progress = progress;
             this.FlowDataCache = flowDataCache;
@@ -40,7 +40,7 @@ namespace Enrollment.Bsl.Flow
 
         private ILogger<FlowManager> logger;
 
-        public IEnrollmentRepository SchoolRepository { get; }
+        public IEnrollmentRepository EnrollmentRepository { get; }
         public IMapper Mapper { get; }
         public DirectorBase Director { get; }
 

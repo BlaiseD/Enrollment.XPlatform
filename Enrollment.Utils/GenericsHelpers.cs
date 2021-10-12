@@ -32,5 +32,9 @@ namespace Enrollment.Utils
 
         [AlsoKnownAs("IsDefault")]
         public static bool IsDefault(T anyObject) => anyObject.Equals(default(T));
+
+        [AlsoKnownAs("Any")]
+        [FunctionGroup(FunctionGroup.Standard)]
+        public static bool Any(IEnumerable<T> enumerable) => enumerable?.Any() == true;
     }
 }

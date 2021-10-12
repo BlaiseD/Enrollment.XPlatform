@@ -15,7 +15,7 @@ namespace Enrollment.Bsl.Flow
         FlowDataCache FlowDataCache { get; }
         IMapper Mapper { get; }
         Progress Progress { get; }
-        IEnrollmentRepository SchoolRepository { get; }
+        IEnrollmentRepository EnrollmentRepository { get; }
 
         void Start(string module);
         void SetCurrentBusinessBackupData();

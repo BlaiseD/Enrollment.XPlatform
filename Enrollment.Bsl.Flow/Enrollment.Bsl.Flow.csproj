@@ -6,6 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Rulesets\saveacademic.module" />
+    <None Remove="Rulesets\saveacademic.resources" />
+    <None Remove="Rulesets\validateacademic.module" />
+    <None Remove="Rulesets\validateacademic.resources" />
+    <None Remove="Rulesets\validateinstitutions.module" />
+    <None Remove="Rulesets\validateinstitutions.resources" />
+    <None Remove="Rulesets\VariablesMetadata.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Rulesets\saveacademic.module" />
+    <EmbeddedResource Include="Rulesets\saveacademic.resources" />
+    <EmbeddedResource Include="Rulesets\validateacademic.module" />
+    <EmbeddedResource Include="Rulesets\validateacademic.resources" />
+    <EmbeddedResource Include="Rulesets\validateinstitutions.module" />
+    <EmbeddedResource Include="Rulesets\validateinstitutions.resources" />
+    <EmbeddedResource Include="Rulesets\VariablesMetadata.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LogicBuilder.RulesDirector" Version="1.0.3" />
   </ItemGroup>
 
@@ -29,10 +49,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Rulesets\" />
   </ItemGroup>
 
 </Project>
