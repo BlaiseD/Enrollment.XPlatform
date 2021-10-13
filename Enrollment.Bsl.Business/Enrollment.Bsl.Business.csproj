@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Enrollment.Common.Configuration\Enrollment.Common.Configuration.csproj" />
     <ProjectReference Include="..\Enrollment.Domain\Enrollment.Domain.csproj" />
+    <ProjectReference Include="..\Enrollment.Utils\Enrollment.Utils.csproj" />
   </ItemGroup>
 
 </Project>

@@ -22,7 +22,7 @@ namespace Enrollment.BSL.Controllers
         }
 
         [HttpPost("GetEntity")]
-        public async Task<GetEntityResponse> GetEntity([FromBody] GetEntityRequest request)
+        public async Task<BaseResponse> GetEntity([FromBody] GetEntityRequest request)
             => await RequestHelpers.GetEntity
             (
                 request,

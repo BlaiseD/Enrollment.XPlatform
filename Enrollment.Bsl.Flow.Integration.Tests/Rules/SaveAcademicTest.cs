@@ -36,16 +36,31 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveAcademic1()
+        public void SaveAcademic()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
             var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
             (
-                s => s.UserId == 1
+                s => s.UserId == 1,
+                null,
+                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
+                {
+                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
+                    {
+                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
+                        {
+                            MemberName = "Institutions"
+                        }
+                    }
+                }
             ).Result.Single();
+
             academic.LastHighSchoolLocation = "FL";
+            InstitutionModel institution = academic.Institutions.First();
+            institution.EndYear = "2222";
             academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            institution.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
             flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
 
             //act
@@ -57,7 +72,51 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
-            Assert.Equal("FL", ((AcademicModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity).LastHighSchoolLocation);
+
+            AcademicModel model = (AcademicModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("FL", model.LastHighSchoolLocation);
+            Assert.Equal("2222", model.Institutions.First().EndYear);
+        }
+
+        [Fact]
+        public void SaveInvalidAcademic()
+        {
+            //arrange
+            IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
+            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
+            (
+                s => s.UserId == 1,
+                null,
+                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
+                {
+                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
+                    {
+                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
+                        {
+                            MemberName = "Institutions"
+                        }
+                    }
+                }
+            ).Result.Single();
+            academic.LastHighSchoolLocation = null;
+            academic.FromDate = new DateTime();
+            academic.ToDate = new DateTime();
+            academic.GraduationStatus = null;
+            InstitutionModel institution = academic.Institutions.First();
+            institution.EndYear = null;
+            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
+
+            //act
+            System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            flowManager.Start("saveacademic");
+            stopWatch.Stop();
+            this.output.WriteLine("Saving valid course  = {0}", stopWatch.Elapsed.TotalMilliseconds);
+
+            //assert
+            Assert.False(flowManager.FlowDataCache.Response.Success);
+            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -97,7 +156,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                             serviceProvider => new XUnitLoggerProvider(this.output)
                         );
                         loggingBuilder.AddFilter<XUnitLoggerProvider>("*", LogLevel.None);
-                        loggingBuilder.AddFilter<XUnitLoggerProvider>("Contoso.Bsl.Flow", LogLevel.Trace);
+                        loggingBuilder.AddFilter<XUnitLoggerProvider>("Enrollment.Bsl.Flow", LogLevel.Trace);
                     }
                 )
                 .AddTransient<IEnrollmentStore, EnrollmentStore>()

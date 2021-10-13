@@ -65,16 +65,6 @@ namespace Enrollment.Bsl.Utils
                 Success = true
             };
 
-        private static Task<IEnumerable<dynamic>> Query<TModel, TData>(IContextRepository repository,
-            IExpressionPart queryExpression)
-            where TModel : BaseModel
-            where TData : BaseData
-            => repository.QueryAsync<TModel, TData, IEnumerable<dynamic>, IEnumerable<dynamic>>
-            (
-                (Expression<Func<IQueryable<TModel>, IEnumerable<dynamic>>>)queryExpression.Build(),
-                (SelectExpandDefinition)null
-            );
-
         private static Task<TModelReturn> Query<TModel, TData, TModelReturn, TDataReturn>(IContextRepository repository,
             IExpressionPart queryExpression,
             SelectExpandDefinition selectExpandDefinition = null)

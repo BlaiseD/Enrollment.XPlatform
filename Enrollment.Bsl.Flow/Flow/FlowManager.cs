@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Enrollment.Bsl.Business.Responses;
 using Enrollment.Bsl.Flow.Cache;
 using Enrollment.Bsl.Flow.Services;
 using Enrollment.Repositories;
 using LogicBuilder.RulesDirector;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Enrollment.Bsl.Flow
@@ -70,6 +72,11 @@ namespace Enrollment.Bsl.Flow
             }
             catch (Exception ex)
             {
+                FlowDataCache.Response = new ErrorResponse
+                {
+                    Success = false,
+                    ErrorMessages = new List<string> { ex.Message }
+                };
                 logger.LogWarning(0, string.Format("Progress Start {0}", JsonSerializer.Serialize(this.Progress)));
                 this.logger.LogError(ex, ex.Message);
             }

@@ -23,8 +23,8 @@ namespace Enrollment.Api.Controllers
         }
 
         [HttpPost("GetList")]
-        public async Task<GetListResponse> GetList([FromBody] GetTypedListRequest request)
-            => await this.clientFactory.PostAsync<GetListResponse>
+        public async Task<BaseResponse> GetList([FromBody] GetTypedListRequest request)
+            => await this.clientFactory.PostAsync<BaseResponse>
             (
                 "api/List/GetList",
                 JsonSerializer.Serialize(request),

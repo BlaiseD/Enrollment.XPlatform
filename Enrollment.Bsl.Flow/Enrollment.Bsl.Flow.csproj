@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Rulesets\logvalidationerrors.module" />
+    <None Remove="Rulesets\logvalidationerrors.resources" />
     <None Remove="Rulesets\saveacademic.module" />
     <None Remove="Rulesets\saveacademic.resources" />
     <None Remove="Rulesets\validateacademic.module" />
@@ -16,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Rulesets\logvalidationerrors.module" />
+    <EmbeddedResource Include="Rulesets\logvalidationerrors.resources" />
     <EmbeddedResource Include="Rulesets\saveacademic.module" />
     <EmbeddedResource Include="Rulesets\saveacademic.resources" />
     <EmbeddedResource Include="Rulesets\validateacademic.module" />
