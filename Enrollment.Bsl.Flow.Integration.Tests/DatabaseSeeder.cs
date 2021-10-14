@@ -99,6 +99,15 @@ namespace Enrollment.Bsl.Flow.Integration.Tests
                             }
                         }
                     },
+                    Admissions = new AdmissionsModel
+                    {
+                        EnteringStatus = "1",
+                        EnrollmentTerm = "FA",
+                        EnrollmentYear = "2021",
+                        ProgramType = "degreePrograms",
+                        Program = "degreeProgram1",
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added
+                    },
                     EntityState = LogicBuilder.Domain.EntityStateType.Added
                 },
                 new UserModel
@@ -143,6 +152,15 @@ namespace Enrollment.Bsl.Flow.Integration.Tests
                                 MonthYearGraduated = new DateTime(2020, 10, 10)
                             }
                         }
+                    },
+                    Admissions = new AdmissionsModel
+                    {
+                        EnteringStatus = "1",
+                        EnrollmentTerm = "FA",
+                        EnrollmentYear = "2021",
+                        ProgramType = "degreePrograms",
+                        Program = "degreeProgram1",
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added
                     },
                     EntityState = LogicBuilder.Domain.EntityStateType.Added
                 }

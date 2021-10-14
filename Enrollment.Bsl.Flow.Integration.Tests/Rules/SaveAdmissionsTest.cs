@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveAcademicTest
+    public class SaveAdmissionsTest
     {
-        public SaveAcademicTest(ITestOutputHelper output)
+        public SaveAdmissionsTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,83 +36,55 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveAcademic()
+        public void SaveAdmissions()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
+            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
             (
-                s => s.UserId == 1,
-                null,
-                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
-                {
-                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
-                    {
-                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
-                        {
-                            MemberName = "Institutions"
-                        }
-                    }
-                }
+                s => s.UserId == 1
             ).Result.Single();
 
-            academic.LastHighSchoolLocation = "FL";
-            InstitutionModel institution = academic.Institutions.First();
-            institution.EndYear = "2222";
-            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            institution.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
+            admissions.EnrollmentTerm = "SP";
+            admissions.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = admissions };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveacademic");
+            flowManager.Start("saveadmissions");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid admissions  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            AcademicModel model = (AcademicModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("FL", model.LastHighSchoolLocation);
-            Assert.Equal("2222", model.Institutions.First().EndYear);
+            AdmissionsModel model = (AdmissionsModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("SP", model.EnrollmentTerm);
         }
 
         [Fact]
-        public void SaveInvalidAcademic()
+        public void SaveInvalidAdmissions()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
+            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
             (
-                s => s.UserId == 1,
-                null,
-                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
-                {
-                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
-                    {
-                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
-                        {
-                            MemberName = "Institutions"
-                        }
-                    }
-                }
+                s => s.UserId == 1
             ).Result.Single();
-            academic.LastHighSchoolLocation = null;
-            academic.FromDate = new DateTime();
-            academic.ToDate = new DateTime();
-            academic.GraduationStatus = null;
-            InstitutionModel institution = academic.Institutions.First();
-            institution.EndYear = null;
-            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            institution.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
+            admissions.EnteringStatus = null;
+            admissions.EnrollmentTerm = null;
+            admissions.EnrollmentYear = null;
+            admissions.ProgramType = null;
+            admissions.Program = null;
+            admissions.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = admissions };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveacademic");
+            flowManager.Start("saveadmissions");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid admissions = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
@@ -142,7 +114,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveAcademicTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=SaveAdmissionsTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

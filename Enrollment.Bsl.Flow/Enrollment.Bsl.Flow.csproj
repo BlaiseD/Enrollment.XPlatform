@@ -6,24 +6,40 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Rulesets\deleteacademic.module" />
+    <None Remove="Rulesets\deleteacademic.resources" />
+    <None Remove="Rulesets\deleteadmissions.module" />
+    <None Remove="Rulesets\deleteadmissions.resources" />
     <None Remove="Rulesets\logvalidationerrors.module" />
     <None Remove="Rulesets\logvalidationerrors.resources" />
     <None Remove="Rulesets\saveacademic.module" />
     <None Remove="Rulesets\saveacademic.resources" />
+    <None Remove="Rulesets\saveadmissions.module" />
+    <None Remove="Rulesets\saveadmissions.resources" />
     <None Remove="Rulesets\validateacademic.module" />
     <None Remove="Rulesets\validateacademic.resources" />
+    <None Remove="Rulesets\validateadmissions.module" />
+    <None Remove="Rulesets\validateadmissions.resources" />
     <None Remove="Rulesets\validateinstitutions.module" />
     <None Remove="Rulesets\validateinstitutions.resources" />
     <None Remove="Rulesets\VariablesMetadata.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Rulesets\deleteacademic.module" />
+    <EmbeddedResource Include="Rulesets\deleteacademic.resources" />
+    <EmbeddedResource Include="Rulesets\deleteadmissions.module" />
+    <EmbeddedResource Include="Rulesets\deleteadmissions.resources" />
     <EmbeddedResource Include="Rulesets\logvalidationerrors.module" />
     <EmbeddedResource Include="Rulesets\logvalidationerrors.resources" />
     <EmbeddedResource Include="Rulesets\saveacademic.module" />
     <EmbeddedResource Include="Rulesets\saveacademic.resources" />
+    <EmbeddedResource Include="Rulesets\saveadmissions.module" />
+    <EmbeddedResource Include="Rulesets\saveadmissions.resources" />
     <EmbeddedResource Include="Rulesets\validateacademic.module" />
     <EmbeddedResource Include="Rulesets\validateacademic.resources" />
+    <EmbeddedResource Include="Rulesets\validateadmissions.module" />
+    <EmbeddedResource Include="Rulesets\validateadmissions.resources" />
     <EmbeddedResource Include="Rulesets\validateinstitutions.module" />
     <EmbeddedResource Include="Rulesets\validateinstitutions.resources" />
     <EmbeddedResource Include="Rulesets\VariablesMetadata.xml" />

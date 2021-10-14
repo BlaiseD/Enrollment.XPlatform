@@ -2,7 +2,6 @@
 using AutoMapper.Extensions.ExpressionMapping;
 using Enrollment.AutoMapperProfiles;
 using Enrollment.Bsl.Business.Requests;
-using Enrollment.Bsl.Business.Responses;
 using Enrollment.Bsl.Flow.Cache;
 using Enrollment.Bsl.Flow.Services;
 using Enrollment.BSL.AutoMapperProfiles;
@@ -22,9 +21,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveAcademicTest
+    public class DeleteAdmissionsTest
     {
-        public SaveAcademicTest(ITestOutputHelper output)
+        public DeleteAdmissionsTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,87 +35,88 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveAcademic()
+        public void DeleteValidAdmissionsRequest()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
+            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
             (
-                s => s.UserId == 1,
-                null,
-                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
-                {
-                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
-                    {
-                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
-                        {
-                            MemberName = "Institutions"
-                        }
-                    }
-                }
+                s => s.UserId == 1
             ).Result.Single();
-
-            academic.LastHighSchoolLocation = "FL";
-            InstitutionModel institution = academic.Institutions.First();
-            institution.EndYear = "2222";
-            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            institution.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
+            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = admissions };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveacademic");
+            flowManager.Start("deleteadmissions");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Deleting valid admissions = {0}", stopWatch.Elapsed.TotalMilliseconds);
+
+            admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            (
+                s => s.UserId == 1
+            ).Result.SingleOrDefault();
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
-            Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
-
-            AcademicModel model = (AcademicModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("FL", model.LastHighSchoolLocation);
-            Assert.Equal("2222", model.Institutions.First().EndYear);
+            Assert.Null(admissions);
         }
 
         [Fact]
-        public void SaveInvalidAcademic()
+        public void DeleteInvalidAdmissionsRequest()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
+            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
             (
-                s => s.UserId == 1,
-                null,
-                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
-                {
-                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
-                    {
-                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
-                        {
-                            MemberName = "Institutions"
-                        }
-                    }
-                }
+                s => s.UserId == 1
             ).Result.Single();
-            academic.LastHighSchoolLocation = null;
-            academic.FromDate = new DateTime();
-            academic.ToDate = new DateTime();
-            academic.GraduationStatus = null;
-            InstitutionModel institution = academic.Institutions.First();
-            institution.EndYear = null;
-            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            institution.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
+            admissions.UserId = 0;
+            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = admissions };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveacademic");
+            flowManager.Start("deleteadmissions");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Deleting invalid admissions = {0}", stopWatch.Elapsed.TotalMilliseconds);
+
+            admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            (
+                s => s.UserId == 1
+            ).Result.SingleOrDefault();
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.Equal(1, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.NotNull(admissions);
+        }
+
+        [Fact]
+        public void DeleteAdmissionsNotFoundRequest()
+        {
+            //arrange
+            IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
+            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            (
+                s => s.UserId == 1
+            ).Result.Single();
+            admissions.UserId = Int32.MaxValue;
+            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = admissions };
+
+            //act
+            System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            flowManager.Start("deleteadmissions");
+            stopWatch.Stop();
+            this.output.WriteLine("Deleting admissions not found = {0}", stopWatch.Elapsed.TotalMilliseconds);
+
+            admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            (
+                s => s.UserId == 1
+            ).Result.SingleOrDefault();
+
+            //assert
+            Assert.False(flowManager.FlowDataCache.Response.Success);
+            Assert.Equal(1, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.NotNull(admissions);
         }
 
         #region Helpers
@@ -129,11 +129,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 {
                     cfg.AddExpressionMapping();
 
-                    cfg.AddProfile<ParameterToDescriptorMappingProfile>();
-                    cfg.AddProfile<DescriptorToOperatorMappingProfile>();
-                    cfg.AddProfile<EnrollmentProfile>();
-                    cfg.AddProfile<ExpansionParameterToDescriptorMappingProfile>();
-                    cfg.AddProfile<ExpansionDescriptorToOperatorMappingProfile>();
+                    cfg.AddMaps(typeof(DescriptorToOperatorMappingProfile), typeof(EnrollmentProfile));
                 });
             }
             MapperConfiguration.AssertConfigurationIsValid();
@@ -142,7 +138,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveAcademicTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=DeleteAdmissionsTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )
