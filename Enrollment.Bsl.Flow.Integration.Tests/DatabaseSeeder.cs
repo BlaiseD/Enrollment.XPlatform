@@ -142,6 +142,19 @@ namespace Enrollment.Bsl.Flow.Integration.Tests
                         VeteranType = "H",
                         MilitaryBranch = "AF"
                     },
+                    Personal = new PersonalModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        FirstName = "Michael",
+                        MiddleName = "Jackson",
+                        LastName = "Smith",
+                        PrimaryEmail = "go.here@jack.com",
+                        Address1 = "First Street",
+                        City = "Dallas",
+                        State = "GA",
+                        ZipCode = "30060",
+                        CellPhone = "770-840-8756",
+                    },
                     EntityState = LogicBuilder.Domain.EntityStateType.Added
                 },
                 new UserModel
@@ -226,6 +239,19 @@ namespace Enrollment.Bsl.Flow.Integration.Tests
                         MilitaryStatus = "A",
                         VeteranType = "G",
                         MilitaryBranch = "Army"
+                    },
+                    Personal = new PersonalModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        FirstName = "Mike",
+                        MiddleName = "Tyson",
+                        LastName = "Smith",
+                        PrimaryEmail = "go.stay@jack.com",
+                        Address1 = "Second Street",
+                        City = "Dallas",
+                        State = "GA",
+                        ZipCode = "30060",
+                        CellPhone = "770-855-0050",
                     },
                     EntityState = LogicBuilder.Domain.EntityStateType.Added
                 }
