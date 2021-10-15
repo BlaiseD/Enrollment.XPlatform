@@ -21,9 +21,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class DeleteAdmissionsTest
+    public class DeleteCertificationTest
     {
-        public DeleteAdmissionsTest(ITestOutputHelper output)
+        public DeleteCertificationTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -35,51 +35,51 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void DeleteValidAdmissionsRequest()
+        public void DeleteValidCertificationRequest()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            var certification = flowManager.EnrollmentRepository.GetAsync<CertificationModel, Certification>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = admissions };
+            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = certification };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("deleteadmissions");
+            flowManager.Start("deletecertification");
             stopWatch.Stop();
-            this.output.WriteLine("Deleting valid admissions = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Deleting valid certification = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
-            admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            certification = flowManager.EnrollmentRepository.GetAsync<CertificationModel, Certification>
             (
                 s => s.UserId == 1
             ).Result.SingleOrDefault();
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
-            Assert.Null(admissions);
+            Assert.Null(certification);
         }
 
         [Fact]
-        public void DeleteAdmissionsNotFoundRequest()
+        public void DeleteCertificationNotFoundRequest()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            var certification = flowManager.EnrollmentRepository.GetAsync<CertificationModel, Certification>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            admissions.UserId = Int32.MaxValue;
-            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = admissions };
+            certification.UserId = Int32.MaxValue;
+            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = certification };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("deleteadmissions");
+            flowManager.Start("deletecertification");
             stopWatch.Stop();
-            this.output.WriteLine("Deleting admissions not found = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Deleting certification not found = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
-            admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            certification = flowManager.EnrollmentRepository.GetAsync<CertificationModel, Certification>
             (
                 s => s.UserId == 1
             ).Result.SingleOrDefault();
@@ -87,7 +87,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
             Assert.Equal(1, flowManager.FlowDataCache.Response.ErrorMessages.Count);
-            Assert.NotNull(admissions);
+            Assert.NotNull(certification);
         }
 
         #region Helpers
@@ -109,7 +109,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=DeleteAdmissionsTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=DeleteCertificationTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

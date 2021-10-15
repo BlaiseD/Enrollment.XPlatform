@@ -108,6 +108,30 @@ namespace Enrollment.Bsl.Flow.Integration.Tests
                         Program = "degreeProgram1",
                         EntityState = LogicBuilder.Domain.EntityStateType.Added
                     },
+                    Certification = new CertificationModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        CertificateStatementChecked = true,
+                        DeclarationStatementChecked = true,
+                        PolicyStatementsChecked = true
+                    },
+                    ContactInfo = new ContactInfoModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        HasFormerName = true,
+                        FormerFirstName = "John",
+                        FormerMiddleName = "Michael",
+                        FormerLastName = "Smith",
+                        DateOfBirth = new DateTime(2003, 10, 10),
+                        SocialSecurityNumber = "111-22-3333",
+                        Gender = "M",
+                        Race = "AN",
+                        Ethnicity = "HIS",
+                        EnergencyContactFirstName = "Jackson",
+                        EnergencyContactLastName = "Zamarano",
+                        EnergencyContactRelationship = "Father",
+                        EnergencyContactPhoneNumber = "704-333-4444"
+                    },
                     EntityState = LogicBuilder.Domain.EntityStateType.Added
                 },
                 new UserModel
@@ -161,6 +185,27 @@ namespace Enrollment.Bsl.Flow.Integration.Tests
                         ProgramType = "degreePrograms",
                         Program = "degreeProgram1",
                         EntityState = LogicBuilder.Domain.EntityStateType.Added
+                    },
+                    Certification = new CertificationModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        CertificateStatementChecked = true,
+                        DeclarationStatementChecked = true,
+                        PolicyStatementsChecked = true
+                    },
+                    ContactInfo = new ContactInfoModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        HasFormerName = false,
+                        DateOfBirth = new DateTime(2003, 10, 10),
+                        SocialSecurityNumber = "000-11-2222",
+                        Gender = "F",
+                        Race = "BL",
+                        Ethnicity = "NHS",
+                        EnergencyContactFirstName = "Jack",
+                        EnergencyContactLastName = "Spratt",
+                        EnergencyContactRelationship = "Father",
+                        EnergencyContactPhoneNumber = "704-222-3333"
                     },
                     EntityState = LogicBuilder.Domain.EntityStateType.Added
                 }

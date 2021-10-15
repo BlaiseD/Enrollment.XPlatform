@@ -2,6 +2,7 @@
 using AutoMapper.Extensions.ExpressionMapping;
 using Enrollment.AutoMapperProfiles;
 using Enrollment.Bsl.Business.Requests;
+using Enrollment.Bsl.Business.Responses;
 using Enrollment.Bsl.Flow.Cache;
 using Enrollment.Bsl.Flow.Services;
 using Enrollment.BSL.AutoMapperProfiles;
@@ -21,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class DeleteAdmissionsTest
+    public class SaveContactInfoTest
     {
-        public DeleteAdmissionsTest(ITestOutputHelper output)
+        public SaveContactInfoTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -35,59 +36,66 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void DeleteValidAdmissionsRequest()
+        public void SaveContactInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = admissions };
+
+            contactInfo.EnergencyContactFirstName = "Samson";
+            contactInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = contactInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("deleteadmissions");
+            flowManager.Start("savecontactInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Deleting valid admissions = {0}", stopWatch.Elapsed.TotalMilliseconds);
-
-            admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
-            (
-                s => s.UserId == 1
-            ).Result.SingleOrDefault();
+            this.output.WriteLine("Saving valid contactInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
-            Assert.Null(admissions);
+            Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
+
+            ContactInfoModel model = (ContactInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("Samson", model.EnergencyContactFirstName);
         }
 
         [Fact]
-        public void DeleteAdmissionsNotFoundRequest()
+        public void SaveInvalidContactInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            admissions.UserId = Int32.MaxValue;
-            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = admissions };
+            contactInfo.HasFormerName = true;
+            contactInfo.FormerFirstName = null;
+            contactInfo.FormerLastName = null;
+            contactInfo.DateOfBirth = default;
+            contactInfo.SocialSecurityNumber = "123";
+            contactInfo.Gender = null;
+            contactInfo.Race = null;
+            contactInfo.Ethnicity = null;
+            contactInfo.EnergencyContactFirstName = null;
+            contactInfo.EnergencyContactLastName = null;
+            contactInfo.EnergencyContactRelationship = null;
+            contactInfo.EnergencyContactPhoneNumber= "123";
+            contactInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = contactInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("deleteadmissions");
+            flowManager.Start("savecontactInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Deleting admissions not found = {0}", stopWatch.Elapsed.TotalMilliseconds);
-
-            admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
-            (
-                s => s.UserId == 1
-            ).Result.SingleOrDefault();
+            this.output.WriteLine("Saving valid contactInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(1, flowManager.FlowDataCache.Response.ErrorMessages.Count);
-            Assert.NotNull(admissions);
+            Assert.Equal(11, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -100,7 +108,11 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 {
                     cfg.AddExpressionMapping();
 
-                    cfg.AddMaps(typeof(DescriptorToOperatorMappingProfile), typeof(EnrollmentProfile));
+                    cfg.AddProfile<ParameterToDescriptorMappingProfile>();
+                    cfg.AddProfile<DescriptorToOperatorMappingProfile>();
+                    cfg.AddProfile<EnrollmentProfile>();
+                    cfg.AddProfile<ExpansionParameterToDescriptorMappingProfile>();
+                    cfg.AddProfile<ExpansionDescriptorToOperatorMappingProfile>();
                 });
             }
             MapperConfiguration.AssertConfigurationIsValid();
@@ -109,7 +121,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=DeleteAdmissionsTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=SaveContactInfoTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

@@ -62,35 +62,6 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         }
 
         [Fact]
-        public void DeleteInvalidAcademicRequest()
-        {
-            //arrange
-            IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
-            academic.UserId = 0;
-            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = academic };
-
-            //act
-            System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("deleteacademic");
-            stopWatch.Stop();
-            this.output.WriteLine("Deleting invalid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
-
-            academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
-            (
-                s => s.UserId == 1
-            ).Result.SingleOrDefault();
-
-            //assert
-            Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(1, flowManager.FlowDataCache.Response.ErrorMessages.Count);
-            Assert.NotNull(academic);
-        }
-
-        [Fact]
         public void DeleteAcademicNotFoundRequest()
         {
             //arrange
