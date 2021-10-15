@@ -21,9 +21,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class DeleteContactInfoTest
+    public class DeleteMoreInfoTest
     {
-        public DeleteContactInfoTest(ITestOutputHelper output)
+        public DeleteMoreInfoTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -35,51 +35,51 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void DeleteValidContactInfoRequest()
+        public void DeleteValidMoreInfoRequest()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
+            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = contactInfo };
+            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = moreInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("deletecontactInfo");
+            flowManager.Start("deletemoreInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Deleting valid contactInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Deleting valid moreInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
-            contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
+            moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
             (
                 s => s.UserId == 1
             ).Result.SingleOrDefault();
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
-            Assert.Null(contactInfo);
+            Assert.Null(moreInfo);
         }
 
         [Fact]
-        public void DeleteContactInfoNotFoundRequest()
+        public void DeleteMoreInfoNotFoundRequest()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
+            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            contactInfo.UserId = Int32.MaxValue;
-            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = contactInfo };
+            moreInfo.UserId = Int32.MaxValue;
+            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = moreInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("deletecontactInfo");
+            flowManager.Start("deletemoreInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Deleting contactInfo not found = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Deleting moreInfo not found = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
-            contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
+            moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
             (
                 s => s.UserId == 1
             ).Result.SingleOrDefault();
@@ -87,7 +87,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
             Assert.Equal(1, flowManager.FlowDataCache.Response.ErrorMessages.Count);
-            Assert.NotNull(contactInfo);
+            Assert.NotNull(moreInfo);
         }
 
         #region Helpers
@@ -109,7 +109,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=DeleteContactInfoTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=DeleteMoreInfoTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

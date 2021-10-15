@@ -2,6 +2,7 @@
 using AutoMapper.Extensions.ExpressionMapping;
 using Enrollment.AutoMapperProfiles;
 using Enrollment.Bsl.Business.Requests;
+using Enrollment.Bsl.Business.Responses;
 using Enrollment.Bsl.Flow.Cache;
 using Enrollment.Bsl.Flow.Services;
 using Enrollment.BSL.AutoMapperProfiles;
@@ -21,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class DeleteContactInfoTest
+    public class SaveMoreInfoTest
     {
-        public DeleteContactInfoTest(ITestOutputHelper output)
+        public SaveMoreInfoTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -35,59 +36,61 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void DeleteValidContactInfoRequest()
+        public void SaveMoreInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
+            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = contactInfo };
+
+            moreInfo.MilitaryStatus = "A";
+            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("deletecontactInfo");
+            flowManager.Start("savemoreInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Deleting valid contactInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
-
-            contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
-            (
-                s => s.UserId == 1
-            ).Result.SingleOrDefault();
+            this.output.WriteLine("Saving valid moreInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
-            Assert.Null(contactInfo);
+            Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
+
+            MoreInfoModel model = (MoreInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("A", model.MilitaryStatus);
         }
 
         [Fact]
-        public void DeleteContactInfoNotFoundRequest()
+        public void SaveInvalidMoreInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
+            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            contactInfo.UserId = Int32.MaxValue;
-            flowManager.FlowDataCache.Request = new DeleteEntityRequest { Entity = contactInfo };
+            moreInfo.IsVeteran = true;
+            moreInfo.ReasonForAttending = null;
+            moreInfo.OverallEducationalGoal = null;
+            moreInfo.MilitaryStatus = null;
+            moreInfo.MilitaryBranch = null;
+            moreInfo.VeteranType = null;
+
+            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("deletecontactInfo");
+            flowManager.Start("savemoreInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Deleting contactInfo not found = {0}", stopWatch.Elapsed.TotalMilliseconds);
-
-            contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
-            (
-                s => s.UserId == 1
-            ).Result.SingleOrDefault();
+            this.output.WriteLine("Saving valid moreInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(1, flowManager.FlowDataCache.Response.ErrorMessages.Count);
-            Assert.NotNull(contactInfo);
+            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -100,7 +103,11 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 {
                     cfg.AddExpressionMapping();
 
-                    cfg.AddMaps(typeof(DescriptorToOperatorMappingProfile), typeof(EnrollmentProfile));
+                    cfg.AddProfile<ParameterToDescriptorMappingProfile>();
+                    cfg.AddProfile<DescriptorToOperatorMappingProfile>();
+                    cfg.AddProfile<EnrollmentProfile>();
+                    cfg.AddProfile<ExpansionParameterToDescriptorMappingProfile>();
+                    cfg.AddProfile<ExpansionDescriptorToOperatorMappingProfile>();
                 });
             }
             MapperConfiguration.AssertConfigurationIsValid();
@@ -109,7 +116,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=DeleteContactInfoTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=SaveMoreInfoTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

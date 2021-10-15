@@ -132,6 +132,16 @@ namespace Enrollment.Bsl.Flow.Integration.Tests
                         EnergencyContactRelationship = "Father",
                         EnergencyContactPhoneNumber = "704-333-4444"
                     },
+                    MoreInfo = new MoreInfoModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        ReasonForAttending = "C1",
+                        OverallEducationalGoal = "E1",
+                        IsVeteran = true,
+                        MilitaryStatus = "A",
+                        VeteranType = "H",
+                        MilitaryBranch = "AF"
+                    },
                     EntityState = LogicBuilder.Domain.EntityStateType.Added
                 },
                 new UserModel
@@ -206,6 +216,16 @@ namespace Enrollment.Bsl.Flow.Integration.Tests
                         EnergencyContactLastName = "Spratt",
                         EnergencyContactRelationship = "Father",
                         EnergencyContactPhoneNumber = "704-222-3333"
+                    },
+                    MoreInfo = new MoreInfoModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        ReasonForAttending = "C2",
+                        OverallEducationalGoal = "E2",
+                        IsVeteran = true,
+                        MilitaryStatus = "A",
+                        VeteranType = "G",
+                        MilitaryBranch = "Army"
                     },
                     EntityState = LogicBuilder.Domain.EntityStateType.Added
                 }
