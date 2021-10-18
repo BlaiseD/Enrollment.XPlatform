@@ -16,15 +16,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveMoreInfoTest
+    public class InsertAcademicTest
     {
-        public SaveMoreInfoTest(ITestOutputHelper output)
+        public InsertAcademicTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,57 +37,109 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveMoreInfo()
+        public void SaveAcademic()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.MilitaryStatus = "AR";
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
+            var academic = new AcademicModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                AttendedPriorColleges = true,
+                FromDate = new DateTime(2010, 10, 10),
+                ToDate = new DateTime(2014, 10, 10),
+                GraduationStatus = "H",
+                EarnedCreditAtCmc = true,
+                LastHighSchoolLocation = "NC",
+                NcHighSchoolName = "NCSCHOOL1",
+                Institutions = new List<InstitutionModel>
+                {
+                    new InstitutionModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        HighestDegreeEarned = "BD",
+                        StartYear = "2015",
+                        EndYear = "2018",
+                        InstitutionName = "Florida Institution 1",
+                        InstitutionState = "FL",
+                        MonthYearGraduated = new DateTime(2020, 10, 10)
+                    }
+                }
+            };
+
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savemoreInfo");
+            flowManager.Start("saveacademic");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid moreInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            MoreInfoModel model = (MoreInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("AR", model.MilitaryStatus);
+            AcademicModel model = (AcademicModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("NC", model.LastHighSchoolLocation);
+            Assert.Equal("2018", model.Institutions.First().EndYear);
         }
 
         [Fact]
-        public void SaveInvalidMoreInfo()
+        public void SaveInvalidAcademic()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
-            moreInfo.IsVeteran = true;
-            moreInfo.ReasonForAttending = null;
-            moreInfo.OverallEducationalGoal = null;
-            moreInfo.MilitaryStatus = null;
-            moreInfo.MilitaryBranch = null;
-            moreInfo.VeteranType = null;
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
+            var academic = new AcademicModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                AttendedPriorColleges = true,
+                FromDate = new DateTime(),
+                ToDate = new DateTime(),
+                GraduationStatus = null,
+                EarnedCreditAtCmc = true,
+                LastHighSchoolLocation = null,
+                NcHighSchoolName = "NCSCHOOL1",
+                Institutions = new List<InstitutionModel>
+                {
+                    new InstitutionModel
+                    {
+                        EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                        HighestDegreeEarned = "BD",
+                        StartYear = "2015",
+                        EndYear = null,
+                        InstitutionName = "Florida Institution 1",
+                        InstitutionState = "FL",
+                        MonthYearGraduated = new DateTime(2020, 10, 10)
+                    }
+                }
+            };
+
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savemoreInfo");
+            flowManager.Start("saveacademic");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid moreInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
@@ -116,7 +169,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveMoreInfoTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=InsertAcademicTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

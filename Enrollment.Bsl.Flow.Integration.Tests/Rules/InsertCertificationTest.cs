@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveMoreInfoTest
+    public class InsertCertificationTest
     {
-        public SaveMoreInfoTest(ITestOutputHelper output)
+        public InsertCertificationTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,61 +36,79 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveMoreInfo()
+        public void SaveCertification()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.MilitaryStatus = "AR";
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
+            var certification = new CertificationModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                CertificateStatementChecked = true,
+                DeclarationStatementChecked = true,
+                PolicyStatementsChecked = true
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = certification };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savemoreInfo");
+            flowManager.Start("savecertification");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid moreInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid certification  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            MoreInfoModel model = (MoreInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("AR", model.MilitaryStatus);
+            CertificationModel model = (CertificationModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.True(model.CertificateStatementChecked);
         }
 
         [Fact]
-        public void SaveInvalidMoreInfo()
+        public void SaveInvalidCertification()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
-            moreInfo.IsVeteran = true;
-            moreInfo.ReasonForAttending = null;
-            moreInfo.OverallEducationalGoal = null;
-            moreInfo.MilitaryStatus = null;
-            moreInfo.MilitaryBranch = null;
-            moreInfo.VeteranType = null;
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
+            var certification = new CertificationModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                CertificateStatementChecked = false,
+                DeclarationStatementChecked = false,
+                PolicyStatementsChecked = false
+            };
+            certification.CertificateStatementChecked = false;
+            certification.DeclarationStatementChecked = false;
+            certification.PolicyStatementsChecked = false;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = certification };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savemoreInfo");
+            flowManager.Start("savecertification");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid moreInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid certification = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.Equal(3, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -116,7 +134,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveMoreInfoTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=InsertCertificationTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

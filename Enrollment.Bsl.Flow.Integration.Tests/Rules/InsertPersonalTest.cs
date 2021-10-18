@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveMoreInfoTest
+    public class InsertPersonalTest
     {
-        public SaveMoreInfoTest(ITestOutputHelper output)
+        public InsertPersonalTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,61 +36,90 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveMoreInfo()
+        public void SavePersonal()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.MilitaryStatus = "AR";
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
+            var personal = new PersonalModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                FirstName = "Michael",
+                MiddleName = "Jackson",
+                LastName = "Smith",
+                PrimaryEmail = "go.here@jack.com",
+                Address1 = "First Street",
+                City = "Dallas",
+                State = "GA",
+                ZipCode = "30060",
+                CellPhone = "770-840-8756",
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = personal };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savemoreInfo");
+            flowManager.Start("savepersonal");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid moreInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid personal  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            MoreInfoModel model = (MoreInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("AR", model.MilitaryStatus);
+            PersonalModel model = (PersonalModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("Michael", model.FirstName);
         }
 
         [Fact]
-        public void SaveInvalidMoreInfo()
+        public void SaveInvalidPersonal()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
-            moreInfo.IsVeteran = true;
-            moreInfo.ReasonForAttending = null;
-            moreInfo.OverallEducationalGoal = null;
-            moreInfo.MilitaryStatus = null;
-            moreInfo.MilitaryBranch = null;
-            moreInfo.VeteranType = null;
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
+            var personal = new PersonalModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                FirstName = null,
+                MiddleName = null,
+                LastName = null,
+                PrimaryEmail = "123",
+                Address1 = null,
+                City = null,
+                County = null,
+                State = "NC",
+                ZipCode = "123",
+                CellPhone = "123",
+                OtherPhone = "123"
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = personal };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savemoreInfo");
+            flowManager.Start("savepersonal");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid moreInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid personal = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.Equal(10, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -116,7 +145,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveMoreInfoTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=InsertPersonalTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

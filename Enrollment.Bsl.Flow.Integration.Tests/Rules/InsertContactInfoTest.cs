@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveMoreInfoTest
+    public class InsertContactInfoTest
     {
-        public SaveMoreInfoTest(ITestOutputHelper output)
+        public InsertContactInfoTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,61 +36,96 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveMoreInfo()
+        public void SaveContactInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.MilitaryStatus = "AR";
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
+            var contactInfo = new ContactInfoModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                HasFormerName = true,
+                FormerFirstName = "John",
+                FormerMiddleName = "Michael",
+                FormerLastName = "Smith",
+                DateOfBirth = new DateTime(2003, 10, 10),
+                SocialSecurityNumber = "111-22-3333",
+                Gender = "M",
+                Race = "AN",
+                Ethnicity = "HIS",
+                EnergencyContactFirstName = "Jackson",
+                EnergencyContactLastName = "Zamarano",
+                EnergencyContactRelationship = "Father",
+                EnergencyContactPhoneNumber = "704-333-4444"
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = contactInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savemoreInfo");
+            flowManager.Start("savecontactInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid moreInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid contactInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            MoreInfoModel model = (MoreInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("AR", model.MilitaryStatus);
+            ContactInfoModel model = (ContactInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("Jackson", model.EnergencyContactFirstName);
         }
 
         [Fact]
-        public void SaveInvalidMoreInfo()
+        public void SaveInvalidContactInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
-            moreInfo.IsVeteran = true;
-            moreInfo.ReasonForAttending = null;
-            moreInfo.OverallEducationalGoal = null;
-            moreInfo.MilitaryStatus = null;
-            moreInfo.MilitaryBranch = null;
-            moreInfo.VeteranType = null;
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
+            var contactInfo = new ContactInfoModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                HasFormerName = true,
+                FormerFirstName = null,
+                FormerMiddleName = null,
+                FormerLastName = null,
+                DateOfBirth = default,
+                SocialSecurityNumber = "123",
+                Gender = null,
+                Race = null,
+                Ethnicity = null,
+                EnergencyContactFirstName = null,
+                EnergencyContactLastName = null,
+                EnergencyContactRelationship = null,
+                EnergencyContactPhoneNumber = "123"
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = contactInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savemoreInfo");
+            flowManager.Start("savecontactInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid moreInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid contactInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.Equal(11, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -116,7 +151,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveMoreInfoTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=InsertContactInfoTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

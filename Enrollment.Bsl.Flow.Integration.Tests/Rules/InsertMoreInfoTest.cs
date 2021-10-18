@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveMoreInfoTest
+    public class InsertMoreInfoTest
     {
-        public SaveMoreInfoTest(ITestOutputHelper output)
+        public InsertMoreInfoTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -40,13 +40,26 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.MilitaryStatus = "AR";
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            var moreInfo = new MoreInfoModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                ReasonForAttending = "C1",
+                OverallEducationalGoal = "E1",
+                IsVeteran = true,
+                MilitaryStatus = "A",
+                VeteranType = "H",
+                MilitaryBranch = "AF"
+            };
             flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
 
             //act
@@ -60,7 +73,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
             MoreInfoModel model = (MoreInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("AR", model.MilitaryStatus);
+            Assert.Equal("A", model.MilitaryStatus);
         }
 
         [Fact]
@@ -68,18 +81,27 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
-            (
-                s => s.UserId == 1
-            ).Result.Single();
-            moreInfo.IsVeteran = true;
-            moreInfo.ReasonForAttending = null;
-            moreInfo.OverallEducationalGoal = null;
-            moreInfo.MilitaryStatus = null;
-            moreInfo.MilitaryBranch = null;
-            moreInfo.VeteranType = null;
+            var user = new UserModel
+            {
+                UserName = "NewName",
+                EntityState = LogicBuilder.Domain.EntityStateType.Added
+            };
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            flowManager.Start("saveuser");
+            Assert.True(user.UserId > 1);
 
-            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            var moreInfo = new MoreInfoModel
+            {
+                UserId = user.UserId,
+                EntityState = LogicBuilder.Domain.EntityStateType.Added,
+                ReasonForAttending = null,
+                OverallEducationalGoal = null,
+                IsVeteran = true,
+                MilitaryStatus = null,
+                VeteranType = null,
+                MilitaryBranch = null
+            };
+
             flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
 
             //act
@@ -116,7 +138,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveMoreInfoTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=InsertMoreInfoTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )
