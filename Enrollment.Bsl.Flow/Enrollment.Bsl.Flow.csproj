@@ -18,6 +18,8 @@
     <None Remove="Rulesets\deletemoreinfo.resources" />
     <None Remove="Rulesets\deletepersonal.module" />
     <None Remove="Rulesets\deletepersonal.resources" />
+    <None Remove="Rulesets\deleteresidency.module" />
+    <None Remove="Rulesets\deleteresidency.resources" />
     <None Remove="Rulesets\logvalidationerrors.module" />
     <None Remove="Rulesets\logvalidationerrors.resources" />
     <None Remove="Rulesets\saveacademic.module" />
@@ -32,6 +34,8 @@
     <None Remove="Rulesets\savemoreinfo.resources" />
     <None Remove="Rulesets\savepersonal.module" />
     <None Remove="Rulesets\savepersonal.resources" />
+    <None Remove="Rulesets\saveresidency.module" />
+    <None Remove="Rulesets\saveresidency.resources" />
     <None Remove="Rulesets\validateacademic.module" />
     <None Remove="Rulesets\validateacademic.resources" />
     <None Remove="Rulesets\validateadmissions.module" />
@@ -46,6 +50,8 @@
     <None Remove="Rulesets\validatemoreinfo.resources" />
     <None Remove="Rulesets\validatepersonal.module" />
     <None Remove="Rulesets\validatepersonal.resources" />
+    <None Remove="Rulesets\validateresidency.module" />
+    <None Remove="Rulesets\validateresidency.resources" />
     <None Remove="Rulesets\VariablesMetadata.xml" />
   </ItemGroup>
 
@@ -62,6 +68,8 @@
     <EmbeddedResource Include="Rulesets\deletemoreinfo.resources" />
     <EmbeddedResource Include="Rulesets\deletepersonal.module" />
     <EmbeddedResource Include="Rulesets\deletepersonal.resources" />
+    <EmbeddedResource Include="Rulesets\deleteresidency.module" />
+    <EmbeddedResource Include="Rulesets\deleteresidency.resources" />
     <EmbeddedResource Include="Rulesets\logvalidationerrors.module" />
     <EmbeddedResource Include="Rulesets\logvalidationerrors.resources" />
     <EmbeddedResource Include="Rulesets\saveacademic.module" />
@@ -76,6 +84,8 @@
     <EmbeddedResource Include="Rulesets\savemoreinfo.resources" />
     <EmbeddedResource Include="Rulesets\savepersonal.module" />
     <EmbeddedResource Include="Rulesets\savepersonal.resources" />
+    <EmbeddedResource Include="Rulesets\saveresidency.module" />
+    <EmbeddedResource Include="Rulesets\saveresidency.resources" />
     <EmbeddedResource Include="Rulesets\validateacademic.module" />
     <EmbeddedResource Include="Rulesets\validateacademic.resources" />
     <EmbeddedResource Include="Rulesets\validateadmissions.module" />
@@ -90,6 +100,8 @@
     <EmbeddedResource Include="Rulesets\validatemoreinfo.resources" />
     <EmbeddedResource Include="Rulesets\validatepersonal.module" />
     <EmbeddedResource Include="Rulesets\validatepersonal.resources" />
+    <EmbeddedResource Include="Rulesets\validateresidency.module" />
+    <EmbeddedResource Include="Rulesets\validateresidency.resources" />
     <EmbeddedResource Include="Rulesets\VariablesMetadata.xml" />
   </ItemGroup>
 
