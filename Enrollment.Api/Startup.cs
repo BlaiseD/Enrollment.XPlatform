@@ -37,6 +37,9 @@ namespace Enrollment.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Enrollment.Api", Version = "v1" });
             });
+
+            services.Configure<ConfigurationOptions>(Configuration);
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

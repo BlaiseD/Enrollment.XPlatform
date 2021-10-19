@@ -9,7 +9,7 @@ namespace Enrollment.Web.Utils
     {
         #region Constants
         private const string WEB_REQUEST_CONTENT_TYPE = "application/json";
-        private const string BASE_URL = "http://localhost:61619/";
+        private const string BASE_URL = "http://localhost:61619/";//BSL
         #endregion Constants
 
         public static async Task<TResult> PutAsync<TResult>(this IHttpClientFactory factory, string url, string jsonObject, string baseUrl = null)
