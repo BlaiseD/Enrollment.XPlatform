@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveAdmissionsTest
+    public class UpdateMoreInfoTest
     {
-        public SaveAdmissionsTest(ITestOutputHelper output)
+        public UpdateMoreInfoTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,55 +36,57 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveAdmissions()
+        public void SaveMoreInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
 
-            admissions.EnrollmentTerm = "SP";
-            admissions.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = admissions };
+            moreInfo.MilitaryStatus = "AR";
+            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveadmissions");
+            flowManager.Start("savemoreInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid admissions  = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid moreInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            AdmissionsModel model = (AdmissionsModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("SP", model.EnrollmentTerm);
+            MoreInfoModel model = (MoreInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("AR", model.MilitaryStatus);
         }
 
         [Fact]
-        public void SaveInvalidAdmissions()
+        public void SaveInvalidMoreInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
+            var moreInfo = flowManager.EnrollmentRepository.GetAsync<MoreInfoModel, MoreInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            admissions.EnteringStatus = null;
-            admissions.EnrollmentTerm = null;
-            admissions.EnrollmentYear = null;
-            admissions.ProgramType = null;
-            admissions.Program = null;
-            admissions.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = admissions };
+            moreInfo.IsVeteran = true;
+            moreInfo.ReasonForAttending = null;
+            moreInfo.OverallEducationalGoal = null;
+            moreInfo.MilitaryStatus = null;
+            moreInfo.MilitaryBranch = null;
+            moreInfo.VeteranType = null;
+
+            moreInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = moreInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveadmissions");
+            flowManager.Start("savemoreInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid admissions = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid moreInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
@@ -114,7 +116,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveAdmissionsTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=SaveMoreInfoTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

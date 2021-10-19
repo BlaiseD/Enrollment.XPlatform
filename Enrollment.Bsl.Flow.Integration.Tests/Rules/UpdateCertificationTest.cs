@@ -16,16 +16,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveResidencyTest
+    public class UpdateCertificationTest
     {
-        public SaveResidencyTest(ITestOutputHelper output)
+        public UpdateCertificationTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -37,86 +36,56 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveResidency()
+        public void SaveCertification()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var residency = flowManager.EnrollmentRepository.GetAsync<ResidencyModel, Residency>
+            var certification = flowManager.EnrollmentRepository.GetAsync<CertificationModel, Certification>
             (
-                s => s.UserId == 1,
-                null,
-                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
-                {
-                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
-                    {
-                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
-                        {
-                            MemberName = "StatesLivedIn"
-                        }
-                    }
-                }
+                s => s.UserId == 1
             ).Result.Single();
 
-            residency.DriversLicenseNumber = "NC54321";
-            StateLivedInModel stateLivedIn = residency.StatesLivedIn.First();
-            stateLivedIn.State = "OH";
-            residency.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            stateLivedIn.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = residency };
+            certification.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = certification };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveresidency");
+            flowManager.Start("savecertification");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid residency = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid certification  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            ResidencyModel model = (ResidencyModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("NC54321", model.DriversLicenseNumber);
-            Assert.Equal("OH", model.StatesLivedIn.First().State);
+            CertificationModel model = (CertificationModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.True(model.CertificateStatementChecked);
         }
 
         [Fact]
-        public void SaveInvalidResidency()
+        public void SaveInvalidCertification()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var residency = flowManager.EnrollmentRepository.GetAsync<ResidencyModel, Residency>
+            var certification = flowManager.EnrollmentRepository.GetAsync<CertificationModel, Certification>
             (
-                s => s.UserId == 1,
-                null,
-                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
-                {
-                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
-                    {
-                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
-                        {
-                            MemberName = "StatesLivedIn"
-                        }
-                    }
-                }
+                s => s.UserId == 1
             ).Result.Single();
-            residency.CitizenshipStatus = null;
-            residency.StatesLivedIn = new List<StateLivedInModel>();
-            residency.ResidentState = null;
-            residency.HasValidDriversLicense = true;
-            residency.DriversLicenseNumber = null;
-            residency.DriversLicenseState = null;
-            residency.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = residency };
+            certification.CertificateStatementChecked = false;
+            certification.DeclarationStatementChecked = false;
+            certification.PolicyStatementsChecked = false;
+            certification.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = certification };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveresidency");
+            flowManager.Start("savecertification");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid residency = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid certification = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.Equal(3, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -142,7 +111,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveResidencyTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=SaveCertificationTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

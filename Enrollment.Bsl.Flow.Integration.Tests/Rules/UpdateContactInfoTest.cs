@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveUserTest
+    public class UpdateContactInfoTest
     {
-        public SaveUserTest(ITestOutputHelper output)
+        public UpdateContactInfoTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,55 +36,66 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveUser()
+        public void SaveContactInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var user = flowManager.EnrollmentRepository.GetAsync<UserModel, User>
+            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
 
-            user.UserName = "NewName";
-            user.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            contactInfo.EnergencyContactFirstName = "Samson";
+            contactInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = contactInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveuser");
+            flowManager.Start("savecontactInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid user  = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid contactInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            UserModel model = (UserModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("NewName", model.UserName);
+            ContactInfoModel model = (ContactInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("Samson", model.EnergencyContactFirstName);
         }
 
         [Fact]
-        public void SaveInvalidUser()
+        public void SaveInvalidContactInfo()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var user = flowManager.EnrollmentRepository.GetAsync<UserModel, User>
+            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            user.UserName = null;
-            user.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
+            contactInfo.HasFormerName = true;
+            contactInfo.FormerFirstName = null;
+            contactInfo.FormerLastName = null;
+            contactInfo.DateOfBirth = default;
+            contactInfo.SocialSecurityNumber = "123";
+            contactInfo.Gender = null;
+            contactInfo.Race = null;
+            contactInfo.Ethnicity = null;
+            contactInfo.EnergencyContactFirstName = null;
+            contactInfo.EnergencyContactLastName = null;
+            contactInfo.EnergencyContactRelationship = null;
+            contactInfo.EnergencyContactPhoneNumber= "123";
+            contactInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = contactInfo };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveuser");
+            flowManager.Start("savecontactInfo");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid user = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid contactInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(1, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.Equal(11, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -110,7 +121,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveUserTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=SaveContactInfoTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

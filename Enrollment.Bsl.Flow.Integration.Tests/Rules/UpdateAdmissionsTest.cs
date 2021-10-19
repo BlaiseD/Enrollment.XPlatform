@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SavePersonalTest
+    public class UpdateAdmissionsTest
     {
-        public SavePersonalTest(ITestOutputHelper output)
+        public UpdateAdmissionsTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,65 +36,59 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SavePersonal()
+        public void SaveAdmissions()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var personal = flowManager.EnrollmentRepository.GetAsync<PersonalModel, Personal>
+            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
             (
                 s => s.UserId == 1
             ).Result.Single();
 
-            personal.FirstName = "Samson";
-            personal.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = personal };
+            admissions.EnrollmentTerm = "SP";
+            admissions.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = admissions };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savepersonal");
+            flowManager.Start("saveadmissions");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid personal  = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid admissions  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            PersonalModel model = (PersonalModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("Samson", model.FirstName);
+            AdmissionsModel model = (AdmissionsModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("SP", model.EnrollmentTerm);
         }
 
         [Fact]
-        public void SaveInvalidPersonal()
+        public void SaveInvalidAdmissions()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var personal = flowManager.EnrollmentRepository.GetAsync<PersonalModel, Personal>
+            var admissions = flowManager.EnrollmentRepository.GetAsync<AdmissionsModel, Admissions>
             (
                 s => s.UserId == 1
             ).Result.Single();
-            personal.FirstName = null;
-            personal.MiddleName = null;
-            personal.LastName = null;
-            personal.PrimaryEmail = "123";
-            personal.Address1 = null;
-            personal.City = null;
-            personal.State = "NC";
-            personal.County = null;
-            personal.ZipCode = "123";
-            personal.CellPhone = "123";
-            personal.OtherPhone = "123";
-            personal.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = personal };
+            admissions.EnteringStatus = null;
+            admissions.EnrollmentTerm = null;
+            admissions.EnrollmentYear = null;
+            admissions.ProgramType = null;
+            admissions.Program = null;
+            admissions.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = admissions };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savepersonal");
+            flowManager.Start("saveadmissions");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid personal = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid admissions = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(10, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -120,7 +114,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SavePersonalTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=SaveAdmissionsTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

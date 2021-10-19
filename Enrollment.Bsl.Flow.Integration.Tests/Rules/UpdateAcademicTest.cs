@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveContactInfoTest
+    public class UpdateAcademicTest
     {
-        public SaveContactInfoTest(ITestOutputHelper output)
+        public UpdateAcademicTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,66 +36,87 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveContactInfo()
+        public void SaveAcademic()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
+            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
             (
-                s => s.UserId == 1
+                s => s.UserId == 1,
+                null,
+                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
+                {
+                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
+                    {
+                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
+                        {
+                            MemberName = "Institutions"
+                        }
+                    }
+                }
             ).Result.Single();
 
-            contactInfo.EnergencyContactFirstName = "Samson";
-            contactInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = contactInfo };
+            academic.LastHighSchoolLocation = "FL";
+            InstitutionModel institution = academic.Institutions.First();
+            institution.EndYear = "2222";
+            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            institution.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savecontactInfo");
+            flowManager.Start("saveacademic");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid contactInfo  = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            ContactInfoModel model = (ContactInfoModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("Samson", model.EnergencyContactFirstName);
+            AcademicModel model = (AcademicModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("FL", model.LastHighSchoolLocation);
+            Assert.Equal("2222", model.Institutions.First().EndYear);
         }
 
         [Fact]
-        public void SaveInvalidContactInfo()
+        public void SaveInvalidAcademic()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var contactInfo = flowManager.EnrollmentRepository.GetAsync<ContactInfoModel, ContactInfo>
+            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
             (
-                s => s.UserId == 1
+                s => s.UserId == 1,
+                null,
+                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
+                {
+                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
+                    {
+                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
+                        {
+                            MemberName = "Institutions"
+                        }
+                    }
+                }
             ).Result.Single();
-            contactInfo.HasFormerName = true;
-            contactInfo.FormerFirstName = null;
-            contactInfo.FormerLastName = null;
-            contactInfo.DateOfBirth = default;
-            contactInfo.SocialSecurityNumber = "123";
-            contactInfo.Gender = null;
-            contactInfo.Race = null;
-            contactInfo.Ethnicity = null;
-            contactInfo.EnergencyContactFirstName = null;
-            contactInfo.EnergencyContactLastName = null;
-            contactInfo.EnergencyContactRelationship = null;
-            contactInfo.EnergencyContactPhoneNumber= "123";
-            contactInfo.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = contactInfo };
+            academic.LastHighSchoolLocation = null;
+            academic.FromDate = new DateTime();
+            academic.ToDate = new DateTime();
+            academic.GraduationStatus = null;
+            InstitutionModel institution = academic.Institutions.First();
+            institution.EndYear = null;
+            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            institution.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("savecontactInfo");
+            flowManager.Start("saveacademic");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid contactInfo = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(11, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -121,7 +142,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveContactInfoTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=SaveAcademicTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )

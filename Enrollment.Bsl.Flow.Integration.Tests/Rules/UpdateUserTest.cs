@@ -22,9 +22,9 @@ using Xunit.Abstractions;
 
 namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
 {
-    public class SaveAcademicTest
+    public class UpdateUserTest
     {
-        public SaveAcademicTest(ITestOutputHelper output)
+        public UpdateUserTest(ITestOutputHelper output)
         {
             this.output = output;
             Initialize();
@@ -36,87 +36,55 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
         #endregion Fields
 
         [Fact]
-        public void SaveAcademic()
+        public void SaveUser()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
+            var user = flowManager.EnrollmentRepository.GetAsync<UserModel, User>
             (
-                s => s.UserId == 1,
-                null,
-                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
-                {
-                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
-                    {
-                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
-                        {
-                            MemberName = "Institutions"
-                        }
-                    }
-                }
+                s => s.UserId == 1
             ).Result.Single();
 
-            academic.LastHighSchoolLocation = "FL";
-            InstitutionModel institution = academic.Institutions.First();
-            institution.EndYear = "2222";
-            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            institution.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
+            user.UserName = "NewName";
+            user.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveacademic");
+            flowManager.Start("saveuser");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid user  = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.True(flowManager.FlowDataCache.Response.Success);
             Assert.Empty(flowManager.FlowDataCache.Response.ErrorMessages);
 
-            AcademicModel model = (AcademicModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
-            Assert.Equal("FL", model.LastHighSchoolLocation);
-            Assert.Equal("2222", model.Institutions.First().EndYear);
+            UserModel model = (UserModel)((SaveEntityResponse)flowManager.FlowDataCache.Response).Entity;
+            Assert.Equal("NewName", model.UserName);
         }
 
         [Fact]
-        public void SaveInvalidAcademic()
+        public void SaveInvalidUser()
         {
             //arrange
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
-            var academic = flowManager.EnrollmentRepository.GetAsync<AcademicModel, Academic>
+            var user = flowManager.EnrollmentRepository.GetAsync<UserModel, User>
             (
-                s => s.UserId == 1,
-                null,
-                new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
-                {
-                    ExpandedItems = new System.Collections.Generic.List<LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem>
-                    {
-                        new LogicBuilder.Expressions.Utils.Expansions.SelectExpandItem
-                        {
-                            MemberName = "Institutions"
-                        }
-                    }
-                }
+                s => s.UserId == 1
             ).Result.Single();
-            academic.LastHighSchoolLocation = null;
-            academic.FromDate = new DateTime();
-            academic.ToDate = new DateTime();
-            academic.GraduationStatus = null;
-            InstitutionModel institution = academic.Institutions.First();
-            institution.EndYear = null;
-            academic.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            institution.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
-            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = academic };
+            user.UserName = null;
+            user.EntityState = LogicBuilder.Domain.EntityStateType.Modified;
+            flowManager.FlowDataCache.Request = new SaveEntityRequest { Entity = user };
 
             //act
             System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            flowManager.Start("saveacademic");
+            flowManager.Start("saveuser");
             stopWatch.Stop();
-            this.output.WriteLine("Saving valid academic = {0}", stopWatch.Elapsed.TotalMilliseconds);
+            this.output.WriteLine("Saving valid user = {0}", stopWatch.Elapsed.TotalMilliseconds);
 
             //assert
             Assert.False(flowManager.FlowDataCache.Response.Success);
-            Assert.Equal(5, flowManager.FlowDataCache.Response.ErrorMessages.Count);
+            Assert.Equal(1, flowManager.FlowDataCache.Response.ErrorMessages.Count);
         }
 
         #region Helpers
@@ -142,7 +110,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
                 (
                     options => options.UseSqlServer
                     (
-                        @"Server=(localdb)\mssqllocaldb;Database=SaveAcademicTest;ConnectRetryCount=0"
+                        @"Server=(localdb)\mssqllocaldb;Database=SaveUserTest;ConnectRetryCount=0"
                     ),
                     ServiceLifetime.Transient
                 )
