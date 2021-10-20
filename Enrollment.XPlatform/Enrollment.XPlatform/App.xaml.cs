@@ -1,5 +1,5 @@
 ﻿using Enrollment.XPlatform.Services;
-using Enrollment.XPlatform.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -13,9 +13,16 @@ namespace Enrollment.XPlatform
         {
             InitializeComponent();
 
-            DependencyService.Register<MockDataStore>();
-            MainPage = new AppShell();
+            //DependencyService.Register<MockDataStore>();
+            //MainPage = new AppShell();
         }
+
+        public const string BASE_URL = "https://contosoapibps.azurewebsites.net/";
+
+        #region Properties
+        public static IServiceProvider ServiceProvider { get; set; }
+        public static ServiceCollection ServiceCollection { get; set; }
+        #endregion Properties
 
         protected override void OnStart()
         {
