@@ -17,7 +17,7 @@ namespace Enrollment.Parameters.Expressions
             IExpressionParameter selector,
 
             [ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
-            [NameValue(AttributeNames.DEFAULTVALUE, "Contoso.Domain.Entities")]
+            [NameValue(AttributeNames.DEFAULTVALUE, "Enrollment.Domain.Entities")]
             [Comments("Fully qualified class name for the model type.")]
             string fieldTypeSource = null
         )

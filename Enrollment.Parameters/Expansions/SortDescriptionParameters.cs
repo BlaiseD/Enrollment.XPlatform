@@ -22,7 +22,7 @@ namespace Enrollment.Parameters.Expansions
 
             [ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
             [Comments("Fully qualified class name for the model type.")]
-            string fieldTypeSource = "Contoso.Domain.Entities"
+            string fieldTypeSource = "Enrollment.Domain.Entities"
         )
         {
             this.PropertyName = propertyName;
