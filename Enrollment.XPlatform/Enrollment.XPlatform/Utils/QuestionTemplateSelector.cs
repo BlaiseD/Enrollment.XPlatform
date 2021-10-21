@@ -14,6 +14,7 @@ namespace Enrollment.XPlatform.Utils
         public DataTemplate PasswordTemplate { get; set; }
         public DataTemplate PopupFormGroupTemplate { get; set; }
         public DataTemplate PickerTemplate { get; set; }
+        public DataTemplate SwitchTemplate { get; set; }
         public DataTemplate TextTemplate { get; set; }
 
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
@@ -31,6 +32,7 @@ namespace Enrollment.XPlatform.Utils
                 nameof(PasswordTemplate) => PasswordTemplate,
                 nameof(PopupFormGroupTemplate) => PopupFormGroupTemplate,
                 nameof(PickerTemplate) => PickerTemplate,
+                nameof(SwitchTemplate) => SwitchTemplate,
                 _ => TextTemplate,
             };
         }

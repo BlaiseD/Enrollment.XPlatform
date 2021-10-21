@@ -99,6 +99,17 @@ namespace Enrollment.XPlatform.Utils
                     }
                 }
             ),
+            SwitchTemplate = new DataTemplate
+            (
+                () => new StackLayout
+                {
+                    Children =
+                    {
+                        GetSwitchForValidation(),
+                        GetLabelForValidation()
+                    }
+                }
+            ),
             PickerTemplate = new DataTemplate
             (
                 () => new StackLayout
@@ -176,6 +187,32 @@ namespace Enrollment.XPlatform.Utils
                         VerticalOptions = LayoutOptions.Center
                     }
                     .AddBinding(Label.TextProperty, new Binding(nameof(CheckboxValidatableObject.CheckboxLabel)))
+                }
+            };
+
+        public static StackLayout GetSwitchForValidation()
+            => new StackLayout()
+            {
+                Orientation = StackOrientation.Horizontal,
+                Children =
+                {
+                    new Switch
+                    {
+                        Behaviors =
+                        {
+                            new EventToCommandBehavior()
+                            {
+                                EventName = nameof(Switch.Toggled)
+                            }
+                            .AddBinding(EventToCommandBehavior.CommandProperty, new Binding(nameof(SwitchValidatableObject.ToggledCommand)))
+                        }
+                    }
+                    .AddBinding(Switch.IsToggledProperty, new Binding(nameof(SwitchValidatableObject.Value))),
+                    new Label
+                    {
+                        VerticalOptions = LayoutOptions.Center
+                    }
+                    .AddBinding(Label.TextProperty, new Binding(nameof(SwitchValidatableObject.SwitchLabel)))
                 }
             };
 

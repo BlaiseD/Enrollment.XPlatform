@@ -130,6 +130,10 @@ namespace Enrollment.XPlatform.Utils
             {
                 properties.Add(CreateCheckboxValidatableObject(setting, name, textTemplate.TemplateName, setting.Title));
             }
+            else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.SwitchTemplate))
+            {
+                properties.Add(CreateSwitchValidatableObject(setting, name, textTemplate.TemplateName, setting.Title));
+            }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.LabelTemplate))
             {
                 properties.Add
@@ -232,6 +236,21 @@ namespace Enrollment.XPlatform.Utils
                 Activator.CreateInstance
                 (
                     typeof(CheckboxValidatableObject),
+                    name,
+                    templateName,
+                    title,
+                    GetValidationRules(setting),
+                    this.uiNotificationService
+                ),
+                setting
+            );
+
+        private IValidatable CreateSwitchValidatableObject(FormControlSettingsDescriptor setting, string name, string templateName, string title)
+            => ValidatableObjectFactory.GetValidatable
+            (
+                Activator.CreateInstance
+                (
+                    typeof(SwitchValidatableObject),
                     name,
                     templateName,
                     title,

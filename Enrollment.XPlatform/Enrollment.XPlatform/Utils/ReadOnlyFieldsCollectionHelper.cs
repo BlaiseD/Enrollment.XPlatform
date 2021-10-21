@@ -91,6 +91,10 @@ namespace Enrollment.XPlatform.Utils
             {
                 properties.Add(CreateCheckboxReadOnlyObject(setting, name));
             }
+            else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.SwitchTemplate))
+            {
+                properties.Add(CreateSwitchReadOnlyObject(setting, name));
+            }
             else
             {
                 throw new ArgumentException($"{nameof(setting.TextTemplate.TemplateName)}: 537C774B-91B8-490D-8F47-38834614C383");
@@ -174,6 +178,14 @@ namespace Enrollment.XPlatform.Utils
             => (IReadOnly)Activator.CreateInstance
             (
                 typeof(CheckboxReadOnlyObject),
+                name,
+                setting
+            );
+
+        private IReadOnly CreateSwitchReadOnlyObject(DetailControlSettingsDescriptor setting, string name)
+            => (IReadOnly)Activator.CreateInstance
+            (
+                typeof(SwitchReadOnlyObject),
                 name,
                 setting
             );

@@ -86,6 +86,16 @@ namespace Enrollment.XPlatform.Utils
                     }
                 }
             ),
+            SwitchTemplate = new DataTemplate
+            (
+                () => new StackLayout
+                {
+                    Children =
+                    {
+                        GetSwitchFieldControl()
+                    }
+                }
+            ),
             TextTemplate = new DataTemplate
             (
                 () => new StackLayout
@@ -104,6 +114,25 @@ namespace Enrollment.XPlatform.Utils
                 nameof(TextFieldReadOnlyObject<string>.Title),
                 nameof(TextFieldReadOnlyObject<string>.DisplayText)
             );
+
+        private static StackLayout GetSwitchFieldControl()
+            => new StackLayout()
+            {
+                Orientation = StackOrientation.Horizontal,
+                Children =
+                {
+                    new Switch
+                    {
+                        IsEnabled = false
+                    }
+                    .AddBinding(Switch.IsToggledProperty, new Binding(nameof(SwitchReadOnlyObject.Value))),
+                    new Label
+                    {
+                        VerticalOptions = LayoutOptions.Center
+                    }
+                    .AddBinding(Label.TextProperty, new Binding(nameof(SwitchReadOnlyObject.SwitchLabel)))
+                }
+            };
 
         private static Grid GetPasswordTextFieldControl()
             => new Grid
