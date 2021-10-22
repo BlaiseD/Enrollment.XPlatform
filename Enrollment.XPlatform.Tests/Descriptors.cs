@@ -115,6 +115,7 @@ namespace Enrollment.XPlatform.Tests
                             DataReturnType = typeof(IEnumerable<LookUps>).AssemblyQualifiedName
                         }
                     },
+                    UpdateOnlyTextTemplate = new TextFieldTemplateDescriptor { TemplateName = "LabelTemplate" },
                     ValidationSetting = new FieldValidationSettingsDescriptor
                     {
                         DefaultValue = "",
@@ -288,6 +289,17 @@ namespace Enrollment.XPlatform.Tests
             },
             FieldSettings = new List<FormItemSettingsDescriptor>
             {
+                new FormControlSettingsDescriptor
+                {
+                    Field = "UserId",
+                    Type = "System.Int32",
+                    Title = "User ID",
+                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "HiddenTemplate" },
+                    ValidationSetting = new FieldValidationSettingsDescriptor
+                    {
+                        DefaultValue = 0
+                    }
+                },
                 new FormControlSettingsDescriptor
                 {
                     Field = "LastHighSchoolLocation",
