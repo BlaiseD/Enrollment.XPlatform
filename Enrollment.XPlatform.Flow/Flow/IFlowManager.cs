@@ -19,7 +19,7 @@ namespace Enrollment.XPlatform.Flow
 
         Task<FlowSettings> Start(string module);
         Task<FlowSettings> Next(CommandButtonRequest request);
-        Task<FlowSettings> NavStart(NavBarRequest navBarRequest);
+        Task<FlowSettings> NewFlowStart(NewFlowRequest request);
         void FlowComplete();
         void Wait();
         void Terminate();

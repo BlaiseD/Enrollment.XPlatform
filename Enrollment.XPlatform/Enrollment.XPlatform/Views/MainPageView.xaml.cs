@@ -126,9 +126,9 @@ namespace Enrollment.XPlatform.Views
 
             DisposeCurrentPageBindingContext(Detail);
 
-            await UiNotificationService.NavStart
+            await UiNotificationService.NewFlowStart
             (
-                new Flow.Requests.NavBarRequest { InitialModuleName = item.InitialModule }
+                new Flow.Requests.NewFlowRequest { InitialModuleName = item.InitialModule }
             );
 
             void DisposeCurrentPageBindingContext(Page detail)

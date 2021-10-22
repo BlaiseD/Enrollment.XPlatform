@@ -1,6 +1,6 @@
 ﻿namespace Enrollment.XPlatform.Flow.Requests
 {
-    public class NavBarRequest
+    public class NewFlowRequest
     {
         public string InitialModuleName { get; set; }
     }

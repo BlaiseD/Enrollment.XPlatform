@@ -78,15 +78,15 @@ namespace Enrollment.XPlatform.Flow
             }
         }
 
-        Task<FlowSettings> IFlowManager.NavStart(NavBarRequest navBarRequest) 
-            => Task.Run(() => NavStart(navBarRequest));
+        Task<FlowSettings> IFlowManager.NewFlowStart(NewFlowRequest request) 
+            => Task.Run(() => NewFlowStart(request));
 
-        private FlowSettings NavStart(NavBarRequest navBarRequest)
+        private FlowSettings NewFlowStart(NewFlowRequest request)
         {
             try
             {
                 Reset();
-                this.Director.StartInitialFlow(navBarRequest.InitialModuleName);
+                this.Director.StartInitialFlow(request.InitialModuleName);
                 return this.FlowSettings;
             }
             catch (Exception ex)

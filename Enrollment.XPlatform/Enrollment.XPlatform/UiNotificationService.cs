@@ -37,10 +37,10 @@ namespace Enrollment.XPlatform
             this.FlowSettingsSubject.OnNext(flowSettings);
         }
 
-        public async Task NavStart(NavBarRequest navBarRequest)
+        public async Task NewFlowStart(NewFlowRequest request)
         {
             DateTime dt = DateTime.Now;
-            FlowSettings flowSettings = await this.FlowManager.NavStart(navBarRequest);
+            FlowSettings flowSettings = await this.FlowManager.NewFlowStart(request);
             DateTime dt2 = DateTime.Now;
 
             appLogger.LogMessage(nameof(UiNotificationService), $"NavStart (milliseconds) = {(dt2 - dt).TotalMilliseconds}");
