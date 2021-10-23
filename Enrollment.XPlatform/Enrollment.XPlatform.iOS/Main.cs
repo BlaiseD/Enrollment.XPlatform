@@ -14,7 +14,20 @@ namespace Enrollment.XPlatform.iOS
         {
             // if you want to use a different Application Delegate class from "AppDelegate"
             // you can specify it here.
-            UIApplication.Main(args, null, "AppDelegate");
+#if DEBUG
+            try
+            {
+#endif
+                UIApplication.Main(args, null, "AppDelegate");
+#if DEBUG
+            }
+            catch (System.Exception ex)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Break();
+                throw;
+            }
+#endif
         }
     }
 }

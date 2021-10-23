@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Enrollment.XPlatform.Flow;
 using Foundation;
+using Microsoft.Extensions.DependencyInjection;
 using UIKit;
 
 namespace Enrollment.XPlatform.iOS
@@ -23,9 +24,15 @@ namespace Enrollment.XPlatform.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            Startup.Init(ConfigureServices);
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
+        }
+
+        void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<IAppLogger, AppLogger>();
         }
     }
 }

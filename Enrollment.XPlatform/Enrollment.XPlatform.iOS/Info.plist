@@ -34,5 +34,11 @@
     <string>Enrollment.XPlatform</string>
     <key>XSAppIconAssets</key>
     <string>Assets.xcassets/AppIcon.appiconset</string>
+    <key>UIAppFonts</key>
+    <array>
+      <string>FontAwesome5BrandsRegular400.otf</string>
+      <string>FontAwesome5Regular400.otf</string>
+      <string>FontAwesome5Solid900.otf</string>
+    </array>
 </dict>
 </plist>
