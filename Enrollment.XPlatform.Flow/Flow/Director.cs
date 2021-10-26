@@ -18,10 +18,6 @@ namespace Enrollment.XPlatform.Flow
         #endregion Fields
 
         #region Properties
-        protected override Dictionary<int, int> QuestionListAnswers => throw new NotImplementedException();
-        protected override Dictionary<int, object> InputQuestionsAnswers => throw new NotImplementedException();
-        protected override Variables Variables => throw new NotImplementedException();
-
         protected override Progress Progress => this._flowManager.Progress;
         protected override IRulesCache RulesCache => this._rulesCache;
         protected override IFlowActivity FlowActivity => this._flowManager.FlowActivity;

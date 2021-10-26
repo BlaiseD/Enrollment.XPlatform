@@ -21,7 +21,6 @@ namespace Enrollment.XPlatform.Flow
         Task<FlowSettings> Next(CommandButtonRequest request);
         Task<FlowSettings> NewFlowStart(NewFlowRequest request);
         void FlowComplete();
-        void Wait();
         void Terminate();
         void SetCurrentBusinessBackupData();
     }

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LogicBuilder.Attributes" Version="1.0.4" />
+    <PackageReference Include="LogicBuilder.Attributes" Version="1.0.5-alpha.0.1" />
   </ItemGroup>
 
   <ItemGroup>

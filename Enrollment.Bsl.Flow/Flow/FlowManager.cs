@@ -59,8 +59,6 @@ namespace Enrollment.Bsl.Flow
 
         public void Terminate() => throw new NotImplementedException();
 
-        public void Wait() => throw new NotImplementedException();
-
         public void Start(string module)
         {
             try

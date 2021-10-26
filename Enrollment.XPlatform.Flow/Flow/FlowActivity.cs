@@ -33,14 +33,6 @@ namespace Enrollment.XPlatform.Flow
         public void FlowComplete() => this.flowManager.FlowComplete();
 
         public void Terminate() => this.flowManager.Terminate();
-
-        public void Wait() => this.flowManager.Wait();
-
-        public void DisplayInputQuestions(InputFormParameters form, ICollection<ConnectorParameters> shortValues = null)
-            => throw new NotImplementedException();
-
-        public void DisplayQuestions(QuestionFormParameters form, ICollection<ConnectorParameters> shortValues = null)
-            => throw new NotImplementedException();
         #endregion Methods
     }
 }

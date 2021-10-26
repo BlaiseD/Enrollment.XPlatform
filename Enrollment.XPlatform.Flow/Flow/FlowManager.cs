@@ -133,10 +133,6 @@ namespace Enrollment.XPlatform.Flow
         {
         }
 
-        public void Wait()
-        {
-        }
-
         private void Reset()
         {
             Progress.ClearProgressList();

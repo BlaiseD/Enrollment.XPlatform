@@ -118,7 +118,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LogicBuilder.RulesDirector" Version="1.0.4" />
+    <PackageReference Include="LogicBuilder.RulesDirector" Version="1.0.5-alpha.0.1" />
   </ItemGroup>
 
   <ItemGroup>
