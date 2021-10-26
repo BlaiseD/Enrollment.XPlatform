@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="LogicBuilder.Forms.Parameters" Version="1.0.3" />
+    <PackageReference Include="LogicBuilder.Forms.Parameters" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
