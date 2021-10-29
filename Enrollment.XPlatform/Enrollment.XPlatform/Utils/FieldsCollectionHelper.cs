@@ -365,6 +365,6 @@ namespace Enrollment.XPlatform.Utils
             ).ToArray();
 
         private IValidationRule GetValidatorRule(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting)
-            => ValidatorRuleFactory.GetValidatorRule(validator, setting, this.formSettings.ValidationMessages, properties);
+            => new ValidatorRuleFactory(this.parentName).GetValidatorRule(validator, setting, this.formSettings.ValidationMessages, properties);
     }
 }

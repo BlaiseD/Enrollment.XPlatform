@@ -9,14 +9,21 @@ using System.Reflection;
 
 namespace Enrollment.XPlatform.Validators.Rules
 {
-    internal static class ValidatorRuleFactory
+    internal class ValidatorRuleFactory
     {
-        public static IValidationRule GetValidatorRule(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting, Dictionary<string, List<ValidationRuleDescriptor>> validationMessages, ObservableCollection<IValidatable> fields) 
+        public ValidatorRuleFactory(string parentName)
+        {
+            this.parentName = parentName;
+        }
+
+        private readonly string parentName;
+
+        public IValidationRule GetValidatorRule(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting, Dictionary<string, List<ValidationRuleDescriptor>> validationMessages, ObservableCollection<IValidatable> fields)
             => (IValidationRule)typeof(ValidatorRuleFactory).GetMethod
             (
                 "_GetValidatorRule",
                 1,
-                BindingFlags.NonPublic | BindingFlags.Static,
+                BindingFlags.NonPublic | BindingFlags.Instance,
                 null,
                 new Type[]
                 {
@@ -29,7 +36,7 @@ namespace Enrollment.XPlatform.Validators.Rules
             )
             .MakeGenericMethod(Type.GetType(setting.Type)).Invoke
             (
-                null,
+                this,
                 new object[]
                 {
                     validator,
@@ -39,7 +46,7 @@ namespace Enrollment.XPlatform.Validators.Rules
                 }
             );
 
-        private static IValidationRule _GetValidatorRule<T>(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting, Dictionary<string, List<ValidationRuleDescriptor>> validationMessages, ObservableCollection<IValidatable> fields)
+        private IValidationRule _GetValidatorRule<T>(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting, Dictionary<string, List<ValidationRuleDescriptor>> validationMessages, ObservableCollection<IValidatable> fields)
         {
             if (validationMessages == null)
                 throw new ArgumentException($"{nameof(validationMessages)}: C1BDA4F7-B684-438F-B5BB-B61F01B625CE");
@@ -78,7 +85,7 @@ namespace Enrollment.XPlatform.Validators.Rules
             IValidationRule GetIsValueTrueRule()
                 => new IsValidEmailRule
                 (
-                    setting.Field,
+                    GetFieldName(setting.Field),
                     validationMessage,
                     fields
                 );
@@ -86,7 +93,7 @@ namespace Enrollment.XPlatform.Validators.Rules
             IValidationRule GetIsValidPasswordRule()
                 => new IsValidEmailRule
                 (
-                    setting.Field,
+                    GetFieldName(setting.Field),
                     validationMessage,
                     fields
                 );
@@ -94,7 +101,7 @@ namespace Enrollment.XPlatform.Validators.Rules
             IValidationRule GetIsValidEmailRule()
                 => new IsValidEmailRule
                 (
-                    setting.Field,
+                    GetFieldName(setting.Field),
                     validationMessage,
                     fields
                 );
@@ -110,7 +117,7 @@ namespace Enrollment.XPlatform.Validators.Rules
 
                 return new IsLengthValidRule
                 (
-                    setting.Field,
+                    GetFieldName(setting.Field),
                     validationMessage,
                     fields,
                     (int)minDescriptor.Value,
@@ -121,7 +128,7 @@ namespace Enrollment.XPlatform.Validators.Rules
             IValidationRule GetMustBePositiveNumberRule()
                 => new MustBePositiveNumberRule<T>
                 (
-                    setting.Field,
+                    GetFieldName(setting.Field),
                     validationMessage,
                     fields
                 );
@@ -129,7 +136,7 @@ namespace Enrollment.XPlatform.Validators.Rules
             IValidationRule GetMustBeNumberRule()
                 => new MustBeNumberRule<T>
                 (
-                    setting.Field,
+                    GetFieldName(setting.Field),
                     validationMessage,
                     fields
                 );
@@ -137,20 +144,20 @@ namespace Enrollment.XPlatform.Validators.Rules
             IValidationRule GetMustBeIntegerRule()
                 => new MustBeIntegerRule<T>
                 (
-                    setting.Field,
+                    GetFieldName(setting.Field),
                     validationMessage,
                     fields
                 );
 
             IValidationRule GetRequiredRule()
             {
-                if (setting.ValidationSetting?.DefaultValue != null 
+                if (setting.ValidationSetting?.DefaultValue != null
                     && setting.ValidationSetting.DefaultValue.GetType() != typeof(T))
                     throw new ArgumentException($"{nameof(setting.ValidationSetting.DefaultValue)}: C96394B8-B26B-45B2-8C34-B9BA3FF95088");
 
                 return new RequiredRule<T>
                 (
-                    setting.Field,
+                    GetFieldName(setting.Field),
                     validationMessage,
                     fields,
                     setting.ValidationSetting?.DefaultValue == null ? default : (T)setting.ValidationSetting.DefaultValue
@@ -165,9 +172,9 @@ namespace Enrollment.XPlatform.Validators.Rules
 
                 return new IsMatchRule<T>
                 (
-                    setting.Field,
-                    validationMessage, 
-                    fields, 
+                    GetFieldName(setting.Field),
+                    validationMessage,
+                    fields,
                     (string)validatorArgumentDescriptor.Value
                 );
             }
@@ -178,7 +185,7 @@ namespace Enrollment.XPlatform.Validators.Rules
                 (
                     "GetRangeRule",
                     1,
-                    BindingFlags.NonPublic | BindingFlags.Static,
+                    BindingFlags.NonPublic | BindingFlags.Instance,
                     null,
                     new Type[]
                     {
@@ -191,7 +198,7 @@ namespace Enrollment.XPlatform.Validators.Rules
                 )
                 .MakeGenericMethod(Type.GetType(setting.Type)).Invoke
                 (
-                    null,
+                    this,
                     new object[]
                     {
                         validator,
@@ -203,7 +210,7 @@ namespace Enrollment.XPlatform.Validators.Rules
             }
         }
 
-        private static IValidationRule GetRangeRule<T>(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting, string validationMessage, ObservableCollection<IValidatable> fields) where T : IComparable<T>
+        private IValidationRule GetRangeRule<T>(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting, string validationMessage, ObservableCollection<IValidatable> fields) where T : IComparable<T>
         {
             const string argumentMin = "min";
             const string argumentMax = "max";
@@ -214,12 +221,15 @@ namespace Enrollment.XPlatform.Validators.Rules
 
             return new RangeRule<T>
             (
-                setting.Field,
+                GetFieldName(setting.Field),
                 validationMessage,
                 fields,
                 (T)minDescriptor.Value,
                 (T)maxDescriptor.Value
             );
         }
+
+        string GetFieldName(string field)
+                => parentName == null ? field : $"{parentName}.{field}";
     }
 }
