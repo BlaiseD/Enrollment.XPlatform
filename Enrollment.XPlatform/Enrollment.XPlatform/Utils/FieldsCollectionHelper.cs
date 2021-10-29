@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Enrollment.Forms.Configuration;
+﻿using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.Forms.Configuration.Validation;
 using Enrollment.XPlatform.Services;
@@ -7,7 +6,6 @@ using Enrollment.XPlatform.Validators;
 using Enrollment.XPlatform.Validators.Rules;
 using Enrollment.XPlatform.ViewModels.Validatables;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -16,43 +14,45 @@ namespace Enrollment.XPlatform.Utils
     internal class FieldsCollectionHelper
     {
         private IFormGroupSettings formSettings;
-        private ObservableCollection<IValidatable> properties;
+        protected ObservableCollection<IValidatable> properties;
         private readonly UiNotificationService uiNotificationService;
-        private readonly IContextProvider contextProvider;
+        protected readonly IContextProvider contextProvider;
+        private readonly string parentName;
 
-        public FieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider)
+        public FieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, ObservableCollection<IValidatable> properties = null, string parentName = null)
         {
             this.formSettings = formSettings;
             this.contextProvider = contextProvider;
             this.uiNotificationService = contextProvider.UiNotificationService;
-            this.properties = new ObservableCollection<IValidatable>();
+            this.properties = properties ?? new ObservableCollection<IValidatable>();
+            this.parentName = parentName;
         }
 
         public ObservableCollection<IValidatable> CreateFields()
         {
-            this.CreateFieldsCollection(this.formSettings.FieldSettings);
+            this.CreateFieldsCollection();
             return this.properties;
         }
 
-        private void CreateFieldsCollection(List<FormItemSettingsDescriptor> fieldSettings, string parentName = null)
+        private void CreateFieldsCollection()
         {
-            fieldSettings.ForEach
+            this.formSettings.FieldSettings.ForEach
             (
                 setting =>
                 {
                     switch (setting)
                     {
                         case MultiSelectFormControlSettingsDescriptor multiSelectFormControlSettings:
-                            AddMultiSelectControl(multiSelectFormControlSettings, GetFieldName(setting.Field, parentName));
+                            AddMultiSelectControl(multiSelectFormControlSettings);
                             break;
                         case FormControlSettingsDescriptor formControlSettings:
-                            AddFormControl(formControlSettings, GetFieldName(setting.Field, parentName));
+                            AddFormControl(formControlSettings);
                             break;
                         case FormGroupSettingsDescriptor formGroupSettings:
-                            AddFormGroupSettings(formGroupSettings, parentName);
+                            AddFormGroupSettings(formGroupSettings);
                             break;
                         case FormGroupArraySettingsDescriptor formGroupArraySettings:
-                            AddFormGroupArray(formGroupArraySettings, GetFieldName(setting.Field, parentName));
+                            AddFormGroupArray(formGroupArraySettings);
                             break;
                         default:
                             throw new ArgumentException($"{nameof(setting)}: B024F65A-50DC-4D45-B8F0-9EC0BE0E2FE2");
@@ -61,10 +61,10 @@ namespace Enrollment.XPlatform.Utils
             );
         }
 
-        string GetFieldName(string field, string parentName)
+        protected string GetFieldName(string field)
                 => parentName == null ? field : $"{parentName}.{field}";
 
-        private void AddFormGroupSettings(FormGroupSettingsDescriptor setting, string parentName = null)
+        private void AddFormGroupSettings(FormGroupSettingsDescriptor setting)
         {
             if (setting.FormGroupTemplate == null
                 || string.IsNullOrEmpty(setting.FormGroupTemplate.TemplateName))
@@ -73,35 +73,43 @@ namespace Enrollment.XPlatform.Utils
             switch (setting.FormGroupTemplate.TemplateName)
             {
                 case FromGroupTemplateNames.InlineFormGroupTemplate:
-                    AddFormGroupInline(setting, parentName);
+                    AddFormGroupInline(setting);
                     break;
                 case FromGroupTemplateNames.PopupFormGroupTemplate:
-                    AddFormGroupPopup(setting, parentName);
+                    AddFormGroupPopup(setting);
                     break;
                 default:
                     throw new ArgumentException($"{nameof(setting.FormGroupTemplate)}: 6664DF64-DF69-415E-8AD2-2AEFC3FA4261");
             }
         }
 
-        private void AddFormGroupPopup(FormGroupSettingsDescriptor setting, string parentName)
+        private void AddFormGroupPopup(FormGroupSettingsDescriptor setting)
         {
-            properties.Add(CreateFormValidatableObject(setting, GetFieldName(setting.Field, parentName)));
+            properties.Add(CreateFormValidatableObject(setting));
         }
 
-        private void AddFormGroupInline(FormGroupSettingsDescriptor setting, string parentName)
-            => CreateFieldsCollection(setting.FieldSettings, GetFieldName(setting.Field, parentName));
+        protected virtual void AddFormGroupInline(FormGroupSettingsDescriptor setting)
+        {
+            new FieldsCollectionHelper
+            (
+                setting,
+                this.contextProvider,
+                this.properties,
+                GetFieldName(setting.Field)
+            ).CreateFields();
+        }
 
-        protected virtual void AddFormControl(FormControlSettingsDescriptor setting, string name)
+        protected virtual void AddFormControl(FormControlSettingsDescriptor setting)
         {
             if (setting.TextTemplate != null)
-                AddTextControl(setting, setting.TextTemplate, name);
+                AddTextControl(setting, setting.TextTemplate);
             else if (setting.DropDownTemplate != null)
-                AddDropdownControl(setting, name);
+                AddDropdownControl(setting);
             else
                 throw new ArgumentException($"{nameof(setting)}: 0556AEAF-C851-44F1-A2A2-66C8814D0F54");
         }
 
-        protected void AddTextControl(FormControlSettingsDescriptor setting, TextFieldTemplateDescriptor textTemplate, string name)
+        protected void AddTextControl(FormControlSettingsDescriptor setting, TextFieldTemplateDescriptor textTemplate)
         {
             if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.TextTemplate)
                 || textTemplate.TemplateName == nameof(QuestionTemplateSelector.PasswordTemplate))
@@ -110,8 +118,7 @@ namespace Enrollment.XPlatform.Utils
                 (
                     CreateEntryValidatableObject
                     (
-                        setting, 
-                        name,
+                        setting,
                         textTemplate.TemplateName,
                         setting.Placeholder,
                         setting.StringFormat
@@ -120,19 +127,19 @@ namespace Enrollment.XPlatform.Utils
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.DateTemplate))
             {
-                properties.Add(CreateDatePickerValidatableObject(setting, name, textTemplate.TemplateName));
+                properties.Add(CreateDatePickerValidatableObject(setting, textTemplate.TemplateName));
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.HiddenTemplate))
             {
-                properties.Add(CreateHiddenValidatableObject(setting, name, textTemplate.TemplateName));
+                properties.Add(CreateHiddenValidatableObject(setting, textTemplate.TemplateName));
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.CheckboxTemplate))
             {
-                properties.Add(CreateCheckboxValidatableObject(setting, name, textTemplate.TemplateName, setting.Title));
+                properties.Add(CreateCheckboxValidatableObject(setting, textTemplate.TemplateName, setting.Title));
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.SwitchTemplate))
             {
-                properties.Add(CreateSwitchValidatableObject(setting, name, textTemplate.TemplateName, setting.Title));
+                properties.Add(CreateSwitchValidatableObject(setting, textTemplate.TemplateName, setting.Title));
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.LabelTemplate))
             {
@@ -140,8 +147,7 @@ namespace Enrollment.XPlatform.Utils
                 (
                     CreateLabelValidatableObject
                     (
-                        setting, 
-                        name,
+                        setting,
                         textTemplate.TemplateName,
                         setting.Title,
                         setting.Placeholder,
@@ -155,11 +161,11 @@ namespace Enrollment.XPlatform.Utils
             }
         }
 
-        protected void AddDropdownControl(FormControlSettingsDescriptor setting, string name)
+        protected void AddDropdownControl(FormControlSettingsDescriptor setting)
         {
             if (setting.DropDownTemplate.TemplateName == nameof(QuestionTemplateSelector.PickerTemplate))
             {
-                properties.Add(CreatePickerValidatableObject(setting, name, setting.DropDownTemplate));
+                properties.Add(CreatePickerValidatableObject(setting, setting.DropDownTemplate));
             }
             else
             {
@@ -167,7 +173,7 @@ namespace Enrollment.XPlatform.Utils
             }
         }
 
-        private void AddFormGroupArray(FormGroupArraySettingsDescriptor setting, string name)
+        private void AddFormGroupArray(FormGroupArraySettingsDescriptor setting)
         {
             if (setting.FormGroupTemplate == null
                 || string.IsNullOrEmpty(setting.FormGroupTemplate.TemplateName))
@@ -175,7 +181,7 @@ namespace Enrollment.XPlatform.Utils
 
             if (setting.FormGroupTemplate.TemplateName == nameof(QuestionTemplateSelector.FormGroupArrayTemplate))
             {
-                properties.Add(CreateFormArrayValidatableObject(setting, name));
+                properties.Add(CreateFormArrayValidatableObject(setting));
             }
             else
             {
@@ -183,11 +189,11 @@ namespace Enrollment.XPlatform.Utils
             }
         }
 
-        private void AddMultiSelectControl(MultiSelectFormControlSettingsDescriptor setting, string name)
+        private void AddMultiSelectControl(MultiSelectFormControlSettingsDescriptor setting)
         {
             if (setting.MultiSelectTemplate.TemplateName == nameof(QuestionTemplateSelector.MultiSelectTemplate))
             {
-                properties.Add(CreateMultiSelectValidatableObject(setting, name));
+                properties.Add(CreateMultiSelectValidatableObject(setting));
             }
             else
             {
@@ -195,34 +201,25 @@ namespace Enrollment.XPlatform.Utils
             }
         }
 
-        private IValidationRule[] GetValidationRules(FormControlSettingsDescriptor setting)
-            => setting.ValidationSetting?.Validators?.Select
-            (
-                validator => GetValidatorRule(validator, setting)
-            ).ToArray();
-
-        private IValidationRule GetValidatorRule(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting)
-            => ValidatorRuleFactory.GetValidatorRule(validator, setting, this.formSettings.ValidationMessages, properties);
-
-        private IValidatable CreateFormValidatableObject(FormGroupSettingsDescriptor setting, string name)
+        private IValidatable CreateFormValidatableObject(FormGroupSettingsDescriptor setting)
         {
             return (IValidatable)Activator.CreateInstance
             (
                 typeof(FormValidatableObject<>).MakeGenericType(Type.GetType(setting.ModelType)),
-                name,
+                GetFieldName(setting.Field),
                 setting,
                 new IValidationRule[] { },
                 this.contextProvider
             );
         }
 
-        private IValidatable CreateHiddenValidatableObject(FormControlSettingsDescriptor setting, string name, string templateName)
+        private IValidatable CreateHiddenValidatableObject(FormControlSettingsDescriptor setting, string templateName)
             => ValidatableObjectFactory.GetValidatable
             (
                 Activator.CreateInstance
                 (
                     typeof(HiddenValidatableObject<>).MakeGenericType(Type.GetType(setting.Type)),
-                    name,
+                    GetFieldName(setting.Field),
                     templateName,
                     GetValidationRules(setting),
                     this.uiNotificationService
@@ -230,13 +227,13 @@ namespace Enrollment.XPlatform.Utils
                 setting
             );
 
-        private IValidatable CreateCheckboxValidatableObject(FormControlSettingsDescriptor setting, string name, string templateName, string title)
+        private IValidatable CreateCheckboxValidatableObject(FormControlSettingsDescriptor setting, string templateName, string title)
             => ValidatableObjectFactory.GetValidatable
             (
                 Activator.CreateInstance
                 (
                     typeof(CheckboxValidatableObject),
-                    name,
+                    GetFieldName(setting.Field),
                     templateName,
                     title,
                     GetValidationRules(setting),
@@ -245,13 +242,13 @@ namespace Enrollment.XPlatform.Utils
                 setting
             );
 
-        private IValidatable CreateSwitchValidatableObject(FormControlSettingsDescriptor setting, string name, string templateName, string title)
+        private IValidatable CreateSwitchValidatableObject(FormControlSettingsDescriptor setting, string templateName, string title)
             => ValidatableObjectFactory.GetValidatable
             (
                 Activator.CreateInstance
                 (
                     typeof(SwitchValidatableObject),
-                    name,
+                    GetFieldName(setting.Field),
                     templateName,
                     title,
                     GetValidationRules(setting),
@@ -260,13 +257,13 @@ namespace Enrollment.XPlatform.Utils
                 setting
             );
 
-        private IValidatable CreateEntryValidatableObject(FormControlSettingsDescriptor setting, string name, string templateName, string placeholder, string stringFormat)
+        private IValidatable CreateEntryValidatableObject(FormControlSettingsDescriptor setting, string templateName, string placeholder, string stringFormat)
             => ValidatableObjectFactory.GetValidatable
             (
                 Activator.CreateInstance
                 (
                     typeof(EntryValidatableObject<>).MakeGenericType(Type.GetType(setting.Type)),
-                    name,
+                    GetFieldName(setting.Field),
                     templateName,
                     placeholder,
                     stringFormat,
@@ -276,13 +273,13 @@ namespace Enrollment.XPlatform.Utils
                 setting
             );
 
-        private IValidatable CreateLabelValidatableObject(FormControlSettingsDescriptor setting, string name, string templateName, string title, string placeholder, string stringFormat)
+        private IValidatable CreateLabelValidatableObject(FormControlSettingsDescriptor setting, string templateName, string title, string placeholder, string stringFormat)
             => ValidatableObjectFactory.GetValidatable
             (
                 Activator.CreateInstance
                 (
                     typeof(LabelValidatableObject<>).MakeGenericType(Type.GetType(setting.Type)),
-                    name,
+                    GetFieldName(setting.Field),
                     templateName,
                     title,
                     placeholder,
@@ -293,13 +290,13 @@ namespace Enrollment.XPlatform.Utils
                 setting
             );
 
-        private IValidatable CreateDatePickerValidatableObject(FormControlSettingsDescriptor setting, string name, string templateName)
+        private IValidatable CreateDatePickerValidatableObject(FormControlSettingsDescriptor setting, string templateName)
             => ValidatableObjectFactory.GetValidatable
             (
                 Activator.CreateInstance
                 (
                     typeof(DatePickerValidatableObject),
-                    name,
+                    GetFieldName(setting.Field),
                     templateName,
                     GetValidationRules(setting),
                     this.uiNotificationService
@@ -307,13 +304,13 @@ namespace Enrollment.XPlatform.Utils
                 setting
             );
 
-        private IValidatable CreatePickerValidatableObject(FormControlSettingsDescriptor setting, string name, DropDownTemplateDescriptor dropDownTemplate)
+        private IValidatable CreatePickerValidatableObject(FormControlSettingsDescriptor setting, DropDownTemplateDescriptor dropDownTemplate)
             => ValidatableObjectFactory.GetValidatable
             (
                 Activator.CreateInstance
                 (
                     typeof(PickerValidatableObject<>).MakeGenericType(Type.GetType(setting.Type)),
-                    name,
+                    GetFieldName(setting.Field),
                     dropDownTemplate,
                     GetValidationRules(setting),
                     this.contextProvider
@@ -321,7 +318,7 @@ namespace Enrollment.XPlatform.Utils
                 setting
             );
 
-        private IValidatable CreateMultiSelectValidatableObject(MultiSelectFormControlSettingsDescriptor setting, string name)
+        private IValidatable CreateMultiSelectValidatableObject(MultiSelectFormControlSettingsDescriptor setting)
         {
             return GetValidatable(Type.GetType(setting.MultiSelectTemplate.ModelType));
             IValidatable GetValidatable(Type elementType)
@@ -334,7 +331,7 @@ namespace Enrollment.XPlatform.Utils
                             typeof(ObservableCollection<>).MakeGenericType(elementType),
                             elementType
                         ),
-                        name,
+                        GetFieldName(setting.Field),
                         setting,
                         GetValidationRules(setting),
                         this.contextProvider
@@ -343,7 +340,7 @@ namespace Enrollment.XPlatform.Utils
                 );
         }
 
-        private IValidatable CreateFormArrayValidatableObject(FormGroupArraySettingsDescriptor setting, string name)
+        private IValidatable CreateFormArrayValidatableObject(FormGroupArraySettingsDescriptor setting)
         {
             return GetValidatable(Type.GetType(setting.ModelType));
             IValidatable GetValidatable(Type elementType)
@@ -354,11 +351,20 @@ namespace Enrollment.XPlatform.Utils
                         typeof(ObservableCollection<>).MakeGenericType(elementType),
                         elementType
                     ),
-                    name,
+                    GetFieldName(setting.Field),
                     setting,
                     new IValidationRule[] { },
                     this.contextProvider
                 );
         }
+
+        private IValidationRule[] GetValidationRules(FormControlSettingsDescriptor setting)
+            => setting.ValidationSetting?.Validators?.Select
+            (
+                validator => GetValidatorRule(validator, setting)
+            ).ToArray();
+
+        private IValidationRule GetValidatorRule(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting)
+            => ValidatorRuleFactory.GetValidatorRule(validator, setting, this.formSettings.ValidationMessages, properties);
     }
 }

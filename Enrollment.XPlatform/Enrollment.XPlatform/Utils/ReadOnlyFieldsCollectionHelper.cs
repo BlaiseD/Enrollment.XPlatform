@@ -2,7 +2,6 @@
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Enrollment.XPlatform.Utils
@@ -12,39 +11,41 @@ namespace Enrollment.XPlatform.Utils
         private IDetailGroupSettings formSettings;
         private ObservableCollection<IReadOnly> properties;
         private readonly IContextProvider contextProvider;
+        private readonly string parentName;
 
-        public ReadOnlyFieldsCollectionHelper(IDetailGroupSettings formSettings, IContextProvider contextProvider)
+        public ReadOnlyFieldsCollectionHelper(IDetailGroupSettings formSettings, IContextProvider contextProvider, ObservableCollection<IReadOnly> properties = null, string parentName = null)
         {
             this.formSettings = formSettings;
             this.contextProvider = contextProvider;
-            this.properties = new ObservableCollection<IReadOnly>();
+            this.properties = properties ?? new ObservableCollection<IReadOnly>();
+            this.parentName = parentName;
         }
 
         public ObservableCollection<IReadOnly> CreateFields()
         {
-            this.CreateFieldsCollection(this.formSettings.FieldSettings);
+            this.CreateFieldsCollection();
             return this.properties;
         }
 
-        private void CreateFieldsCollection(List<DetailItemSettingsDescriptor> fieldSettings, string parentName = null)
+        private void CreateFieldsCollection()
         {
-            fieldSettings.ForEach
+            this.formSettings.FieldSettings.ForEach
             (
                 setting =>
                 {
                     switch (setting)
                     {
                         case MultiSelectDetailControlSettingsDescriptor multiSelectDetailControlSettings:
-                            AddMultiSelectControl(multiSelectDetailControlSettings, GetFieldName(setting.Field, parentName));
+                            AddMultiSelectControl(multiSelectDetailControlSettings);
                             break;
                         case DetailControlSettingsDescriptor formControlSettings:
-                            AddFormControl(formControlSettings, GetFieldName(setting.Field, parentName));
+                            AddFormControl(formControlSettings);
                             break;
                         case DetailGroupSettingsDescriptor formGroupSettings:
-                            AddFormGroupSettings(formGroupSettings, parentName);
+                            AddFormGroupSettings(formGroupSettings);
                             break;
                         case DetailGroupArraySettingsDescriptor formGroupArraySettings:
-                            AddFormGroupArray(formGroupArraySettings, GetFieldName(setting.Field, parentName));
+                            AddFormGroupArray(formGroupArraySettings);
                             break;
                         default:
                             throw new ArgumentException($"{nameof(setting)}: B024F65A-50DC-4D45-B8F0-9EC0BE0E2FE2");
@@ -53,11 +54,11 @@ namespace Enrollment.XPlatform.Utils
             );
         }
 
-        private void AddMultiSelectControl(MultiSelectDetailControlSettingsDescriptor setting, string name)
+        private void AddMultiSelectControl(MultiSelectDetailControlSettingsDescriptor setting)
         {
             if (setting.MultiSelectTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.MultiSelectTemplate))
             {
-                properties.Add(CreateMultiSelectReadOnlyObject(setting, name));
+                properties.Add(CreateMultiSelectReadOnlyObject(setting));
             }
             else
             {
@@ -65,35 +66,35 @@ namespace Enrollment.XPlatform.Utils
             }
         }
 
-        private void AddFormControl(DetailControlSettingsDescriptor setting, string name)
+        private void AddFormControl(DetailControlSettingsDescriptor setting)
         {
             if (setting.TextTemplate != null)
-                AddTextControl(setting, name);
+                AddTextControl(setting);
             else if (setting.DropDownTemplate != null)
-                AddDropdownControl(setting, name);
+                AddDropdownControl(setting);
             else
                 throw new ArgumentException($"{nameof(setting)}: 88225DC7-F14A-4CB5-AC97-3FE63BFCC298");
         }
 
-        private void AddTextControl(DetailControlSettingsDescriptor setting, string name)
+        private void AddTextControl(DetailControlSettingsDescriptor setting)
         {
             if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.TextTemplate)
                 || setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.PasswordTemplate)
                 || setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.DateTemplate))
             {
-                properties.Add(CreateTextFieldReadOnlyObject(setting, name));
+                properties.Add(CreateTextFieldReadOnlyObject(setting));
             }
             else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.HiddenTemplate))
             {
-                properties.Add(CreateHiddenReadOnlyObject(setting, name));
+                properties.Add(CreateHiddenReadOnlyObject(setting));
             }
             else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.CheckboxTemplate))
             {
-                properties.Add(CreateCheckboxReadOnlyObject(setting, name));
+                properties.Add(CreateCheckboxReadOnlyObject(setting));
             }
             else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.SwitchTemplate))
             {
-                properties.Add(CreateSwitchReadOnlyObject(setting, name));
+                properties.Add(CreateSwitchReadOnlyObject(setting));
             }
             else
             {
@@ -101,11 +102,11 @@ namespace Enrollment.XPlatform.Utils
             }
         }
 
-        private void AddDropdownControl(DetailControlSettingsDescriptor setting, string name)
+        private void AddDropdownControl(DetailControlSettingsDescriptor setting)
         {
             if (setting.DropDownTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.PickerTemplate))
             {
-                properties.Add(CreatePickerReadOnlyObject(setting, name));
+                properties.Add(CreatePickerReadOnlyObject(setting));
             }
             else
             {
@@ -113,7 +114,7 @@ namespace Enrollment.XPlatform.Utils
             }
         }
 
-        private void AddFormGroupSettings(DetailGroupSettingsDescriptor setting, string parentName)
+        private void AddFormGroupSettings(DetailGroupSettingsDescriptor setting)
         {
             if (setting.FormGroupTemplate == null
                 || string.IsNullOrEmpty(setting.FormGroupTemplate.TemplateName))
@@ -122,23 +123,31 @@ namespace Enrollment.XPlatform.Utils
             switch (setting.FormGroupTemplate.TemplateName)
             {
                 case FromGroupTemplateNames.InlineFormGroupTemplate:
-                    AddFormGroupInline(setting, parentName);
+                    AddFormGroupInline(setting);
                     break;
                 case FromGroupTemplateNames.PopupFormGroupTemplate:
-                    AddFormGroupPopup(setting, parentName);
+                    AddFormGroupPopup(setting);
                     break;
                 default:
                     throw new ArgumentException($"{nameof(setting.FormGroupTemplate)}: D6A2C8DF-8581-46C3-A4CA-810C9A14E635");
             }
         }
 
-        private void AddFormGroupInline(DetailGroupSettingsDescriptor setting, string parentName)
-            => CreateFieldsCollection(setting.FieldSettings, GetFieldName(setting.Field, parentName));
+        private void AddFormGroupInline(DetailGroupSettingsDescriptor setting)
+        {
+            new ReadOnlyFieldsCollectionHelper
+            (
+                setting,
+                this.contextProvider,
+                this.properties,
+                GetFieldName(setting.Field)
+            ).CreateFields();
+        }
 
-        private void AddFormGroupPopup(DetailGroupSettingsDescriptor setting, string parentName) 
-            => properties.Add(CreateFormReadOnlyObject(setting, GetFieldName(setting.Field, parentName)));
+        private void AddFormGroupPopup(DetailGroupSettingsDescriptor setting)
+            => properties.Add(CreateFormReadOnlyObject(setting));
 
-        private void AddFormGroupArray(DetailGroupArraySettingsDescriptor setting, string name)
+        private void AddFormGroupArray(DetailGroupArraySettingsDescriptor setting)
         {
             if (setting.FormGroupTemplate == null
                 || string.IsNullOrEmpty(setting.FormGroupTemplate.TemplateName))
@@ -146,7 +155,7 @@ namespace Enrollment.XPlatform.Utils
 
             if (setting.FormGroupTemplate.TemplateName == nameof(QuestionTemplateSelector.FormGroupArrayTemplate))
             {
-                properties.Add(CreateFormArrayReadOnlyObject(setting, name));
+                properties.Add(CreateFormArrayReadOnlyObject(setting));
             }
             else
             {
@@ -154,60 +163,60 @@ namespace Enrollment.XPlatform.Utils
             }
         }
 
-        string GetFieldName(string field, string parentName)
+        string GetFieldName(string field)
                 => parentName == null ? field : $"{parentName}.{field}";
 
-        private IReadOnly CreateFormReadOnlyObject(DetailGroupSettingsDescriptor setting, string name)
+        private IReadOnly CreateFormReadOnlyObject(DetailGroupSettingsDescriptor setting)
             => (IReadOnly)Activator.CreateInstance
             (
                 typeof(FormReadOnlyObject<>).MakeGenericType(Type.GetType(setting.ModelType)),
-                name,
+                GetFieldName(setting.Field),
                 setting,
                 this.contextProvider
             );
 
-        private IReadOnly CreateHiddenReadOnlyObject(DetailControlSettingsDescriptor setting, string name)
+        private IReadOnly CreateHiddenReadOnlyObject(DetailControlSettingsDescriptor setting)
             => (IReadOnly)Activator.CreateInstance
             (
                 typeof(HiddenReadOnlyObject<>).MakeGenericType(Type.GetType(setting.Type)),
-                name,
+                GetFieldName(setting.Field),
                 setting
             );
 
-        private IReadOnly CreateCheckboxReadOnlyObject(DetailControlSettingsDescriptor setting, string name)
+        private IReadOnly CreateCheckboxReadOnlyObject(DetailControlSettingsDescriptor setting)
             => (IReadOnly)Activator.CreateInstance
             (
                 typeof(CheckboxReadOnlyObject),
-                name,
+                GetFieldName(setting.Field),
                 setting
             );
 
-        private IReadOnly CreateSwitchReadOnlyObject(DetailControlSettingsDescriptor setting, string name)
+        private IReadOnly CreateSwitchReadOnlyObject(DetailControlSettingsDescriptor setting)
             => (IReadOnly)Activator.CreateInstance
             (
                 typeof(SwitchReadOnlyObject),
-                name,
+                GetFieldName(setting.Field),
                 setting
             );
 
-        private IReadOnly CreateTextFieldReadOnlyObject(DetailControlSettingsDescriptor setting, string name)
+        private IReadOnly CreateTextFieldReadOnlyObject(DetailControlSettingsDescriptor setting)
             => (IReadOnly)Activator.CreateInstance
             (
                 typeof(TextFieldReadOnlyObject<>).MakeGenericType(Type.GetType(setting.Type)),
-                name,
+                GetFieldName(setting.Field),
                 setting
             );
 
-        private IReadOnly CreatePickerReadOnlyObject(DetailControlSettingsDescriptor setting, string name)
+        private IReadOnly CreatePickerReadOnlyObject(DetailControlSettingsDescriptor setting)
             => (IReadOnly)Activator.CreateInstance
             (
                 typeof(PickerReadOnlyObject<>).MakeGenericType(Type.GetType(setting.Type)),
-                name,
+                GetFieldName(setting.Field),
                 setting,
                 this.contextProvider
             );
 
-        private IReadOnly CreateMultiSelectReadOnlyObject(MultiSelectDetailControlSettingsDescriptor setting, string name)
+        private IReadOnly CreateMultiSelectReadOnlyObject(MultiSelectDetailControlSettingsDescriptor setting)
         {
             return GetValidatable(Type.GetType(setting.MultiSelectTemplate.ModelType));
             IReadOnly GetValidatable(Type elementType)
@@ -218,13 +227,13 @@ namespace Enrollment.XPlatform.Utils
                         typeof(ObservableCollection<>).MakeGenericType(elementType),
                         elementType
                     ),
-                    name,
+                    GetFieldName(setting.Field),
                     setting,
                     this.contextProvider
                 );
         }
 
-        private IReadOnly CreateFormArrayReadOnlyObject(DetailGroupArraySettingsDescriptor setting, string name)
+        private IReadOnly CreateFormArrayReadOnlyObject(DetailGroupArraySettingsDescriptor setting)
         {
             return GetValidatable(Type.GetType(setting.ModelType));
             IReadOnly GetValidatable(Type elementType)
@@ -235,7 +244,7 @@ namespace Enrollment.XPlatform.Utils
                         typeof(ObservableCollection<>).MakeGenericType(elementType),
                         elementType
                     ),
-                    name,
+                    GetFieldName(setting.Field),
                     setting,
                     this.contextProvider
                 );
