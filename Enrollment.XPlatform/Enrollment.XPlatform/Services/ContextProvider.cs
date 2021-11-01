@@ -4,7 +4,7 @@ namespace Enrollment.XPlatform.Services
 {
     public class ContextProvider : IContextProvider
     {
-        public ContextProvider(UiNotificationService uiNotificationService, IConditionalValidationConditionsBuilder conditionalValidationConditionsBuilder, IEntityStateUpdater entityStateUpdater, IEntityUpdater entityUpdater, IGetItemFilterBuilder getItemFilterBuilder, IHttpService httpService, IMapper mapper, ISearchSelectorBuilder searchSelectorBuilder, IPropertiesUpdater propertiesUpdater, IReadOnlyPropertiesUpdater readOnlyPropertiesUpdater)
+        public ContextProvider(UiNotificationService uiNotificationService, IConditionalValidationConditionsBuilder conditionalValidationConditionsBuilder, IEntityStateUpdater entityStateUpdater, IEntityUpdater entityUpdater, IGetItemFilterBuilder getItemFilterBuilder, IHttpService httpService, IMapper mapper, ISearchSelectorBuilder searchSelectorBuilder, IPropertiesUpdater propertiesUpdater, IReadOnlyPropertiesUpdater readOnlyPropertiesUpdater, IHideIfConditionalDirectiveBuilder hideIfConditionalDirectiveBuilder)
         {
             UiNotificationService = uiNotificationService;
             ConditionalValidationConditionsBuilder = conditionalValidationConditionsBuilder;
@@ -16,6 +16,7 @@ namespace Enrollment.XPlatform.Services
             SearchSelectorBuilder = searchSelectorBuilder;
             PropertiesUpdater = propertiesUpdater;
             ReadOnlyPropertiesUpdater = readOnlyPropertiesUpdater;
+            HideIfConditionalDirectiveBuilder = hideIfConditionalDirectiveBuilder;
 
             //passing IContextProvider to FieldsCollectionBuilder will create a circular dependency
             //so creating the instance here instead of using DI.
@@ -25,6 +26,7 @@ namespace Enrollment.XPlatform.Services
         }
 
         public IConditionalValidationConditionsBuilder ConditionalValidationConditionsBuilder { get; }
+        public IHideIfConditionalDirectiveBuilder HideIfConditionalDirectiveBuilder { get; }
         public IEntityStateUpdater EntityStateUpdater { get; }
         public IEntityUpdater EntityUpdater { get; }
         public IFieldsCollectionBuilder FieldsCollectionBuilder { get; }

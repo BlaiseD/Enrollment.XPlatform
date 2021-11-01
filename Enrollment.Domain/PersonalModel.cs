@@ -37,6 +37,20 @@ namespace Enrollment.Domain.Entities
 			}
 		}
 
+		private string _userIdString;
+		public string UserIdString
+		{
+			get { return _userIdString; }
+			set
+			{
+				if (_userIdString == value)
+					return;
+
+				_userIdString = value;
+				OnPropertyChanged();
+			}
+		}
+
 		private string _firstName;
 		[Display(Name = "First Name:")]
 		[Required]
@@ -70,6 +84,20 @@ namespace Enrollment.Domain.Entities
 					return;
 
 				_middleName = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private string _fullName;
+		public string FullName
+		{
+			get { return _fullName; }
+			set
+			{
+				if (_fullName == value)
+					return;
+
+				_fullName = value;
 				OnPropertyChanged();
 			}
 		}

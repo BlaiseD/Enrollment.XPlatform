@@ -131,6 +131,7 @@ namespace Enrollment.XPlatform.Tests
                 .AddSingleton<UiNotificationService, UiNotificationService>()
                 .AddSingleton<IFieldsCollectionBuilder, FieldsCollectionBuilder>()
                 .AddSingleton<IConditionalValidationConditionsBuilder, ConditionalValidationConditionsBuilder>()
+                .AddSingleton<IHideIfConditionalDirectiveBuilder, HideIfConditionalDirectiveBuilder>()
                 .AddSingleton<ISearchSelectorBuilder, SearchSelectorBuilder>()
                 .AddHttpClient()
                 .AddSingleton<IHttpService, HttpServiceMock>()

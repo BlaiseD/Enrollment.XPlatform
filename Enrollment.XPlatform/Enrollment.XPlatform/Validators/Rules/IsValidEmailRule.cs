@@ -16,7 +16,7 @@ namespace Enrollment.XPlatform.Validators.Rules
         {
             try
             {
-                return new System.Net.Mail.MailAddress(Value).Address == Value;
+                return string.IsNullOrEmpty(Value) ? true : new System.Net.Mail.MailAddress(Value).Address == Value;
             }
             catch
             {

@@ -16,6 +16,7 @@ namespace Enrollment.XPlatform.Views
         {
             this.detailFormEntityViewModel = detailFormViewModel.DetailFormEntityViewModel;
             AddContent();
+            Visual = VisualMarker.Material;
             BindingContext = this.detailFormEntityViewModel;
         }
 
@@ -45,7 +46,7 @@ namespace Enrollment.XPlatform.Views
                     StringFormat = multiBindingDescriptor.StringFormat,
                     Bindings = multiBindingDescriptor.Fields.Select
                     (
-                        field => new Binding($"{nameof(DetailFormEntityViewModel<Domain.EntityModelBase>.PropertiesDictionary)}[{field}].{nameof(IReadOnly.Value)}")
+                        field => new Binding($"{nameof(DetailFormEntityViewModelBase.BindingPropertiesDictionary)}[{field.ToBindingDictionaryKey()}].{nameof(IReadOnly.Value)}")
                     )
                     .Cast<BindingBase>()
                     .ToList()

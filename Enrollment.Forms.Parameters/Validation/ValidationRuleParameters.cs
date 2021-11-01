@@ -8,7 +8,7 @@ namespace Enrollment.Forms.Parameters.Validation
 		(
 			[NameValue(AttributeNames.DEFAULTVALUE, "RequiredRule")]
 			[Comments("The validation class")]
-			[Domain("IsLengthValidRule,IsMatchRule,IsValidEmailRule,IsValidPasswordRule,IsValueTrueRule,MustBeIntegerRule,MustBeNumberRule,MustBePositiveNumberRule,RangeRule,RequiredRule")]
+			[Domain("IsLengthValidRule,IsMatchRule,IsPatternMatchRule,IsValidEmailRule,IsValidPasswordRule,IsValueTrueRule,MustBeIntegerRule,MustBeNumberRule,MustBePositiveNumberRule,RangeRule,RequiredRule")]
 			string className,
 
 			[Comments("The validtion message")]

@@ -30,6 +30,7 @@ namespace Enrollment.XPlatform
                 .AddSingleton<IFieldsCollectionBuilder, FieldsCollectionBuilder>()
                 .AddSingleton<IReadOnlyFieldsCollectionBuilder, ReadOnlyFieldsCollectionBuilder>()
                 .AddSingleton<IConditionalValidationConditionsBuilder, ConditionalValidationConditionsBuilder>()
+                .AddSingleton<IHideIfConditionalDirectiveBuilder, HideIfConditionalDirectiveBuilder>()
                 .AddSingleton<IEntityStateUpdater, EntityStateUpdater>()
                 .AddSingleton<IEntityUpdater, EntityUpdater>()
                 .AddSingleton<IPropertiesUpdater, PropertiesUpdater>()

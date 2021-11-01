@@ -1,5 +1,4 @@
-﻿using Enrollment.Forms.Configuration;
-using Enrollment.XPlatform.Behaviours;
+﻿using Enrollment.XPlatform.Behaviours;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels;
 using Enrollment.XPlatform.ViewModels.SearchPage;
@@ -13,6 +12,7 @@ namespace Enrollment.XPlatform.Views
         {
             this.searchPageListViewModel = searchPageViewModel.SearchPageEntityViewModel;
             AddContent();
+            Visual = VisualMarker.Material;
             BindingContext = this.searchPageListViewModel;
         }
 

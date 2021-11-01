@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using Enrollment.Forms.Configuration.Directives;
 using Enrollment.XPlatform.ViewModels.Validatables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Enrollment.XPlatform.Validators
 {
@@ -17,32 +17,6 @@ namespace Enrollment.XPlatform.Validators
             this.mapper = mapper;
             this.uiNotificationService = uiNotificationService;
             propertyChangedSubscription = this.uiNotificationService.ValueChanged.Subscribe(PropertyChanged);
-        }
-
-        private void PropertyChanged(string fieldName)
-        {
-            Type thisClassType = this.GetType();
-            conditions.ForEach
-            (
-                condition => thisClassType.GetMethod(condition.DirectiveDefinition.FunctionName)
-                    .Invoke(this, GetArguments(condition))
-            );
-
-            object[] GetArguments(ValidateIf<TModel> condition)
-            {
-                if (condition.DirectiveDefinition.Arguments?.Any() != true)
-                    return new object[] { condition };
-
-                return condition.DirectiveDefinition.Arguments.Values.Aggregate
-                (
-                    new List<object> { condition }, 
-                    (list, next) =>
-                    {
-                        list.Add(next);
-                        return list;
-                    }
-                ).ToArray();
-            }
         }
 
         private readonly IMapper mapper;
@@ -79,14 +53,50 @@ namespace Enrollment.XPlatform.Validators
                     }
                 }
             }
-        }
 
-        bool CanValidate(TModel entity, Expression<Func<TModel, bool>> evaluator) 
-            => new List<TModel> { entity }.AsQueryable().All(evaluator);
+            bool CanValidate(TModel entity, Expression<Func<TModel, bool>> evaluator)
+                => new List<TModel> { entity }.AsQueryable().All(evaluator);
+        }
 
         public void Dispose()
         {
             DisposeSubscription(propertyChangedSubscription);
+        }
+
+        private void PropertyChanged(string fieldName)
+        {
+            conditions.ForEach
+            (
+                condition =>
+                {
+                    if (condition.DirectiveDefinition.FunctionName == nameof(ValidateIfManager<TModel>.Check))
+                    {
+                        if (condition.DirectiveDefinition.Arguments?.Any() != true)
+                            throw new ArgumentException($"{condition.DirectiveDefinition.Arguments}: F1DA1B2F-9397-439B-BC5B-AEFB85A9E4E5");
+
+                        const string fieldsToWatch = "fieldsToWatch";
+                        if (!condition.DirectiveDefinition.Arguments.TryGetValue(fieldsToWatch, out DirectiveArgumentDescriptor fieldsToWatchDescriptor))
+                            throw new ArgumentException($"{fieldsToWatch}: 36940976-0DAD-4171-A181-445216EC0A26");
+                        if (!typeof(IEnumerable<string>).IsAssignableFrom(fieldsToWatchDescriptor.Value.GetType()))
+                            throw new ArgumentException($"{fieldsToWatchDescriptor}: 1B131DAA-276A-438E-88A8-031AF504E421");
+
+                        if (
+                                new HashSet<string>
+                                (
+                                    ((IEnumerable<string>)fieldsToWatchDescriptor.Value).Select(f => GetFieldName(f, condition.ParentField))
+                                ).Contains(fieldName)
+                          )
+                        {
+                            Check(condition);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"{condition.DirectiveDefinition.FunctionName}: 8720D414-5352-4401-97C9-D6D7E9454292");
+                    }
+
+                }
+            );
         }
 
         private void DisposeSubscription(IDisposable subscription)
@@ -96,5 +106,8 @@ namespace Enrollment.XPlatform.Validators
                 subscription.Dispose();
             }
         }
+
+        private string GetFieldName(string field, string parentName)
+                => parentName == null ? field : $"{parentName}.{field}";
     }
 }

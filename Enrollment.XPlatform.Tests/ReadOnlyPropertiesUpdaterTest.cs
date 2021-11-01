@@ -177,6 +177,7 @@ namespace Enrollment.XPlatform.Tests
                 .AddSingleton<IFieldsCollectionBuilder, FieldsCollectionBuilder>()
                 .AddSingleton<IReadOnlyFieldsCollectionBuilder, ReadOnlyFieldsCollectionBuilder>()
                 .AddSingleton<IConditionalValidationConditionsBuilder, ConditionalValidationConditionsBuilder>()
+                .AddSingleton<IHideIfConditionalDirectiveBuilder, HideIfConditionalDirectiveBuilder>()
                 .AddSingleton<IGetItemFilterBuilder, GetItemFilterBuilder>()
                 .AddSingleton<ISearchSelectorBuilder, SearchSelectorBuilder>()
                 .AddSingleton<IEntityStateUpdater, EntityStateUpdater>()

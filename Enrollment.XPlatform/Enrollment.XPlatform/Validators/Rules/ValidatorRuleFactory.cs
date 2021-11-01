@@ -77,6 +77,8 @@ namespace Enrollment.XPlatform.Validators.Rules
                 return GetIsValidEmailRule();
             else if (validator.ClassName == nameof(IsValidPasswordRule))
                 return GetIsValidPasswordRule();
+            else if (validator.ClassName == nameof(IsPatternMatchRule))
+                return GetIsPatternMatchRule();
             else if (validator.ClassName == nameof(IsValueTrueRule))
                 return GetIsValueTrueRule();
             else
@@ -105,6 +107,21 @@ namespace Enrollment.XPlatform.Validators.Rules
                     validationMessage,
                     fields
                 );
+
+            IValidationRule GetIsPatternMatchRule()
+            {
+                const string pattern = "pattern";
+                if (!validator.Arguments.TryGetValue(pattern, out ValidatorArgumentDescriptor patternDescriptor))
+                    throw new ArgumentException($"{pattern}: 086E280E-03C7-4900-A8DB-2C570CEEC91A");
+
+                return new IsPatternMatchRule
+                (
+                    GetFieldName(setting.Field),
+                    validationMessage,
+                    fields,
+                    (string)patternDescriptor.Value
+                );
+            }
 
             IValidationRule GetIsLengthValidRule()
             {

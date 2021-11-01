@@ -8,7 +8,10 @@ namespace Enrollment.BSL.AutoMapperProfiles
     {
         public EnrollmentProfile()
         {
-            CreateMap<Personal, PersonalModel>().ReverseMap();
+            CreateMap<Personal, PersonalModel>()
+                .ForMember(dest => dest.FullName, opts => opts.MapFrom(src => src.FirstName + " " + src.LastName))
+                .ForMember(dest => dest.UserIdString, opts => opts.MapFrom(src => src.UserId.ToString()))
+                .ReverseMap();
             CreateMap<Academic, AcademicModel>().ReverseMap();
             CreateMap<Admissions, AdmissionsModel>().ReverseMap();
             CreateMap<Certification, CertificationModel>().ReverseMap();

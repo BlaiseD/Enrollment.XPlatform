@@ -103,6 +103,11 @@ namespace Enrollment.BSL
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Enrollment.BSL v1"));
+                app.UseExceptionHandler("/error-local-development");
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
             }
 
             app.UseHttpsRedirection();

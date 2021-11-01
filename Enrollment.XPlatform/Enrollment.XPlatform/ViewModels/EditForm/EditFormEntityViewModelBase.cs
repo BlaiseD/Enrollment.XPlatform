@@ -3,6 +3,7 @@ using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Flow.Requests;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
+using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.Validatables;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,8 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
             Properties = contextProvider.FieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
         }
 
-        public Dictionary<string, IValidatable> PropertiesDictionary
-            => Properties.ToDictionary(p => p.Name);
+        public Dictionary<string, IValidatable> BindingPropertiesDictionary
+            => Properties.ToDictionary(p => p.Name.ToBindingDictionaryKey());
 
         public EditFormSettingsDescriptor FormSettings { get; set; }
         public ObservableCollection<IValidatable> Properties { get; set; }

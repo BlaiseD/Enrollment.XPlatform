@@ -225,6 +225,24 @@ namespace Enrollment.XPlatform.ViewModels.SearchPage
             }
         }
 
+        private ICommand _selectAndNavigateCommand;
+        public ICommand SelectAndNavigateCommand
+        {
+            get
+            {
+                if (_selectAndNavigateCommand != null)
+                    return _selectAndNavigateCommand;
+
+                _selectAndNavigateCommand = new Command<CommandButtonDescriptor>
+                (
+                     SelectAndNavigate,
+                    (button) => SelectedItem != null
+                );
+
+                return _selectAndNavigateCommand;
+            }
+        }
+
         private void Filter()
         {
             this.FormSettings.SortCollection.Skip = defaultSkip;
@@ -236,6 +254,7 @@ namespace Enrollment.XPlatform.ViewModels.SearchPage
             (EditCommand as Command).ChangeCanExecute();
             (DeleteCommand as Command).ChangeCanExecute();
             (DetailCommand as Command).ChangeCanExecute();
+            (SelectAndNavigateCommand as Command).ChangeCanExecute();
         }
 
         private Task<BaseResponse> GetList()
@@ -289,6 +308,12 @@ namespace Enrollment.XPlatform.ViewModels.SearchPage
             foreach (TModel model in getListResponse.List)
                 this.Items.Add(model);
 
+        }
+
+        private void SelectAndNavigate(CommandButtonDescriptor button)
+        {
+            SetItemFilter();
+            NavigateNext(button);
         }
 
         private void Add(CommandButtonDescriptor button)

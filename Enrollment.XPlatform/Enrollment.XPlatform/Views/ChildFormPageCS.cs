@@ -36,12 +36,13 @@ namespace Enrollment.XPlatform.Views
                                         }.AddBinding(Label.TextProperty, new Binding("Title"))
                                     }
                                 },
-                                new CollectionView
+                                new ScrollView
                                 {
-                                    Style = LayoutHelpers.GetStaticStyleResource("ChildFormPopupCollectionViewStyle"),
-                                    ItemTemplate = EditFormViewHelpers.QuestionTemplateSelector
-                                }
-                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding("Properties")),
+                                    Style = LayoutHelpers.GetStaticStyleResource("ChildFormPopupScrollViewStyle"),
+                                    Content = new StackLayout()
+                                    .AddBinding(BindableLayout.ItemsSourceProperty, new Binding(nameof(FormValidatableObject<object>.Properties)))
+                                    .SetDataTemplateSelector(EditFormViewHelpers.QuestionTemplateSelector)
+                                },
                                 new BoxView { Style = LayoutHelpers.GetStaticStyleResource("PopupFooterSeparatorStyle") },
                                 new Grid
                                 {
@@ -78,6 +79,7 @@ namespace Enrollment.XPlatform.Views
             };
 
             this.BackgroundColor = Color.Transparent;
+            Visual = VisualMarker.Material;
             this.BindingContext = this.formValidatable;
         }
 

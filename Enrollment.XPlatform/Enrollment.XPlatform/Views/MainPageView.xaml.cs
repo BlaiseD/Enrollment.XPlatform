@@ -20,6 +20,7 @@ namespace Enrollment.XPlatform.Views
         public MainPageView()
         {
             InitializeComponent();
+            Visual = VisualMarker.Material;
             flyout.ListView.SelectionChanged += ListView_SelectionChanged;
             ViewModel = App.ServiceProvider.GetRequiredService<MainPageViewModel>();
             this.BindingContext = ViewModel;

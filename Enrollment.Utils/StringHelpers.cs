@@ -2,6 +2,8 @@
 {
     public static class StringHelpers
     {
+        public static string NullString = null;
+
         public static bool IsValidEmail(string email)
         {
             try

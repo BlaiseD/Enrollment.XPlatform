@@ -14,6 +14,7 @@ namespace Enrollment.XPlatform.Views
         {
             this.textPageScreenViewModel = textPageViewModel.TextPageScreenViewModel;
             AddContent();
+            Visual = VisualMarker.Material;
             BindingContext = this.textPageScreenViewModel;
         }
 

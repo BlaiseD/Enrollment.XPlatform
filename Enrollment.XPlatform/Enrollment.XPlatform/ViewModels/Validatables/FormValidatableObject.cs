@@ -20,8 +20,33 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             this.entityUpdater = contextProvider.EntityUpdater;
             this.propertiesUpdater = contextProvider.PropertiesUpdater;
             this.fieldsCollectionBuilder = contextProvider.FieldsCollectionBuilder;
-            this.updateOnlyFieldsCollectionBuilder = contextProvider.UpdateOnlyFieldsCollectionBuilder;
+            this.updateOnlyFieldsCollectionBuilder = contextProvider.UpdateOnlyFieldsCollectionBuilder;      
             CreateFieldsCollection();
+
+            this.validateIfManager = new ValidateIfManager<T>
+            (
+                Properties,
+                contextProvider.ConditionalValidationConditionsBuilder.GetConditions<T>
+                (
+                    FormSettings,
+                    Properties
+                ),
+                contextProvider.Mapper,
+                this.uiNotificationService
+            );
+
+            this.hideIfManager = new HideIfManager<T>
+            (
+                Properties,
+                contextProvider.HideIfConditionalDirectiveBuilder.GetConditions<T>
+                (
+                    FormSettings,
+                    Properties
+                ),
+                contextProvider.Mapper,
+                this.uiNotificationService
+            );
+
             propertyChangedSubscription = this.uiNotificationService.ValueChanged.Subscribe(FieldChanged);
         }
 
@@ -36,6 +61,8 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
         private readonly IEntityUpdater entityUpdater;
         private readonly IPropertiesUpdater propertiesUpdater;
         private readonly IDisposable propertyChangedSubscription;
+        private readonly ValidateIfManager<T> validateIfManager;
+        private readonly HideIfManager<T> hideIfManager;
 
         protected readonly IFieldsCollectionBuilder fieldsCollectionBuilder;
         private readonly IUpdateOnlyFieldsCollectionBuilder updateOnlyFieldsCollectionBuilder;
@@ -188,6 +215,8 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
         public virtual void Dispose()
         {
+            Dispose(this.validateIfManager);
+            Dispose(this.hideIfManager);
             Dispose(this.propertyChangedSubscription);
         }
 

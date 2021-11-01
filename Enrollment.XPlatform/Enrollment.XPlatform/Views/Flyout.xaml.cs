@@ -20,6 +20,7 @@ namespace Enrollment.XPlatform.Views
         public Flyout()
         {
             InitializeComponent();
+            Visual = VisualMarker.Material;
             ListView = MenuItemsListView;
         }
     }

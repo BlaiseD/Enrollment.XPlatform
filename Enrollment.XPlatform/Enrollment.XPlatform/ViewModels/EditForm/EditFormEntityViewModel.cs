@@ -28,7 +28,19 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
                 Properties,
                 contextProvider.ConditionalValidationConditionsBuilder.GetConditions<TModel>
                 (
-                    FormSettings.ConditionalDirectives,
+                    FormSettings,
+                    Properties
+                ),
+                contextProvider.Mapper,
+                this.UiNotificationService
+            );
+
+            this.hideIfManager = new HideIfManager<TModel>
+            (
+                Properties,
+                contextProvider.HideIfConditionalDirectiveBuilder.GetConditions<TModel>
+                (
+                    FormSettings,
                     Properties
                 ),
                 contextProvider.Mapper,
@@ -46,6 +58,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
         private readonly IPropertiesUpdater propertiesUpdater;
         private readonly IMapper mapper;
         private readonly ValidateIfManager<TModel> validateIfManager;
+        private readonly HideIfManager<TModel> hideIfManager;
         private TModel entity;
         private Dictionary<string, object> originalEntityDictionary = new Dictionary<string, object>();
         private readonly IDisposable propertyChangedSubscription;
@@ -54,6 +67,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
         {
             base.Dispose();
             Dispose(this.validateIfManager);
+            Dispose(this.hideIfManager);
             Dispose(this.propertyChangedSubscription);
         }
 

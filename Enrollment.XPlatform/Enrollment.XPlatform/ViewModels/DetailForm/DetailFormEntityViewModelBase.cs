@@ -3,6 +3,7 @@ using Enrollment.Forms.Configuration.DetailForm;
 using Enrollment.XPlatform.Flow.Requests;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
+using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,8 +24,8 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
             Properties = contextProvider.ReadOnlyFieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
         }
 
-        public Dictionary<string, IReadOnly> PropertiesDictionary
-            => Properties.ToDictionary(p => p.Name);
+        public Dictionary<string, IReadOnly> BindingPropertiesDictionary
+            => Properties.ToDictionary(p => p.Name.ToBindingDictionaryKey());
 
         public DetailFormSettingsDescriptor FormSettings { get; set; }
         public ObservableCollection<IReadOnly> Properties { get; set; }

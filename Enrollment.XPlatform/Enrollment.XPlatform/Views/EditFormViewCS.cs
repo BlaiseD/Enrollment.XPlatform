@@ -15,6 +15,7 @@ namespace Enrollment.XPlatform.Views
         {
             this.editFormEntityViewModel = editFormViewModel.EditFormEntityViewModel;
             AddContent();
+            Visual = VisualMarker.Material;
             BindingContext = this.editFormEntityViewModel;
         }
 
@@ -45,7 +46,7 @@ namespace Enrollment.XPlatform.Views
                     StringFormat = multiBindingDescriptor.StringFormat,
                     Bindings = multiBindingDescriptor.Fields.Select
                     (
-                        field => new Binding($"{nameof(EditFormEntityViewModel<Domain.EntityModelBase>.PropertiesDictionary)}[{field}].{nameof(IValidatable.Value)}")
+                        field => new Binding($"{nameof(EditFormEntityViewModelBase.BindingPropertiesDictionary)}[{field.ToBindingDictionaryKey()}].{nameof(IValidatable.Value)}")
                     )
                     .Cast<BindingBase>()
                     .ToList()
@@ -70,12 +71,12 @@ namespace Enrollment.XPlatform.Views
                                     Label.TextProperty, 
                                     GetHeaderBinding(editFormEntityViewModel.FormSettings.HeaderBindings)
                                 ),
-                                new CollectionView
+                                new ScrollView
                                 {
-                                    SelectionMode = SelectionMode.None,
-                                    ItemTemplate = EditFormViewHelpers.QuestionTemplateSelector
+                                    Content = new StackLayout()
+                                    .AddBinding(BindableLayout.ItemsSourceProperty, new Binding(nameof(EditFormEntityViewModelBase.Properties)))
+                                    .SetDataTemplateSelector(EditFormViewHelpers.QuestionTemplateSelector)
                                 }
-                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding(nameof(EditFormEntityViewModelBase.Properties))),
                             }
                         }
                     ),

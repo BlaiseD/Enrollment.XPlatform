@@ -21,6 +21,8 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
         private bool _isValid = true;
         private string _name;
         private bool _isDirty;
+        private bool _isVisible = true;
+        private bool _isEnabled = true;
         private Dictionary<string, string> _errors = new Dictionary<string, string>();
         private string _templateName;
         protected UiNotificationService uiNotificationService;
@@ -77,6 +79,32 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
                     return;
 
                 _isValid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                if (_isVisible == value)
+                    return;
+
+                _isVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if (_isEnabled == value)
+                    return;
+
+                _isEnabled = value;
                 OnPropertyChanged();
             }
         }

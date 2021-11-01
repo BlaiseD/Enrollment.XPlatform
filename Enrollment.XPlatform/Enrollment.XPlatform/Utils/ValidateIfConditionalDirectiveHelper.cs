@@ -1,0 +1,121 @@
+﻿using AutoMapper;
+using Enrollment.Forms.Configuration.Directives;
+using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.XPlatform.Validators;
+using Enrollment.XPlatform.ViewModels.Validatables;
+using LogicBuilder.Expressions.Utils.ExpressionBuilder.Lambda;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace Enrollment.XPlatform.Utils
+{
+    public class ValidateIfConditionalDirectiveHelper<TModel>
+    {
+        private readonly IMapper mapper;
+        private readonly string parentName;
+        private readonly List<ValidateIf<TModel>> parentList;
+        private readonly IFormGroupSettings formGroupSettings;
+        private readonly IEnumerable<IValidatable> properties;
+        const string PARAMETERS_KEY = "parameters";
+
+        public ValidateIfConditionalDirectiveHelper(IFormGroupSettings formGroupSettings, IEnumerable<IValidatable> properties, IMapper mapper, List<ValidateIf<TModel>> parentList = null, string parentName = null)
+        {
+            this.mapper = mapper;
+            this.parentList = parentList;
+            this.parentName = parentName;
+            this.formGroupSettings = formGroupSettings;
+            this.properties = properties;
+        }
+
+        public List<ValidateIf<TModel>> GetConditions()
+        {
+            if (formGroupSettings.ConditionalDirectives == null)
+                return this.parentList ?? new List<ValidateIf<TModel>>();
+
+            IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(p => p.Name);
+
+            List<ValidateIf<TModel>> conditions = formGroupSettings.ConditionalDirectives.Aggregate(parentList ?? new List<ValidateIf<TModel>>(), (list, kvp) =>
+            {
+                kvp.Value.ForEach
+                (
+                    descriptor =>
+                    {
+                        if (descriptor.Definition.ClassName != nameof(ValidateIf<TModel>))
+                            return;
+
+                        const string validationsToWatchKey = "validationsToWatch";
+                        if (!descriptor.Definition.Arguments.TryGetValue(validationsToWatchKey, out DirectiveArgumentDescriptor validationsToWatchDescriptor))
+                            throw new ArgumentException($"{validationsToWatchKey}: A5B39033-62C9-4B5D-A800-754054169502");
+                        if (!typeof(IEnumerable<string>).IsAssignableFrom(validationsToWatchDescriptor.Value.GetType()))
+                            throw new ArgumentException($"{validationsToWatchDescriptor}: 60E64249-A275-4992-8444-9DC85DF108B9");
+
+                        HashSet<string> validationsToWatch = new HashSet<string>((IEnumerable<string>)validationsToWatchDescriptor.Value);
+
+                        IValidatable validatable = null;
+                        try
+                        {
+                            validatable = propertiesDictionary[GetFieldName(kvp.Key)];
+                        }
+                        catch (Exception ex)
+                        {
+
+                            throw;
+                        }
+
+                        validatable.Validations.ForEach
+                        (
+                            validationRule =>
+                            {
+                                if (validationsToWatch.Contains(validationRule.ClassName) == false)
+                                    return;
+                                Type t = typeof(TModel);
+                                list.Add
+                                (
+                                    new ValidateIf<TModel>
+                                    {
+                                        Field = GetFieldName(kvp.Key),
+                                        ParentField = this.parentName,
+                                        Validator = validationRule,
+                                        Evaluator = (Expression<Func<TModel, bool>>)mapper.Map<FilterLambdaOperator>
+                                        (
+                                            descriptor.Condition,
+                                            opts => opts.Items[PARAMETERS_KEY] = new Dictionary<string, ParameterExpression>()
+                                        ).Build(),
+                                        DirectiveDefinition = descriptor.Definition
+                                    }
+                                );
+                            }
+                        );
+                    }
+                );
+
+                return list;
+            });
+
+            formGroupSettings.FieldSettings.ForEach(descriptor =>
+            {
+                if (!(descriptor is FormGroupSettingsDescriptor childForm))
+                    return;
+
+                if ((childForm.FormGroupTemplate?.TemplateName) != FromGroupTemplateNames.InlineFormGroupTemplate)
+                    return;
+
+                conditions = new ValidateIfConditionalDirectiveHelper<TModel>
+                (
+                    childForm,
+                    properties,
+                    mapper,
+                    conditions,
+                    GetFieldName(childForm.Field)
+                ).GetConditions();
+            });
+
+            return conditions;
+        }
+
+        string GetFieldName(string field)
+                => parentName == null ? field : $"{parentName}.{field}";
+    }
+}

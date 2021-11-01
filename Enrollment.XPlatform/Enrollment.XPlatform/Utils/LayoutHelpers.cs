@@ -46,6 +46,18 @@ namespace Enrollment.XPlatform.Utils
             return bindable;
         }
 
+        public static T SetGridRow<T>(this T bindable, int row) where T : BindableObject
+        {
+            Grid.SetRow(bindable, row);
+            return bindable;
+        }
+
+        public static T SetDataTemplateSelector<T>(this T bindable, DataTemplateSelector dataTemplateSelector) where T : BindableObject
+        {
+            BindableLayout.SetItemTemplateSelector(bindable, dataTemplateSelector);
+            return bindable;
+        }
+
         public static T SetAbsoluteLayoutBounds<T>(this T bindable, Rectangle rectangle) where T : BindableObject
         {
             AbsoluteLayout.SetLayoutBounds(bindable, rectangle);
@@ -253,5 +265,15 @@ namespace Enrollment.XPlatform.Utils
             }
             .AddBinding(MenuItem.CommandProperty, new Binding(button.Command))
             .SetAutomationPropertiesName(button.ShortString);
+
+        /// <summary>
+        /// For inline child forms the key includes a period which does not work for binding dictionaries.
+        /// i.e. new Binding(@"[Property.ChildProperty].Value") does not work.
+        /// We're using new Binding(@"[Property_ChildProperty].Value") instead
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        internal static string ToBindingDictionaryKey(this string key)
+            => key.Replace(".", "_");
     }
 }

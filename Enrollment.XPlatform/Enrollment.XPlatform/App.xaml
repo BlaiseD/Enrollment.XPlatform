@@ -259,6 +259,10 @@
                 <Setter Property="HeightRequest" Value="340"/>
             </Style>
 
+            <Style TargetType="ScrollView" x:Key="ChildFormPopupScrollViewStyle">
+                <Setter Property="HeightRequest" Value="340"/>
+            </Style>
+
             <Style TargetType="Grid" x:Key="PopupFooterStyle">
                 <Setter Property="BackgroundColor" Value="Transparent"/>
                 <Setter Property="HeightRequest" Value="60"/>

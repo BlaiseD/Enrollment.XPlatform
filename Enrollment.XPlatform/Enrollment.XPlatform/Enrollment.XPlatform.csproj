@@ -18,6 +18,10 @@
     <None Remove="Rulesets\nav_admin.resources" />
     <None Remove="Rulesets\nav_home.module" />
     <None Remove="Rulesets\nav_home.resources" />
+    <None Remove="Rulesets\nav_personal.module" />
+    <None Remove="Rulesets\nav_personal.resources" />
+    <None Remove="Rulesets\personal.module" />
+    <None Remove="Rulesets\personal.resources" />
     <None Remove="Rulesets\VariablesMetadata.xml" />
   </ItemGroup>
 
@@ -30,6 +34,10 @@
     <EmbeddedResource Include="Rulesets\nav_admin.resources" />
     <EmbeddedResource Include="Rulesets\nav_home.module" />
     <EmbeddedResource Include="Rulesets\nav_home.resources" />
+    <EmbeddedResource Include="Rulesets\nav_personal.module" />
+    <EmbeddedResource Include="Rulesets\nav_personal.resources" />
+    <EmbeddedResource Include="Rulesets\personal.module" />
+    <EmbeddedResource Include="Rulesets\personal.resources" />
     <EmbeddedResource Include="Rulesets\VariablesMetadata.xml" />
   </ItemGroup>
 
@@ -41,7 +49,8 @@
     <PackageReference Include="Polly" Version="7.2.2" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />  
+    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2196" />
   </ItemGroup>
 
   <ItemGroup>
