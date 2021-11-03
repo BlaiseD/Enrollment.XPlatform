@@ -56,6 +56,7 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName))
 				.ForMember(dest => dest.DataType, opts => opts.MapFrom(x => x.DataType.AssemblyQualifiedName));
 			CreateMap<FormsCollectionDisplayTemplateParameters, FormsCollectionDisplayTemplateDescriptor>();
+			CreateMap<GroupBoxSettingsParameters, FormGroupBoxSettingsDescriptor>();
 			CreateMap<HyperLinkLabelItemParameters, HyperLinkLabelItemDescriptor>();
 			CreateMap<HyperLinkSpanItemParameters, HyperLinkSpanItemDescriptor>();
 			CreateMap<ItemBindingParameters, ItemBindingDescriptor>();
@@ -95,6 +96,7 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 				.Include<FormControlSettingsParameters, FormControlSettingsDescriptor>()
 				.Include<FormGroupArraySettingsParameters, FormGroupArraySettingsDescriptor>()
 				.Include<FormGroupSettingsParameters, FormGroupSettingsDescriptor>()
+				.Include<GroupBoxSettingsParameters, FormGroupBoxSettingsDescriptor>()
 				.Include<MultiSelectFormControlSettingsParameters, MultiSelectFormControlSettingsDescriptor>();
 
             CreateMap<DetailItemSettingsParameters, DetailItemSettingsDescriptor>()

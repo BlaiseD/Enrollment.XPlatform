@@ -4,8 +4,10 @@ using Enrollment.Forms.Configuration.Validation;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Validators;
 using Enrollment.XPlatform.Validators.Rules;
+using Enrollment.XPlatform.ViewModels;
 using Enrollment.XPlatform.ViewModels.Validatables;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -14,29 +16,45 @@ namespace Enrollment.XPlatform.Utils
     internal class FieldsCollectionHelper
     {
         private IFormGroupSettings formSettings;
-        protected ObservableCollection<IValidatable> properties;
+        protected EditFormLayout formLayout;
         private readonly UiNotificationService uiNotificationService;
         protected readonly IContextProvider contextProvider;
         private readonly string parentName;
 
-        public FieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, ObservableCollection<IValidatable> properties = null, string parentName = null)
+        public FieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, EditFormLayout formLayout = null, string parentName = null)
         {
             this.formSettings = formSettings;
             this.contextProvider = contextProvider;
             this.uiNotificationService = contextProvider.UiNotificationService;
-            this.properties = properties ?? new ObservableCollection<IValidatable>();
+
+            if(formLayout == null)
+            {
+                this.formLayout = new EditFormLayout();
+                if (this.formSettings.FieldSettings.ShouldCreateDefaultControlGroupBox())
+                    this.formLayout.AddControlGroupBox(this.formSettings);
+            }
+            else
+            {
+                this.formLayout = formLayout;
+            }
+            
             this.parentName = parentName;
         }
 
-        public ObservableCollection<IValidatable> CreateFields()
+        public EditFormLayout CreateFields()
         {
             this.CreateFieldsCollection();
-            return this.properties;
+            return this.formLayout;
         }
 
         private void CreateFieldsCollection()
         {
-            this.formSettings.FieldSettings.ForEach
+            CreateFieldsCollection(this.formSettings.FieldSettings);
+        }
+
+        private void CreateFieldsCollection(List<FormItemSettingsDescriptor> fieldSettings)
+        {
+            fieldSettings.ForEach
             (
                 setting =>
                 {
@@ -54,11 +72,24 @@ namespace Enrollment.XPlatform.Utils
                         case FormGroupArraySettingsDescriptor formGroupArraySettings:
                             AddFormGroupArray(formGroupArraySettings);
                             break;
+                        case FormGroupBoxSettingsDescriptor groupBoxSettingsDescriptor:
+                            AddGroupBoxSettings(groupBoxSettingsDescriptor);
+                            break;
                         default:
                             throw new ArgumentException($"{nameof(setting)}: B024F65A-50DC-4D45-B8F0-9EC0BE0E2FE2");
                     }
                 }
             );
+        }
+
+        private void AddGroupBoxSettings(FormGroupBoxSettingsDescriptor setting)
+        {
+            this.formLayout.AddControlGroupBox(setting);
+
+            if (setting.FieldSettings.Any(s => s is FormGroupBoxSettingsDescriptor))
+                throw new ArgumentException($"{nameof(setting.FieldSettings)}: B11BFDCD-9612-4584-A420-8FE511A8B64A");
+
+            CreateFieldsCollection(setting.FieldSettings);
         }
 
         protected string GetFieldName(string field)
@@ -85,7 +116,7 @@ namespace Enrollment.XPlatform.Utils
 
         private void AddFormGroupPopup(FormGroupSettingsDescriptor setting)
         {
-            properties.Add(CreateFormValidatableObject(setting));
+            formLayout.Add(CreateFormValidatableObject(setting));
         }
 
         protected virtual void AddFormGroupInline(FormGroupSettingsDescriptor setting)
@@ -94,7 +125,7 @@ namespace Enrollment.XPlatform.Utils
             (
                 setting,
                 this.contextProvider,
-                this.properties,
+                this.formLayout,
                 GetFieldName(setting.Field)
             ).CreateFields();
         }
@@ -114,7 +145,7 @@ namespace Enrollment.XPlatform.Utils
             if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.TextTemplate)
                 || textTemplate.TemplateName == nameof(QuestionTemplateSelector.PasswordTemplate))
             {
-                properties.Add
+                formLayout.Add
                 (
                     CreateEntryValidatableObject
                     (
@@ -127,23 +158,23 @@ namespace Enrollment.XPlatform.Utils
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.DateTemplate))
             {
-                properties.Add(CreateDatePickerValidatableObject(setting, textTemplate.TemplateName));
+                formLayout.Add(CreateDatePickerValidatableObject(setting, textTemplate.TemplateName));
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.HiddenTemplate))
             {
-                properties.Add(CreateHiddenValidatableObject(setting, textTemplate.TemplateName));
+                formLayout.Add(CreateHiddenValidatableObject(setting, textTemplate.TemplateName));
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.CheckboxTemplate))
             {
-                properties.Add(CreateCheckboxValidatableObject(setting, textTemplate.TemplateName, setting.Title));
+                formLayout.Add(CreateCheckboxValidatableObject(setting, textTemplate.TemplateName, setting.Title));
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.SwitchTemplate))
             {
-                properties.Add(CreateSwitchValidatableObject(setting, textTemplate.TemplateName, setting.Title));
+                formLayout.Add(CreateSwitchValidatableObject(setting, textTemplate.TemplateName, setting.Title));
             }
             else if (textTemplate.TemplateName == nameof(QuestionTemplateSelector.LabelTemplate))
             {
-                properties.Add
+                formLayout.Add
                 (
                     CreateLabelValidatableObject
                     (
@@ -165,7 +196,7 @@ namespace Enrollment.XPlatform.Utils
         {
             if (setting.DropDownTemplate.TemplateName == nameof(QuestionTemplateSelector.PickerTemplate))
             {
-                properties.Add(CreatePickerValidatableObject(setting, setting.DropDownTemplate));
+                formLayout.Add(CreatePickerValidatableObject(setting, setting.DropDownTemplate));
             }
             else
             {
@@ -181,7 +212,7 @@ namespace Enrollment.XPlatform.Utils
 
             if (setting.FormGroupTemplate.TemplateName == nameof(QuestionTemplateSelector.FormGroupArrayTemplate))
             {
-                properties.Add(CreateFormArrayValidatableObject(setting));
+                formLayout.Add(CreateFormArrayValidatableObject(setting));
             }
             else
             {
@@ -193,7 +224,7 @@ namespace Enrollment.XPlatform.Utils
         {
             if (setting.MultiSelectTemplate.TemplateName == nameof(QuestionTemplateSelector.MultiSelectTemplate))
             {
-                properties.Add(CreateMultiSelectValidatableObject(setting));
+                formLayout.Add(CreateMultiSelectValidatableObject(setting));
             }
             else
             {
@@ -365,6 +396,12 @@ namespace Enrollment.XPlatform.Utils
             ).ToArray();
 
         private IValidationRule GetValidatorRule(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting)
-            => new ValidatorRuleFactory(this.parentName).GetValidatorRule(validator, setting, this.formSettings.ValidationMessages, properties);
+            => new ValidatorRuleFactory(this.parentName).GetValidatorRule
+            (
+                validator, 
+                setting, 
+                this.formSettings.ValidationMessages,
+                formLayout.Properties
+            );
     }
 }

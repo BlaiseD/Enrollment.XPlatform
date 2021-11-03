@@ -111,7 +111,8 @@ namespace Enrollment.XPlatform.Validators.Rules
             IValidationRule GetIsPatternMatchRule()
             {
                 const string pattern = "pattern";
-                if (!validator.Arguments.TryGetValue(pattern, out ValidatorArgumentDescriptor patternDescriptor))
+                ValidatorArgumentDescriptor patternDescriptor = null;
+                if (validator.Arguments?.TryGetValue(pattern, out patternDescriptor) != true)
                     throw new ArgumentException($"{pattern}: 086E280E-03C7-4900-A8DB-2C570CEEC91A");
 
                 return new IsPatternMatchRule
@@ -119,7 +120,7 @@ namespace Enrollment.XPlatform.Validators.Rules
                     GetFieldName(setting.Field),
                     validationMessage,
                     fields,
-                    (string)patternDescriptor.Value
+                    (string)patternDescriptor?.Value
                 );
             }
 

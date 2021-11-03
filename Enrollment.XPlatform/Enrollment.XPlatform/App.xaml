@@ -60,6 +60,13 @@
                 <Setter Property="LineBreakMode" Value="NoWrap" />
             </Style>
 
+            <Style TargetType="Label" x:Key="EditFormGroupHeaderStyle" BaseResourceKey="SubtitleStyle">
+                <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="0,15,0,0" />
+            </Style>
+
             <Style TargetType="Label" x:Key="DetailFormDeleteQuestionStyle" BaseResourceKey="SubtitleStyle">
                 <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
                 <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}" />

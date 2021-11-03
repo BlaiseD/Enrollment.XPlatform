@@ -35,18 +35,17 @@ namespace Enrollment.XPlatform.Views
             LayoutHelpers.AddToolBarItems(this.ToolbarItems, this.editFormEntityViewModel.Buttons);
             Title = editFormEntityViewModel.FormSettings.Title;
 
-            BindingBase GetHeaderBinding(MultiBindingDescriptor multiBindingDescriptor)
+            BindingBase GetHeaderBinding(MultiBindingDescriptor multiBindingDescriptor, string bindingName)
             {
-                if (editFormEntityViewModel.FormSettings.EditType == EditType.Add 
-                    || multiBindingDescriptor == null)
-                    return new Binding($"{nameof(EditFormEntityViewModelBase.FormSettings)}.{nameof(EditFormSettingsDescriptor.Title)}");
+                if (multiBindingDescriptor == null)
+                    return new Binding(bindingName);
 
                 return new MultiBinding
                 {
                     StringFormat = multiBindingDescriptor.StringFormat,
                     Bindings = multiBindingDescriptor.Fields.Select
                     (
-                        field => new Binding($"{nameof(EditFormEntityViewModelBase.BindingPropertiesDictionary)}[{field.ToBindingDictionaryKey()}].{nameof(IValidatable.Value)}")
+                        field => new Binding($"{nameof(ControlGroupBox.BindingPropertiesDictionary)}[{field.ToBindingDictionaryKey()}].{nameof(IValidatable.Value)}")
                     )
                     .Cast<BindingBase>()
                     .ToList()
@@ -69,13 +68,46 @@ namespace Enrollment.XPlatform.Views
                                 .AddBinding
                                 (
                                     Label.TextProperty, 
-                                    GetHeaderBinding(editFormEntityViewModel.FormSettings.HeaderBindings)
+                                    GetHeaderBinding
+                                    (
+                                        editFormEntityViewModel.FormSettings.HeaderBindings, 
+                                        $"{nameof(EditFormEntityViewModelBase.FormSettings)}.{nameof(EditFormSettingsDescriptor.Title)}"
+                                    )
                                 ),
                                 new ScrollView
                                 {
-                                    Content = new StackLayout()
-                                    .AddBinding(BindableLayout.ItemsSourceProperty, new Binding(nameof(EditFormEntityViewModelBase.Properties)))
-                                    .SetDataTemplateSelector(EditFormViewHelpers.QuestionTemplateSelector)
+                                    Content = editFormEntityViewModel.FormLayout.ControlGroupBoxList.Aggregate
+                                    (
+                                        new StackLayout(), 
+                                        (stackLayout, controlBox) =>
+                                        {
+                                            stackLayout.Children.Add
+                                            (
+                                                new Label
+                                                {
+                                                    Style = LayoutHelpers.GetStaticStyleResource("EditFormGroupHeaderStyle"),
+                                                    BindingContext = controlBox
+                                                }
+                                                .AddBinding
+                                                (
+                                                    Label.TextProperty,
+                                                    GetHeaderBinding(controlBox.HeaderBindings, $"{nameof(ControlGroupBox.GroupHeader)}")
+                                                )
+                                            );
+                                            stackLayout.Children.Add
+                                            (
+                                                new StackLayout
+                                                {
+                                                    VerticalOptions = LayoutOptions.StartAndExpand,
+                                                    BindingContext = controlBox
+                                                }
+                                                .AddBinding(BindableLayout.ItemsSourceProperty, new Binding("."))
+                                                .SetDataTemplateSelector(EditFormViewHelpers.QuestionTemplateSelector)
+                                            );
+
+                                            return stackLayout;
+                                        }
+                                    )
                                 }
                             }
                         }

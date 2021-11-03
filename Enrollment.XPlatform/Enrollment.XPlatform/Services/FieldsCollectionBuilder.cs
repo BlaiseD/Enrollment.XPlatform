@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Enrollment.Forms.Configuration.EditForm;
+﻿using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Utils;
-using Enrollment.XPlatform.ViewModels.Validatables;
-using System.Collections.ObjectModel;
+using Enrollment.XPlatform.ViewModels;
 
 namespace Enrollment.XPlatform.Services
 {
@@ -15,7 +13,7 @@ namespace Enrollment.XPlatform.Services
             this.contextProvider = contextProvider;
         }
 
-        public ObservableCollection<IValidatable> CreateFieldsCollection(IFormGroupSettings formSettings) 
+        public EditFormLayout CreateFieldsCollection(IFormGroupSettings formSettings) 
             => new FieldsCollectionHelper(formSettings, this.contextProvider).CreateFields();
     }
 }

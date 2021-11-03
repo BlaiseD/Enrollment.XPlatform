@@ -1,14 +1,13 @@
 ﻿using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Services;
-using Enrollment.XPlatform.ViewModels.Validatables;
+using Enrollment.XPlatform.ViewModels;
 using System;
-using System.Collections.ObjectModel;
 
 namespace Enrollment.XPlatform.Utils
 {
     internal class UpdateOnlyFieldsCollectionHelper : FieldsCollectionHelper
     {
-        public UpdateOnlyFieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, ObservableCollection<IValidatable> properties = null, string parentName = null) : base(formSettings, contextProvider, properties, parentName)
+        public UpdateOnlyFieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, EditFormLayout formLayout = null, string parentName = null) : base(formSettings, contextProvider, formLayout, parentName)
         {
         }
 
@@ -32,7 +31,7 @@ namespace Enrollment.XPlatform.Utils
             (
                 setting,
                 this.contextProvider,
-                this.properties,
+                this.formLayout,
                 GetFieldName(setting.Field)
             ).CreateFields();
         }

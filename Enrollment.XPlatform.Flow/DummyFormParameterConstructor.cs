@@ -15,6 +15,7 @@ namespace Enrollment.XPlatform.Flow
             FormControlSettingsParameters formControlSettingsParameters,
             FormGroupArraySettingsParameters formGroupArraySettingsParameters,
             FormGroupSettingsParameters formGroupSettingsParameters,
+            GroupBoxSettingsParameters groupBoxSettingsParameters,
             MultiSelectFormControlSettingsParameters multiSelectFormControlSettingsParameters,
             DetailControlSettingsParameters detailControlSettingsParameters,
             DetailGroupArraySettingsParameters detailGroupArraySettingsParameters,

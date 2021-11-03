@@ -34,7 +34,7 @@ namespace Enrollment.XPlatform.Tests
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
                 Descriptors.ResidencyForm
-            );
+            ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 3;
             propertiesDictionary["CitizenshipStatus"].Value = "US";
@@ -89,7 +89,7 @@ namespace Enrollment.XPlatform.Tests
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
                 Descriptors.AcademicForm
-            );
+            ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 1;
             propertiesDictionary["LastHighSchoolLocation"].Value = "NC";
@@ -159,7 +159,7 @@ namespace Enrollment.XPlatform.Tests
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
                 Descriptors.AcademicForm
-            );
+            ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 1;
             propertiesDictionary["LastHighSchoolLocation"].Value = "NC";
@@ -228,7 +228,7 @@ namespace Enrollment.XPlatform.Tests
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
                 Descriptors.AcademicForm
-            );
+            ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["NcHighSchoolName"].Value = null;
 
@@ -252,7 +252,7 @@ namespace Enrollment.XPlatform.Tests
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
                 Descriptors.ResidencyForm
-            );
+            ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 3;
             propertiesDictionary["CitizenshipStatus"].Value = "US";
@@ -283,7 +283,7 @@ namespace Enrollment.XPlatform.Tests
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
                 Descriptors.AcademicForm
-            );
+            ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 1;
             propertiesDictionary["LastHighSchoolLocation"].Value = "NC";
@@ -311,6 +311,54 @@ namespace Enrollment.XPlatform.Tests
             Assert.Equal("DP", academicModel.GraduationStatus);
             Assert.True(academicModel.EarnedCreditAtCmc);
             Assert.Empty(academicModel.Institutions);
+        }
+
+        [Fact]
+        public void MapIValidatableListToPersonal_withMultipleGroupBoxSettingsDescriptorFields()
+        {
+            //arrange
+            ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
+            (
+                Descriptors.PersonalFrom
+            ).Properties;
+            IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
+            propertiesDictionary["Personal.FirstName"].Value = "John";
+            propertiesDictionary["Personal.MiddleName"].Value = "Michael";
+            propertiesDictionary["Personal.LastName"].Value = "Jackson";
+            propertiesDictionary["Personal.PrimaryEmail"].Value = "mj@hotmail.com";
+            propertiesDictionary["Personal.Suffix"].Value = "jr";
+            propertiesDictionary["Personal.Address1"].Value = "820 Jackson Street";
+            propertiesDictionary["Personal.Address2"].Value = "UNIT 1975";
+            propertiesDictionary["Personal.City"].Value = "Detroit";
+            propertiesDictionary["Personal.County"].Value = "Dekalb";
+            propertiesDictionary["Personal.State"].Value = "MI";
+            propertiesDictionary["Personal.ZipCode"].Value = "23456";
+            propertiesDictionary["Personal.CellPhone"].Value = "770-888-9999";
+            propertiesDictionary["Personal.OtherPhone"].Value = "770-333-4444";
+
+            //act
+            UserModel userModel = serviceProvider.GetRequiredService<IEntityStateUpdater>().GetUpdatedModel
+            (
+                (UserModel)null,
+                new Dictionary<string, object>(),
+                properties,
+                Descriptors.PersonalFrom.FieldSettings
+            );
+
+            //assert
+            Assert.Equal("John", userModel.Personal.FirstName);
+            Assert.Equal("Michael", userModel.Personal.MiddleName);
+            Assert.Equal("Jackson", userModel.Personal.LastName);
+            Assert.Equal("mj@hotmail.com", userModel.Personal.PrimaryEmail);
+            Assert.Equal("jr", userModel.Personal.Suffix);
+            Assert.Equal("820 Jackson Street", userModel.Personal.Address1);
+            Assert.Equal("UNIT 1975", userModel.Personal.Address2);
+            Assert.Equal("Detroit", userModel.Personal.City);
+            Assert.Equal("Dekalb", userModel.Personal.County);
+            Assert.Equal("MI", userModel.Personal.State);
+            Assert.Equal("23456", userModel.Personal.ZipCode);
+            Assert.Equal("770-888-9999", userModel.Personal.CellPhone);
+            Assert.Equal("770-333-4444", userModel.Personal.OtherPhone);
         }
 
         static MapperConfiguration MapperConfiguration;

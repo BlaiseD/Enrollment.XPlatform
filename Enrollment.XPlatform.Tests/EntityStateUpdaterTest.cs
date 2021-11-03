@@ -297,7 +297,7 @@ namespace Enrollment.XPlatform.Tests
             return serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
                 formSettings
-            );
+            ).Properties;
         }
         static MapperConfiguration MapperConfiguration;
         private void Initialize()

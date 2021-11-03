@@ -5,6 +5,7 @@
         FormControl,
         MultiSelectFormControl,
         FormGroup,
-        FormGroupArray
+        FormGroupArray,
+        GroupBox
     }
 }

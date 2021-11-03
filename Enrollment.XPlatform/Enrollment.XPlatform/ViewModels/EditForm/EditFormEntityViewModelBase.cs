@@ -22,14 +22,14 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
             this.UiNotificationService = contextProvider.UiNotificationService;
             FormSettings = screenSettings.Settings;
             Buttons = new ObservableCollection<CommandButtonDescriptor>(screenSettings.CommandButtons);
-            Properties = contextProvider.FieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
+            FormLayout = contextProvider.FieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
         }
 
         public Dictionary<string, IValidatable> BindingPropertiesDictionary
-            => Properties.ToDictionary(p => p.Name.ToBindingDictionaryKey());
+            => FormLayout.Properties.ToDictionary(p => p.Name.ToBindingDictionaryKey());
 
         public EditFormSettingsDescriptor FormSettings { get; set; }
-        public ObservableCollection<IValidatable> Properties { get; set; }
+        public EditFormLayout FormLayout { get; set; }
         public UiNotificationService UiNotificationService { get; set; }
         public ObservableCollection<CommandButtonDescriptor> Buttons { get; set; }
 
@@ -67,7 +67,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
             );
 
         public bool AreFieldsValid()
-            => Properties.Aggregate
+            => FormLayout.Properties.Aggregate
             (
                 true,
                 (isTrue, next) => next.Validate() && isTrue

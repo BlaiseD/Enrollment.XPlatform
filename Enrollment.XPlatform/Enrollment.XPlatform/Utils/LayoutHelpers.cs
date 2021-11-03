@@ -1,11 +1,13 @@
 ﻿using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.Bindings;
+using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.ViewModels;
 using Enrollment.XPlatform.Views;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace Enrollment.XPlatform.Utils
@@ -275,5 +277,28 @@ namespace Enrollment.XPlatform.Utils
         /// <returns></returns>
         internal static string ToBindingDictionaryKey(this string key)
             => key.Replace(".", "_");
+
+        internal static bool ShouldCreateDefaultControlGroupBox(this List<FormItemSettingsDescriptor> descriptors)
+        {
+            return descriptors.Aggregate(false, DoAggregate);
+
+            bool DoAggregate(bool shouldAdd, FormItemSettingsDescriptor next)
+            {
+                if (shouldAdd) return shouldAdd;
+
+                if (next is FormGroupSettingsDescriptor inlineFormGroupSettingsDescriptor
+                    && inlineFormGroupSettingsDescriptor.FormGroupTemplate.TemplateName == FromGroupTemplateNames.InlineFormGroupTemplate)
+                {
+                    if (inlineFormGroupSettingsDescriptor.FieldSettings.Aggregate(false, DoAggregate))
+                        return true;
+                }
+                else if ((next is FormGroupBoxSettingsDescriptor) == false)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
     }
 }

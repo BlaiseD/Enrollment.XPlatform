@@ -65,7 +65,9 @@ namespace Enrollment.XPlatform.Utils
         /// <returns></returns>
         private static Dictionary<string, object> ToObjectDictionaryFromValidatableObjects(this IDictionary<string, object> propertiesDictionary, IMapper mapper, List<FormItemSettingsDescriptor> fieldSettings, string parentField = null)
         {
-            return fieldSettings.Aggregate(new Dictionary<string, object>(), (objectDictionary, setting) =>
+            return fieldSettings.Aggregate(new Dictionary<string, object>(), DoAggregation);
+
+            Dictionary<string, object> DoAggregation(Dictionary<string, object> objectDictionary, FormItemSettingsDescriptor setting)
             {
                 if (setting is MultiSelectFormControlSettingsDescriptor multiSelectFormControlSetting)
                     AddMultiSelects();
@@ -85,8 +87,12 @@ namespace Enrollment.XPlatform.Utils
                 }
                 else if (setting is FormGroupArraySettingsDescriptor formGroupArraySetting)
                     AddFormGroupArray(formGroupArraySetting);
+                else if (setting is FormGroupBoxSettingsDescriptor groupBoxSettingsDescriptor)
+                {
+                    groupBoxSettingsDescriptor.FieldSettings.Aggregate(objectDictionary, DoAggregation);
+                }
                 else
-                    throw new ArgumentException($"{nameof(formGroupSetting.FormGroupTemplate)}: CC7AD9E6-1CA5-4B9D-B1DF-D28AF8D6D757");
+                    throw new ArgumentException($"{nameof(setting)}: 82FDF6AC-C2DB-4655-AA03-673E5C6B4E0A");
 
                 return objectDictionary;
 
@@ -157,7 +163,7 @@ namespace Enrollment.XPlatform.Utils
                     setting.Field,
                     propertiesDictionary[GetFieldName(setting.Field)]
                 );
-            });
+            }
 
             string GetFieldName(string field)
                 => string.IsNullOrEmpty(parentField)
@@ -170,7 +176,9 @@ namespace Enrollment.XPlatform.Utils
             if (propertiesDictionary.IsEmpty())//object must be null - no fields to update
                 return new Dictionary<string, object>();
 
-            return fieldSettings.Aggregate(new Dictionary<string, object>(), (objectDictionary, setting) =>
+            return fieldSettings.Aggregate(new Dictionary<string, object>(), DoAggregation);
+
+            Dictionary<string, object> DoAggregation(Dictionary<string, object>  objectDictionary, FormItemSettingsDescriptor setting)
             {
                 if (setting is MultiSelectFormControlSettingsDescriptor multiSelectFormControlSetting)
                     AddMultiSelects();
@@ -182,8 +190,12 @@ namespace Enrollment.XPlatform.Utils
                 }
                 else if (setting is FormGroupArraySettingsDescriptor formGroupArraySetting)
                     AddFormGroupArray(formGroupArraySetting);
+                else if (setting is FormGroupBoxSettingsDescriptor groupBoxSettingsDescriptor)
+                {
+                    groupBoxSettingsDescriptor.FieldSettings.Aggregate(objectDictionary, DoAggregation);
+                }
                 else
-                    throw new ArgumentException($"{nameof(formGroupSetting.FormGroupTemplate)}: CC7AD9E6-1CA5-4B9D-B1DF-D28AF8D6D757");
+                    throw new ArgumentException($"{nameof(setting)}: CC7AD9E6-1CA5-4B9D-B1DF-D28AF8D6D757");
 
                 return objectDictionary;
 
@@ -242,7 +254,7 @@ namespace Enrollment.XPlatform.Utils
                     setting.Field,
                     propertiesDictionary[setting.Field]
                 );
-            });
+            }
         }
 
         public static void UpdateReadOnlys(this IEnumerable<IReadOnly> properties, object source, List<DetailItemSettingsDescriptor> fieldSettings, IMapper mapper, string parentField = null)
@@ -343,6 +355,10 @@ namespace Enrollment.XPlatform.Utils
                             }
                         }
                     }
+                }
+                else if (setting is FormGroupBoxSettingsDescriptor groupBoxSettingsDescriptor)
+                {
+                    UpdateEntityStates(existing, current, groupBoxSettingsDescriptor.FieldSettings);
                 }
             }
         }

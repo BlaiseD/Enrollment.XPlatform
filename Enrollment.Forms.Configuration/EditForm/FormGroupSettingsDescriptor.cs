@@ -15,5 +15,7 @@ namespace Enrollment.Forms.Configuration.EditForm
         public List<FormItemSettingsDescriptor> FieldSettings { get; set; }
         public Dictionary<string, List<ValidationRuleDescriptor>> ValidationMessages { get; set; }
         public Dictionary<string, List<DirectiveDescriptor>> ConditionalDirectives { get; set; }
+
+        public MultiBindingDescriptor HeaderBindings => null;
     }
 }

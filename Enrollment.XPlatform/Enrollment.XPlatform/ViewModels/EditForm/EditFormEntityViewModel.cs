@@ -25,11 +25,11 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
             this.mapper = contextProvider.Mapper;
             this.validateIfManager = new ValidateIfManager<TModel>
             (
-                Properties,
+                FormLayout.Properties,
                 contextProvider.ConditionalValidationConditionsBuilder.GetConditions<TModel>
                 (
                     FormSettings,
-                    Properties
+                    FormLayout.Properties
                 ),
                 contextProvider.Mapper,
                 this.UiNotificationService
@@ -37,11 +37,11 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
 
             this.hideIfManager = new HideIfManager<TModel>
             (
-                Properties,
+                FormLayout.Properties,
                 contextProvider.HideIfConditionalDirectiveBuilder.GetConditions<TModel>
                 (
                     FormSettings,
-                    Properties
+                    FormLayout.Properties
                 ),
                 contextProvider.Mapper,
                 this.UiNotificationService
@@ -122,7 +122,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
 
             this.propertiesUpdater.UpdateProperties
             (
-                Properties,
+                FormLayout.Properties,
                 getEntityResponse.Entity,
                 this.FormSettings.FieldSettings
             );
@@ -143,7 +143,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
                             (
                                 entity,
                                 this.originalEntityDictionary,
-                                Properties,
+                                FormLayout.Properties,
                                 FormSettings.FieldSettings
                             )
                         },
