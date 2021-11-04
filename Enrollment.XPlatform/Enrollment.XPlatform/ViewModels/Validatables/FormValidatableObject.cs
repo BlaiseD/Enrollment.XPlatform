@@ -54,6 +54,9 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             FormLayout = updateOnlyFieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
         }
 
+        public event EventHandler Cancelled;
+        public event EventHandler Submitted;
+
         public EditFormLayout FormLayout { get; set; }
 
         public IChildFormGroupSettings FormSettings { get; set; }
@@ -153,6 +156,8 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
                         (
                             () => App.Current.MainPage.Navigation.PopModalAsync()
                         );
+
+                        Submitted?.Invoke(this, new EventArgs());
                     },
                     canExecute: AreFieldsValid
                 );
@@ -210,6 +215,8 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             (
                 () => App.Current.MainPage.Navigation.PopModalAsync()
             );
+
+            Cancelled?.Invoke(this, new EventArgs());
         }
 
         public virtual void Dispose()
@@ -217,6 +224,11 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             Dispose(this.validateIfManager);
             Dispose(this.hideIfManager);
             Dispose(this.propertyChangedSubscription);
+            foreach(var property in FormLayout.Properties)
+            {
+                if (property is IDisposable disposable)
+                    Dispose(disposable);
+            }
         }
 
         public override bool Validate()

@@ -69,6 +69,11 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
             Dispose(this.validateIfManager);
             Dispose(this.hideIfManager);
             Dispose(this.propertyChangedSubscription);
+            foreach (var property in FormLayout.Properties)
+            {
+                if (property is IDisposable disposable)
+                    Dispose(disposable);
+            }
         }
 
         protected void Dispose(IDisposable disposable)

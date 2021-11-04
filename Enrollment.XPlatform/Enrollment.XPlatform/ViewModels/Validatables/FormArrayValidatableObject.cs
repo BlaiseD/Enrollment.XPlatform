@@ -243,23 +243,25 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
         private void Edit()
         {
+            var formValidatable = new FormValidatableObject<E>
+            (
+                Value.IndexOf(this.SelectedItem).ToString(),
+                this.FormSettings,
+                new IValidationRule[] { },
+                this.contextProvider
+            )
+            {
+                Value = this.SelectedItem
+            };
+
+            formValidatable.Cancelled += FormValidatable_Cancelled;
+            formValidatable.Submitted += FormValidatable_Submitted;
+
             Xamarin.Essentials.MainThread.BeginInvokeOnMainThread
             (
                 () => App.Current.MainPage.Navigation.PushModalAsync
                 (
-                    new Views.ChildFormPageCS
-                    (
-                        new FormValidatableObject<E>
-                        (
-                            Value.IndexOf(this.SelectedItem).ToString(),
-                            this.FormSettings,
-                            new IValidationRule[] { },
-                            this.contextProvider
-                        )
-                        {
-                            Value = this.SelectedItem
-                        }
-                    )
+                    new Views.ChildFormPageCS(formValidatable)
                 )
             );
         }
@@ -282,6 +284,8 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             };
 
             addValidatable.AddCancelled += AddValidatable_AddCancelled;
+            addValidatable.Cancelled += FormValidatable_Cancelled;
+            addValidatable.Submitted += FormValidatable_Submitted;
 
             Xamarin.Essentials.MainThread.BeginInvokeOnMainThread
             (
@@ -292,10 +296,20 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             );
         }
 
-        private void AddValidatable_AddCancelled(object sender, System.EventArgs e)
+        private void AddValidatable_AddCancelled(object sender, EventArgs e)
         {
             Value.Remove(((AddFormValidatableObject<E>)sender).Value);
-            SelectedItem = null; 
+            SelectedItem = null;
+        }
+
+        private void FormValidatable_Cancelled(object sender, EventArgs e)
+        {
+            ((FormValidatableObject<E>)sender).Dispose();
+        }
+
+        private void FormValidatable_Submitted(object sender, EventArgs e)
+        {
+            ((FormValidatableObject<E>)sender).Dispose();
         }
     }
 }
