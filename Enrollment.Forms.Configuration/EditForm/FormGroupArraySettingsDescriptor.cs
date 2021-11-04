@@ -7,6 +7,7 @@ namespace Enrollment.Forms.Configuration.EditForm
     public class FormGroupArraySettingsDescriptor : FormItemSettingsDescriptor, IChildFormGroupSettings
     {
         public override AbstractControlEnumDescriptor AbstractControlType => AbstractControlEnumDescriptor.FormGroupArray;
+        public string Field { get; set; }
         public string Title { get; set; }
         public string Placeholder { get; set; }
         public string ModelType { get; set; }//e.g. T

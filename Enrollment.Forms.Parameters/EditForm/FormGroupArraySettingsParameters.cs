@@ -65,8 +65,9 @@ namespace Enrollment.Forms.Parameters.EditForm
 			[ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
 			[Comments("Fully qualified class name for the model type.")]
 			string listElementTypeSource = "Enrollment.Domain.Entities"
-		) : base(field)
+		)
 		{
+			Field = field;
 			Title = title;
 			Placeholder = placeholder;
 			ModelType = modelType;
@@ -89,6 +90,7 @@ namespace Enrollment.Forms.Parameters.EditForm
 			);
 		}
 
+		public string Field { get; set; }
 		public string Title { get; set; }
 		public string Placeholder { get; set; }
 		public Type ModelType { get; set; }

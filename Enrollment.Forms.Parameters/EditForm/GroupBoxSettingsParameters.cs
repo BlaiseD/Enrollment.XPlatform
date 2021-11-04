@@ -18,7 +18,7 @@ namespace Enrollment.Forms.Parameters.EditForm
 
 			[Comments("Multibindings list for the group header field - typically used in edit mode.")]
 			MultiBindingParameters headerBindings = null
-		) : base(null)
+		)
 		{
 			if (fieldSettings.Any(s => s is GroupBoxSettingsParameters))
 				throw new ArgumentException($"{nameof(fieldSettings)}: D8590E1F-D029-405F-8E6C-EA98803004B8");

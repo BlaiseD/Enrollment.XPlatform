@@ -70,9 +70,9 @@ namespace Enrollment.XPlatform.Utils
             Dictionary<string, object> DoAggregation(Dictionary<string, object> objectDictionary, FormItemSettingsDescriptor setting)
             {
                 if (setting is MultiSelectFormControlSettingsDescriptor multiSelectFormControlSetting)
-                    AddMultiSelects();
+                    AddMultiSelects(multiSelectFormControlSetting);
                 else if (setting is FormControlSettingsDescriptor controlSetting)
-                    AddSingleValueField();//must stay after MultiSelect because MultiSelect extends FormControl
+                    AddSingleValueField(controlSetting);//must stay after MultiSelect because MultiSelect extends FormControl
                 else if (setting is FormGroupSettingsDescriptor formGroupSetting)
                 {
                     if (formGroupSetting.FormGroupTemplate == null)
@@ -98,10 +98,10 @@ namespace Enrollment.XPlatform.Utils
 
                 void AddFormGroupArray(FormGroupArraySettingsDescriptor formGroupArraySetting) => objectDictionary.Add
                 (
-                    setting.Field,
+                    formGroupArraySetting.Field,
                     mapper.Map<IEnumerable<object>, IEnumerable<Dictionary<string, object>>>
                     (
-                        (IEnumerable<object>)propertiesDictionary[GetFieldName(setting.Field)]
+                        (IEnumerable<object>)propertiesDictionary[GetFieldName(formGroupArraySetting.Field)]
                     )
                     .Select
                     (
@@ -113,13 +113,13 @@ namespace Enrollment.XPlatform.Utils
                 {
                     if (propertiesDictionary[GetFieldName(formGroupSetting.Field)] == null)
                     {
-                        objectDictionary.Add(setting.Field, null);
+                        objectDictionary.Add(formGroupSetting.Field, null);
                         return;
                     }
 
                     objectDictionary.Add
                     (
-                        setting.Field,
+                        formGroupSetting.Field,
                         mapper.Map<Dictionary<string, object>>
                         (
                             propertiesDictionary[GetFieldName(formGroupSetting.Field)]
@@ -129,7 +129,7 @@ namespace Enrollment.XPlatform.Utils
 
                 void AddFormGroupInline(FormGroupSettingsDescriptor formGroupSetting) => objectDictionary.Add
                 (
-                    setting.Field,
+                    formGroupSetting.Field,
                     ToObjectDictionaryFromValidatableObjects
                     (
                         propertiesDictionary,
@@ -139,29 +139,29 @@ namespace Enrollment.XPlatform.Utils
                     )
                 );
 
-                void AddMultiSelects()
+                void AddMultiSelects(MultiSelectFormControlSettingsDescriptor multiSelectFormControlSetting)
                 {
-                    if (propertiesDictionary[GetFieldName(setting.Field)] == null)
+                    if (propertiesDictionary[GetFieldName(multiSelectFormControlSetting.Field)] == null)
                     {//The mapper.Map<IEnumerable, IEnumerable>(null) behavior in the Xamarin runtime is different
                      //form the local tests.  Use the null check to ensure the same behavior.
-                        objectDictionary.Add(setting.Field, null);
+                        objectDictionary.Add(multiSelectFormControlSetting.Field, null);
                         return;
                     }
 
                     objectDictionary.Add
                     (
-                        setting.Field,
+                        multiSelectFormControlSetting.Field,
                         mapper.Map<IEnumerable<object>, IEnumerable<Dictionary<string, object>>>
                         (
-                            (IEnumerable<object>)propertiesDictionary[GetFieldName(setting.Field)]
+                            (IEnumerable<object>)propertiesDictionary[GetFieldName(multiSelectFormControlSetting.Field)]
                         )
                     );
                 }
 
-                void AddSingleValueField() => objectDictionary.Add
+                void AddSingleValueField(FormControlSettingsDescriptor controlSetting) => objectDictionary.Add
                 (
-                    setting.Field,
-                    propertiesDictionary[GetFieldName(setting.Field)]
+                    controlSetting.Field,
+                    propertiesDictionary[GetFieldName(controlSetting.Field)]
                 );
             }
 
@@ -181,9 +181,9 @@ namespace Enrollment.XPlatform.Utils
             Dictionary<string, object> DoAggregation(Dictionary<string, object>  objectDictionary, FormItemSettingsDescriptor setting)
             {
                 if (setting is MultiSelectFormControlSettingsDescriptor multiSelectFormControlSetting)
-                    AddMultiSelects();
+                    AddMultiSelects(multiSelectFormControlSetting);
                 else if (setting is FormControlSettingsDescriptor controlSetting)
-                    AddSingleValueField();//must stay after MultiSelect because MultiSelect extends FormControl
+                    AddSingleValueField(controlSetting);//must stay after MultiSelect because MultiSelect extends FormControl
                 else if (setting is FormGroupSettingsDescriptor formGroupSetting)
                 {
                     AddFormGroup(formGroupSetting);
@@ -201,10 +201,10 @@ namespace Enrollment.XPlatform.Utils
 
                 void AddFormGroupArray(FormGroupArraySettingsDescriptor formGroupArraySetting) => objectDictionary.Add
                 (
-                    setting.Field,
+                    formGroupArraySetting.Field,
                     mapper.Map<IEnumerable<object>, IEnumerable<Dictionary<string, object>>>
                     (
-                        (IEnumerable<object>)propertiesDictionary[setting.Field]
+                        (IEnumerable<object>)propertiesDictionary[formGroupArraySetting.Field]
                     )
                     .Select
                     (
@@ -214,45 +214,45 @@ namespace Enrollment.XPlatform.Utils
 
                 void AddFormGroup(FormGroupSettingsDescriptor formGroupSetting)
                 {
-                    if (propertiesDictionary[setting.Field] == null)
+                    if (propertiesDictionary[formGroupSetting.Field] == null)
                     {
-                        objectDictionary.Add(setting.Field, null);
+                        objectDictionary.Add(formGroupSetting.Field, null);
                         return;
                     }
 
                     objectDictionary.Add
                     (
-                        setting.Field,
+                        formGroupSetting.Field,
                         mapper.Map<Dictionary<string, object>>
                         (
-                            propertiesDictionary[setting.Field]
+                            propertiesDictionary[formGroupSetting.Field]
                         ).ToObjectDictionaryFromEntity(mapper, formGroupSetting.FieldSettings)
                     );
                 }
 
-                void AddMultiSelects()
+                void AddMultiSelects(MultiSelectFormControlSettingsDescriptor multiSelectFormControlSetting)
                 {
-                    if (propertiesDictionary[setting.Field] == null)
+                    if (propertiesDictionary[multiSelectFormControlSetting.Field] == null)
                     {//The mapper.Map<IEnumerable, IEnumerable>(null) behavior in the Xamarin runtime is different
                      //form the local tests.  Use the null check to ensure the same behavior.
-                        objectDictionary.Add(setting.Field, null);
+                        objectDictionary.Add(multiSelectFormControlSetting.Field, null);
                         return;
                     }
 
                     objectDictionary.Add
                     (
-                        setting.Field,
+                        multiSelectFormControlSetting.Field,
                         mapper.Map<IEnumerable<object>, IEnumerable<Dictionary<string, object>>>
                         (
-                            (IEnumerable<object>)propertiesDictionary[setting.Field]
+                            (IEnumerable<object>)propertiesDictionary[multiSelectFormControlSetting.Field]
                         )
                     );
                 }
 
-                void AddSingleValueField() => objectDictionary.Add
+                void AddSingleValueField(FormControlSettingsDescriptor controlSetting) => objectDictionary.Add
                 (
-                    setting.Field,
-                    propertiesDictionary[setting.Field]
+                    controlSetting.Field,
+                    propertiesDictionary[controlSetting.Field]
                 );
             }
         }
@@ -292,14 +292,14 @@ namespace Enrollment.XPlatform.Utils
             {
                 if (setting is FormGroupSettingsDescriptor formGroupSetting)
                 {
-                    existing.TryGetValue(setting.Field, out object existingObject);
-                    UpdateEntityStates((Dictionary<string, object>)existingObject ?? new Dictionary<string, object>(), (Dictionary<string, object>)current[setting.Field], formGroupSetting.FieldSettings);
+                    existing.TryGetValue(formGroupSetting.Field, out object existingObject);
+                    UpdateEntityStates((Dictionary<string, object>)existingObject ?? new Dictionary<string, object>(), (Dictionary<string, object>)current[formGroupSetting.Field], formGroupSetting.FieldSettings);
                 }
                 else if (setting is MultiSelectFormControlSettingsDescriptor multiSelectFormControlSettingsDescriptor)
                 {
-                    existing.TryGetValue(setting.Field, out object existingCollection);
+                    existing.TryGetValue(multiSelectFormControlSettingsDescriptor.Field, out object existingCollection);
                     ICollection<Dictionary<string, object>> existingList = (ICollection<Dictionary<string, object>>)existingCollection ?? new List<Dictionary<string, object>>();
-                    ICollection<Dictionary<string, object>> currentList = (ICollection<Dictionary<string, object>>)current[setting.Field] ?? new List<Dictionary<string, object>>();
+                    ICollection<Dictionary<string, object>> currentList = (ICollection<Dictionary<string, object>>)current[multiSelectFormControlSettingsDescriptor.Field] ?? new List<Dictionary<string, object>>();
 
                     if (currentList.Any() == true)
                     {
@@ -326,9 +326,9 @@ namespace Enrollment.XPlatform.Utils
                 }
                 else if (setting is FormGroupArraySettingsDescriptor formGroupArraySetting)
                 {
-                    existing.TryGetValue(setting.Field, out object existingCollection);
+                    existing.TryGetValue(formGroupArraySetting.Field, out object existingCollection);
                     ICollection<Dictionary<string, object>> existingList = (ICollection<Dictionary<string, object>>)existingCollection ?? new List<Dictionary<string, object>>();
-                    ICollection<Dictionary<string, object>> currentList = (ICollection<Dictionary<string, object>>)current[setting.Field];
+                    ICollection<Dictionary<string, object>> currentList = (ICollection<Dictionary<string, object>>)current[formGroupArraySetting.Field];
 
                     if (currentList.Any() == true)
                     {

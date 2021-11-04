@@ -278,6 +278,13 @@ namespace Enrollment.XPlatform.Utils
         internal static string ToBindingDictionaryKey(this string key)
             => key.Replace(".", "_");
 
+        /// <summary>
+        /// If every form field has a FormGroupBoxSettingsDescriptor parent then we don't need to create a
+        /// default group box.  Otherwise we create a default group box using IFormGroupSettings.Title as the
+        /// group header.
+        /// </summary>
+        /// <param name="descriptors"></param>
+        /// <returns></returns>
         internal static bool ShouldCreateDefaultControlGroupBox(this List<FormItemSettingsDescriptor> descriptors)
         {
             return descriptors.Aggregate(false, DoAggregate);
