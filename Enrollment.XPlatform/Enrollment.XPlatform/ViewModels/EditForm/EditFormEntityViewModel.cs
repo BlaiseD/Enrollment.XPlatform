@@ -23,28 +23,11 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
             this.httpService = contextProvider.HttpService;
             this.propertiesUpdater = contextProvider.PropertiesUpdater;
             this.mapper = contextProvider.Mapper;
-            this.validateIfManager = new ValidateIfManager<TModel>
+            this.directiveManagers = new DirectiveManagers<TModel>
             (
                 FormLayout.Properties,
-                contextProvider.ConditionalValidationConditionsBuilder.GetConditions<TModel>
-                (
-                    FormSettings,
-                    FormLayout.Properties
-                ),
-                contextProvider.Mapper,
-                this.UiNotificationService
-            );
-
-            this.hideIfManager = new HideIfManager<TModel>
-            (
-                FormLayout.Properties,
-                contextProvider.HideIfConditionalDirectiveBuilder.GetConditions<TModel>
-                (
-                    FormSettings,
-                    FormLayout.Properties
-                ),
-                contextProvider.Mapper,
-                this.UiNotificationService
+                FormSettings,
+                contextProvider
             );
 
             propertyChangedSubscription = this.UiNotificationService.ValueChanged.Subscribe(FieldChanged);
@@ -57,8 +40,8 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
         private readonly IHttpService httpService;
         private readonly IPropertiesUpdater propertiesUpdater;
         private readonly IMapper mapper;
-        private readonly ValidateIfManager<TModel> validateIfManager;
-        private readonly HideIfManager<TModel> hideIfManager;
+        private readonly DirectiveManagers<TModel> directiveManagers;
+
         private TModel entity;
         private Dictionary<string, object> originalEntityDictionary = new Dictionary<string, object>();
         private readonly IDisposable propertyChangedSubscription;
@@ -66,8 +49,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
         public override void Dispose()
         {
             base.Dispose();
-            Dispose(this.validateIfManager);
-            Dispose(this.hideIfManager);
+            Dispose(this.directiveManagers);
             Dispose(this.propertyChangedSubscription);
             foreach (var property in FormLayout.Properties)
             {
@@ -119,6 +101,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
 
             GetEntityResponse getEntityResponse = (GetEntityResponse)baseResponse;
             this.entity = (TModel)getEntityResponse.Entity;
+
             this.originalEntityDictionary = this.entity.EntityToObjectDictionary
             (
                mapper,

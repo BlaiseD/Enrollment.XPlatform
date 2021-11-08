@@ -38,7 +38,7 @@ namespace Enrollment.XPlatform.Views
                                         new Label
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupHeaderLabelStyle"),
-                                        }.AddBinding(Label.TextProperty, new Binding("Title"))
+                                        }.AddBinding(Label.TextProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.Title)))
                                     }
                                 },
                                 new CollectionView
@@ -50,9 +50,9 @@ namespace Enrollment.XPlatform.Views
                                         this.formsCollectionDisplayTemplateDescriptor.Bindings
                                     )
                                 }
-                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding("Value"))
-                                .AddBinding(SelectableItemsView.SelectionChangedCommandProperty, new Binding("SelectionChangedCommand"))
-                                .AddBinding(SelectableItemsView.SelectedItemProperty, new Binding("SelectedItem")),
+                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.Value)))
+                                .AddBinding(SelectableItemsView.SelectionChangedCommandProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.SelectionChangedCommand)))
+                                .AddBinding(SelectableItemsView.SelectedItemProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.SelectedItem))),
                                 new BoxView { Style = LayoutHelpers.GetStaticStyleResource("PopupFooterSeparatorStyle") },
                                 new Grid
                                 {

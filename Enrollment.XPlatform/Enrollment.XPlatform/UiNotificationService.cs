@@ -48,9 +48,19 @@ namespace Enrollment.XPlatform
             this.FlowSettingsSubject.OnNext(flowSettings);
         }
 
+        public async Task RunDataFlow(NewFlowRequest request)
+        {
+            DateTime dt = DateTime.Now;
+            FlowSettings flowSettings = await this.FlowManager.NewFlowStart(request);
+            DateTime dt2 = DateTime.Now;
+
+            appLogger.LogMessage(nameof(UiNotificationService), $"RunDataFlow (milliseconds) = {(dt2 - dt).TotalMilliseconds}");
+        }
+
         public async Task Next(CommandButtonRequest request)
         {
             DateTime dt = DateTime.Now;
+            this.FlowManager.FlowState = this.FlowSettings.FlowState;
             FlowSettings flowSettings = await this.FlowManager.Next(request);
             DateTime dt2 = DateTime.Now;
             appLogger.LogMessage(nameof(UiNotificationService), $"Next (milliseconds) = {(dt2 - dt).TotalMilliseconds}");
@@ -70,6 +80,14 @@ namespace Enrollment.XPlatform
                 return;
 
             this.FlowSettings.FlowDataCache.Items[key] = value;
+        }
+
+        public object GetFlowDataCacheItem(string key)
+        {
+            if (this.FlowSettings?.FlowDataCache?.Items == null)
+                return null;
+
+            return this.FlowSettings.FlowDataCache.Items.TryGetValue(key, out object value) ? value : null;
         }
     }
 }

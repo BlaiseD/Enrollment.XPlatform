@@ -37,7 +37,7 @@ namespace Enrollment.XPlatform.Views
                                         new Label
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupHeaderLabelStyle"),
-                                        }.AddBinding(Label.TextProperty, new Binding("Title"))
+                                        }.AddBinding(Label.TextProperty, new Binding(nameof(MultiSelectValidatableObject<ObservableCollection<string>, string>.Title)))
                                     }
                                 },
                                 new CollectionView
@@ -45,8 +45,8 @@ namespace Enrollment.XPlatform.Views
                                     Style = LayoutHelpers.GetStaticStyleResource("MultiSelectPopupCollectionViewStyle"),
                                     ItemTemplate = EditFormViewHelpers.GetMultiSelectItemTemplateSelector(this.multiSelectTemplateDescriptor)
                                 }
-                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding("Items"))
-                                .AddBinding(SelectableItemsView.SelectedItemsProperty, new Binding("SelectedItems")),
+                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding(nameof(MultiSelectValidatableObject<ObservableCollection<string>, string>.Items)))
+                                .AddBinding(SelectableItemsView.SelectedItemsProperty, new Binding(nameof(MultiSelectValidatableObject<ObservableCollection<string>, string>.SelectedItems))),
                                 new BoxView { Style = LayoutHelpers.GetStaticStyleResource("PopupFooterSeparatorStyle") },
                                 new Grid
                                 {

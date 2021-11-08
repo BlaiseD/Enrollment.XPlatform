@@ -53,9 +53,16 @@ namespace Enrollment.XPlatform.Flow
         private FlowSettings FlowSettings
             => new FlowSettings
             (
+                FlowState,
                 FlowDataCache,
                 screenData.ScreenSettings
             );
+
+        public FlowState FlowState 
+        { 
+            get => ((Director)this.Director).FlowState; 
+            set => ((Director)this.Director).FlowState = value; 
+        }
         #endregion Properties
 
         #region Methods
@@ -85,7 +92,6 @@ namespace Enrollment.XPlatform.Flow
         {
             try
             {
-                Reset();
                 this.Director.StartInitialFlow(request.InitialModuleName);
                 return this.FlowSettings;
             }
@@ -143,6 +149,7 @@ namespace Enrollment.XPlatform.Flow
         private FlowSettings GetFlowSettings(Exception ex) 
             => new FlowSettings
             (
+                FlowState,
                 FlowDataCache,
                 new ScreenSettings<TextFormSettingsDescriptor>
                 (

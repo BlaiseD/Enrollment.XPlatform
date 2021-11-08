@@ -35,6 +35,9 @@ namespace Enrollment.Forms.Parameters
 			[Comments("Includes the source URL. May specify model and data types if we use the URL for multiple types.")]
 			RequestDetailsParameters requestDetails,
 
+			[Comments("Used the dropdown or multiselect items change conditionally at runtime.  Add a flow module to define a new selector (SelectorLambdaOperatorParameters) at run time.  Set reloadItemsFlowName to the flow name.")]
+			string reloadItemsFlowName = null,
+
 			[ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
 			[Comments("Fully qualified class name for the model type.")]
 			string fieldTypeSource = "Enrollment.Domain.Entities"
@@ -47,6 +50,7 @@ namespace Enrollment.Forms.Parameters
 			LoadingIndicatorText = loadingIndicatorText;
 			TextAndValueSelector = textAndValueSelector;
 			RequestDetails = requestDetails;
+			ReloadItemsFlowName = reloadItemsFlowName;
 		}
 
 		public string TemplateName { get; set; }
@@ -56,5 +60,6 @@ namespace Enrollment.Forms.Parameters
 		public string LoadingIndicatorText { get; set; }
 		public SelectorLambdaOperatorParameters TextAndValueSelector { get; set; }
 		public RequestDetailsParameters RequestDetails { get; set; }
-    }
+		public string ReloadItemsFlowName { get; set; }
+	}
 }

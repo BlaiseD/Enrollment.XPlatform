@@ -14,7 +14,7 @@ using Xamarin.Forms;
 
 namespace Enrollment.XPlatform.ViewModels.Validatables
 {
-    public class MultiSelectValidatableObject<T, E> : ValidatableObjectBase<T> where T : ObservableCollection<E>
+    public class MultiSelectValidatableObject<T, E> : ValidatableObjectBase<T>, IHasItemsSourceValidatable where T : ObservableCollection<E>
     {
         public MultiSelectValidatableObject(string name, MultiSelectFormControlSettingsDescriptor setting, IEnumerable<IValidationRule> validations, IContextProvider contextProvider)
             : base(name, setting.MultiSelectTemplate.TemplateName, validations, contextProvider.UiNotificationService)
@@ -181,6 +181,17 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             canExecute = true;
             this.Title = this._multiSelectFormControlSettingsDescriptor.Title;
             this.Placeholder = this._multiSelectTemplate.PlaceholderText;
+        }
+
+        public void Reload(object entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Clear()
+        {
+            Items = null;
+            Value = this._multiSelectFormControlSettingsDescriptor.ValidationSetting?.DefaultValue as T ?? default;
         }
 
         public ICommand TextChangedCommand => new Command

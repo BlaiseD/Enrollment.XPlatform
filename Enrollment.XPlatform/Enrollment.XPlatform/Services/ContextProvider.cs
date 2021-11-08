@@ -4,7 +4,7 @@ namespace Enrollment.XPlatform.Services
 {
     public class ContextProvider : IContextProvider
     {
-        public ContextProvider(UiNotificationService uiNotificationService, IConditionalValidationConditionsBuilder conditionalValidationConditionsBuilder, IEntityStateUpdater entityStateUpdater, IEntityUpdater entityUpdater, IGetItemFilterBuilder getItemFilterBuilder, IHttpService httpService, IMapper mapper, ISearchSelectorBuilder searchSelectorBuilder, IPropertiesUpdater propertiesUpdater, IReadOnlyPropertiesUpdater readOnlyPropertiesUpdater, IHideIfConditionalDirectiveBuilder hideIfConditionalDirectiveBuilder)
+        public ContextProvider(UiNotificationService uiNotificationService, IConditionalValidationConditionsBuilder conditionalValidationConditionsBuilder, IEntityStateUpdater entityStateUpdater, IEntityUpdater entityUpdater, IGetItemFilterBuilder getItemFilterBuilder, IHttpService httpService, IMapper mapper, ISearchSelectorBuilder searchSelectorBuilder, IPropertiesUpdater propertiesUpdater, IReadOnlyPropertiesUpdater readOnlyPropertiesUpdater, IHideIfConditionalDirectiveBuilder hideIfConditionalDirectiveBuilder, IClearIfConditionalDirectiveBuilder clearIfConditionalDirectiveBuilder, IReloadIfConditionalDirectiveBuilder reloadIfConditionalDirectiveBuilder)
         {
             UiNotificationService = uiNotificationService;
             ConditionalValidationConditionsBuilder = conditionalValidationConditionsBuilder;
@@ -17,6 +17,8 @@ namespace Enrollment.XPlatform.Services
             PropertiesUpdater = propertiesUpdater;
             ReadOnlyPropertiesUpdater = readOnlyPropertiesUpdater;
             HideIfConditionalDirectiveBuilder = hideIfConditionalDirectiveBuilder;
+            ClearIfConditionalDirectiveBuilder = clearIfConditionalDirectiveBuilder;
+            ReloadIfConditionalDirectiveBuilder = reloadIfConditionalDirectiveBuilder;
 
             //passing IContextProvider to FieldsCollectionBuilder will create a circular dependency
             //so creating the instance here instead of using DI.
@@ -27,6 +29,8 @@ namespace Enrollment.XPlatform.Services
 
         public IConditionalValidationConditionsBuilder ConditionalValidationConditionsBuilder { get; }
         public IHideIfConditionalDirectiveBuilder HideIfConditionalDirectiveBuilder { get; }
+        public IClearIfConditionalDirectiveBuilder ClearIfConditionalDirectiveBuilder { get; }
+        public IReloadIfConditionalDirectiveBuilder ReloadIfConditionalDirectiveBuilder { get; }
         public IEntityStateUpdater EntityStateUpdater { get; }
         public IEntityUpdater EntityUpdater { get; }
         public IFieldsCollectionBuilder FieldsCollectionBuilder { get; }

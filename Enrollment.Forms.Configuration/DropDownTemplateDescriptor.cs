@@ -11,5 +11,6 @@ namespace Enrollment.Forms.Configuration
         public string LoadingIndicatorText { get; set; }
         public SelectorLambdaOperatorDescriptor TextAndValueSelector { get; set; }
         public RequestDetailsDescriptor RequestDetails { get; set; }
+        public string ReloadItemsFlowName { get; set; }
     }
 }

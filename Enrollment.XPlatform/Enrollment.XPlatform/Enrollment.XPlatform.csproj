@@ -12,32 +12,56 @@
   <ItemGroup>
     <None Remove="Rulesets\admin.module" />
     <None Remove="Rulesets\admin.resources" />
+    <None Remove="Rulesets\admissions.module" />
+    <None Remove="Rulesets\admissions.resources" />
+    <None Remove="Rulesets\admissionsprogramselector.module" />
+    <None Remove="Rulesets\admissionsprogramselector.resources" />
     <None Remove="Rulesets\home.module" />
     <None Remove="Rulesets\home.resources" />
+    <None Remove="Rulesets\init_admissions.module" />
+    <None Remove="Rulesets\init_admissions.resources" />
+    <None Remove="Rulesets\init_personal.module" />
+    <None Remove="Rulesets\init_personal.resources" />
     <None Remove="Rulesets\nav_admin.module" />
     <None Remove="Rulesets\nav_admin.resources" />
+    <None Remove="Rulesets\nav_admissions.module" />
+    <None Remove="Rulesets\nav_admissions.resources" />
     <None Remove="Rulesets\nav_home.module" />
     <None Remove="Rulesets\nav_home.resources" />
     <None Remove="Rulesets\nav_personal.module" />
     <None Remove="Rulesets\nav_personal.resources" />
     <None Remove="Rulesets\personal.module" />
     <None Remove="Rulesets\personal.resources" />
+    <None Remove="Rulesets\personalcountyselector.module" />
+    <None Remove="Rulesets\personalcountyselector.resources" />
     <None Remove="Rulesets\VariablesMetadata.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Rulesets\admin.module" />
     <EmbeddedResource Include="Rulesets\admin.resources" />
+    <EmbeddedResource Include="Rulesets\admissions.module" />
+    <EmbeddedResource Include="Rulesets\admissions.resources" />
+    <EmbeddedResource Include="Rulesets\admissionsprogramselector.module" />
+    <EmbeddedResource Include="Rulesets\admissionsprogramselector.resources" />
     <EmbeddedResource Include="Rulesets\home.module" />
     <EmbeddedResource Include="Rulesets\home.resources" />
+    <EmbeddedResource Include="Rulesets\init_admissions.module" />
+    <EmbeddedResource Include="Rulesets\init_admissions.resources" />
+    <EmbeddedResource Include="Rulesets\init_personal.module" />
+    <EmbeddedResource Include="Rulesets\init_personal.resources" />
     <EmbeddedResource Include="Rulesets\nav_admin.module" />
     <EmbeddedResource Include="Rulesets\nav_admin.resources" />
+    <EmbeddedResource Include="Rulesets\nav_admissions.module" />
+    <EmbeddedResource Include="Rulesets\nav_admissions.resources" />
     <EmbeddedResource Include="Rulesets\nav_home.module" />
     <EmbeddedResource Include="Rulesets\nav_home.resources" />
     <EmbeddedResource Include="Rulesets\nav_personal.module" />
     <EmbeddedResource Include="Rulesets\nav_personal.resources" />
     <EmbeddedResource Include="Rulesets\personal.module" />
     <EmbeddedResource Include="Rulesets\personal.resources" />
+    <EmbeddedResource Include="Rulesets\personalcountyselector.module" />
+    <EmbeddedResource Include="Rulesets\personalcountyselector.resources" />
     <EmbeddedResource Include="Rulesets\VariablesMetadata.xml" />
   </ItemGroup>
 

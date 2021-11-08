@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Enrollment.Common.Utils\Enrollment.Common.Utils.csproj" />
     <ProjectReference Include="..\Enrollment.Data\Enrollment.Data.csproj" />
     <ProjectReference Include="..\Enrollment.Domain\Enrollment.Domain.csproj" />
     <ProjectReference Include="..\Enrollment.Forms.Configuration\Enrollment.Forms.Configuration.csproj" />

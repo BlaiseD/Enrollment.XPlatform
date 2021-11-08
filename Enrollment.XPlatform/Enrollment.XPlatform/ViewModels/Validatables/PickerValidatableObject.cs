@@ -1,31 +1,39 @@
-﻿using Enrollment.Bsl.Business.Requests;
+﻿using AutoMapper;
+using Enrollment.Bsl.Business.Requests;
 using Enrollment.Bsl.Business.Responses;
+using Enrollment.Common.Configuration.ExpressionDescriptors;
 using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Parameters.Expressions;
 using Enrollment.Utils;
+using Enrollment.XPlatform.Flow.Requests;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Enrollment.XPlatform.ViewModels.Validatables
 {
-    public class PickerValidatableObject<T> : ValidatableObjectBase<T>
+    public class PickerValidatableObject<T> : ValidatableObjectBase<T>, IHasItemsSourceValidatable
     {
-        public PickerValidatableObject(string name, DropDownTemplateDescriptor dropDownTemplate, IEnumerable<IValidationRule> validations, IContextProvider contextProvider) 
+        public PickerValidatableObject(string name, T defaultValue, DropDownTemplateDescriptor dropDownTemplate, IEnumerable<IValidationRule> validations, IContextProvider contextProvider) 
             : base(name, dropDownTemplate.TemplateName, validations, contextProvider.UiNotificationService)
-        {       
+        {
+            this.defaultValue = defaultValue;
             this._dropDownTemplate = dropDownTemplate;
             this.httpService = contextProvider.HttpService;
             this.Title = this._dropDownTemplate.LoadingIndicatorText;
+            this.mapper = contextProvider.Mapper;
             GetItemSource();
         }
 
+        private T defaultValue;
         private readonly IHttpService httpService;
         private readonly DropDownTemplateDescriptor _dropDownTemplate;
+        private readonly IMapper mapper;
 
         public DropDownTemplateDescriptor DropDownTemplate => _dropDownTemplate;
 
@@ -91,6 +99,11 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
         private async void GetItemSource()
         {
+            await GetItems(this.DropDownTemplate.TextAndValueSelector);
+        }
+
+        private async Task GetItems(SelectorLambdaOperatorDescriptor selector)
+        {
             try
             {
                 BaseResponse response = await this.httpService.GetObjectDropDown
@@ -101,7 +114,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
                         ModelType = this._dropDownTemplate.RequestDetails.ModelType,
                         ModelReturnType = this._dropDownTemplate.RequestDetails.ModelReturnType,
                         DataReturnType = this._dropDownTemplate.RequestDetails.DataReturnType,
-                        Selector = this.DropDownTemplate.TextAndValueSelector
+                        Selector = selector
                     },
                     this._dropDownTemplate.RequestDetails.DataSourceUrl
                 );
@@ -131,6 +144,56 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
                 System.Diagnostics.Debug.WriteLine($"{ e.GetType().Name + " : " + e.Message}");
                 throw;
             }
+        }
+
+        public async void Reload(object entity)
+        {
+            await this.uiNotificationService.RunDataFlow
+            (
+                new NewFlowRequest 
+                { 
+                    InitialModuleName = this._dropDownTemplate.ReloadItemsFlowName
+                }
+            );
+
+            if ((this.uiNotificationService.GetFlowDataCacheItem($"Get_{this.Name}_Selector_Success") ?? false).Equals(false))
+                return;
+
+            SelectorLambdaOperatorDescriptor selector = this.mapper.Map<SelectorLambdaOperatorDescriptor>
+            (
+                this.uiNotificationService.GetFlowDataCacheItem($"{this.Name}_{typeof(SelectorLambdaOperatorParameters).FullName}")
+            );
+
+            this.Title = this._dropDownTemplate.LoadingIndicatorText;
+
+            await GetItems(selector);
+
+            Value = GetExistingValue() ?? this.defaultValue ?? default;
+
+            IsValid = Validate();
+
+            T GetExistingValue()
+            {
+                object existing = Items.FirstOrDefault
+                (
+                    i => EqualityComparer<T>.Default.Equals
+                    (
+                        Value,
+                        i.GetPropertyValue<T>(_dropDownTemplate.ValueField)
+                    )
+                );
+
+                return existing == null 
+                    ? this.defaultValue ?? default 
+                    : existing.GetPropertyValue<T>(_dropDownTemplate.ValueField);
+            }
+        }
+
+        public void Clear()
+        {
+            Items = null;
+            Value = this.defaultValue ?? default;
+            IsValid = Validate();
         }
 
         public ICommand SelectedIndexChangedCommand => new Command
