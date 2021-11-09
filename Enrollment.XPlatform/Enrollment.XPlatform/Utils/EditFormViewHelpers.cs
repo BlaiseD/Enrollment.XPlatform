@@ -218,9 +218,13 @@ namespace Enrollment.XPlatform.Utils
                             .AddBinding(EventToCommandBehavior.CommandProperty, new Binding(nameof(SwitchValidatableObject.ToggledCommand)))
                         }
                     }
-                    .AddBinding(Switch.IsToggledProperty, new Binding(nameof(SwitchValidatableObject.Value))),
+                    .AddBinding(Switch.IsToggledProperty, new Binding(nameof(SwitchValidatableObject.Value)))
+                    .AssignDynamicResource(Switch.OnColorProperty, "SwitchOnColor")
+                    .AssignDynamicResource(Switch.ThumbColorProperty, "SwitchThumbColor"),
                     new Label
                     {
+                        Margin = new Thickness(2),
+                        Padding = new Thickness(7),
                         VerticalOptions = LayoutOptions.Center
                     }
                     .AddBinding(Label.TextProperty, new Binding(nameof(SwitchValidatableObject.SwitchLabel)))

@@ -23,4 +23,6 @@
         <On Platform="Android">#999999</On>
     </OnPlatform>
     <Color x:Key="PopupViewBackgroundColor">#B2171717</Color>
+    <Color x:Key="SwitchThumbColor">White</Color>
+    <Color x:Key="SwitchOnColor">#34C759</Color>
 </ResourceDictionary>

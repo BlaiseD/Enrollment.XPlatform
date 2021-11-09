@@ -27,7 +27,7 @@ namespace Enrollment.BSL.AutoMapperProfiles
             CreateMap<CertificationModel, Certification>();
 
             CreateMap<ContactInfo, ContactInfoModel>()
-                .ForMember(dest => dest.ConfirmSocialSecurityNumber, opt => opt.Ignore())
+                .ForMember(dest => dest.ConfirmSocialSecurityNumber, opts => opts.MapFrom(src => src.SocialSecurityNumber))
                 .ForAllMembers(o => o.ExplicitExpansion());
             CreateMap<ContactInfoModel, ContactInfo>();
 

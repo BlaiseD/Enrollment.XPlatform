@@ -27,6 +27,17 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             }
         }
 
+        public override bool Value
+        {
+            get => base.Value;
+            set
+            {
+                base.Value = value;
+                this.uiNotificationService.NotifyPropertyChanged(this.Name);
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand ToggledCommand => new Command
         (
             () =>
