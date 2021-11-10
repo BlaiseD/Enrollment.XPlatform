@@ -18,5 +18,6 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
         Dictionary<string, string> Errors { get; set; }
 
         bool Validate();
+        void Clear();
     }
 }

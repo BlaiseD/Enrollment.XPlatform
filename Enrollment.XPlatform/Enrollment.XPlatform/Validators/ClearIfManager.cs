@@ -34,19 +34,16 @@ namespace Enrollment.XPlatform.Validators
 
             void DoCheck(IValidatable currentValidatable)
             {
-                if (currentValidatable is IHasItemsSourceValidatable hasItemsSource)
-                {
-                    if
+                if
+                (
+                    ShouldClear
                     (
-                        ShouldClear
-                        (
-                            mapper.Map<TModel>(CurrentProperties.ToDictionary(p => p.Name, p => p.Value)),
-                            condition.Evaluator
-                        )
+                        mapper.Map<TModel>(CurrentProperties.ToDictionary(p => p.Name, p => p.Value)),
+                        condition.Evaluator
                     )
-                    {
-                        hasItemsSource.Clear();
-                    }
+                )
+                {
+                    currentValidatable.Clear();
                 }
             }
 

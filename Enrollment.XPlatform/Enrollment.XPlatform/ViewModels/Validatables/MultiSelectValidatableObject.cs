@@ -188,7 +188,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             throw new NotImplementedException();
         }
 
-        public void Clear()
+        public override void Clear()
         {
             Items = null;
             Value = this._multiSelectFormControlSettingsDescriptor.ValidationSetting?.DefaultValue as T ?? default;
@@ -253,10 +253,6 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
                             () => App.Current.MainPage.Navigation.PushModalAsync
                             (
                                 new Views.MultiSelectPageCS(this)
-                                //new Views.MultiSelectPage()
-                                //{
-                                //    BindingContext = this
-                                //}
                             )
                         );
                     });

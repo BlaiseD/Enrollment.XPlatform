@@ -81,6 +81,8 @@ namespace Enrollment.XPlatform.Validators.Rules
                 return GetIsPatternMatchRule();
             else if (validator.ClassName == nameof(IsValueTrueRule))
                 return GetIsValueTrueRule();
+            else if (validator.ClassName == nameof(AtLeastOneRequiredRule<List<string>>))
+                return GetAtLeastOneRequiredRule();
             else
                 throw new ArgumentException($"{nameof(validator.ClassName)}: CF4FDB4D-F135-40E0-BB31-14DBA624FC25");
 
@@ -226,6 +228,34 @@ namespace Enrollment.XPlatform.Validators.Rules
                     }
                 );
             }
+
+            IValidationRule GetAtLeastOneRequiredRule()
+            {
+                return (IValidationRule)typeof(ValidatorRuleFactory).GetMethod
+                (
+                    "GetAtLeastOneRequiredRule",
+                    1,
+                    BindingFlags.NonPublic | BindingFlags.Instance,
+                    null,
+                    new Type[]
+                    {
+                        typeof(FormControlSettingsDescriptor),
+                        typeof(string),
+                        typeof(ObservableCollection<IValidatable>)
+                    },
+                    null
+                )
+                .MakeGenericMethod(Type.GetType(setting.Type)).Invoke
+                (
+                    this,
+                    new object[]
+                    {
+                        setting,
+                        validationMessage,
+                        fields
+                    }
+                );
+            }
         }
 
         private IValidationRule GetRangeRule<T>(ValidatorDefinitionDescriptor validator, FormControlSettingsDescriptor setting, string validationMessage, ObservableCollection<IValidatable> fields) where T : IComparable<T>
@@ -244,6 +274,26 @@ namespace Enrollment.XPlatform.Validators.Rules
                 fields,
                 (T)minDescriptor.Value,
                 (T)maxDescriptor.Value
+            );
+        }
+
+        private IValidationRule GetAtLeastOneRequiredRule<T>(FormControlSettingsDescriptor setting, string validationMessage, ObservableCollection<IValidatable> fields) where T : IEnumerable<object>
+        {
+            return (IValidationRule)Activator.CreateInstance
+            (
+                typeof(AtLeastOneRequiredRule<>).MakeGenericType
+                (
+                    typeof(ObservableCollection<>).MakeGenericType
+                    (
+                        typeof(T).GetGenericArguments()[0]
+                    )
+                ),
+                new object[]
+                {
+                    GetFieldName(setting.Field),
+                    validationMessage,
+                    fields
+                }
             );
         }
 
