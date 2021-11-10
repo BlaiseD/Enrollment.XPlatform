@@ -32,7 +32,8 @@ namespace Enrollment.XPlatform.Tests
             //act
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.AcademicForm
+                Descriptors.AcademicForm,
+                typeof(AcademicModel)
             ).Properties;
 
             //assert

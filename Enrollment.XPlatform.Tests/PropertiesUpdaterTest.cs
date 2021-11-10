@@ -62,7 +62,8 @@ namespace Enrollment.XPlatform.Tests
 
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.ResidencyForm
+                Descriptors.ResidencyForm,
+                typeof(ResidencyModel)
             ).Properties;
 
             //act
@@ -129,7 +130,8 @@ namespace Enrollment.XPlatform.Tests
 
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.AcademicForm
+                Descriptors.AcademicForm,
+                typeof(AcademicModel)
             ).Properties;
 
             //act

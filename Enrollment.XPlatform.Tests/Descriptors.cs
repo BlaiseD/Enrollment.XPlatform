@@ -896,6 +896,7 @@ namespace Enrollment.XPlatform.Tests
                             }
                         },
                     },
+                    Type = typeof(ICollection<InstitutionModel>).AssemblyQualifiedName,
                     ModelType = typeof(InstitutionModel).AssemblyQualifiedName,
                     KeyFields = new List<string> { "InstitutionId" }
                 }

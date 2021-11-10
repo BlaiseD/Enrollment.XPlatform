@@ -7,7 +7,7 @@ namespace Enrollment.XPlatform.Utils
 {
     internal class UpdateOnlyFieldsCollectionHelper : FieldsCollectionHelper
     {
-        public UpdateOnlyFieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, EditFormLayout formLayout = null, string parentName = null) : base(formSettings, contextProvider, formLayout, parentName)
+        public UpdateOnlyFieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, Type modelType, EditFormLayout formLayout = null, string parentName = null) : base(formSettings, contextProvider, modelType, formLayout, parentName)
         {
         }
 
@@ -27,10 +27,11 @@ namespace Enrollment.XPlatform.Utils
 
         protected override void AddFormGroupInline(FormGroupSettingsDescriptor setting)
         {
-            new FieldsCollectionHelper
+            new UpdateOnlyFieldsCollectionHelper
             (
                 setting,
                 this.contextProvider,
+                this.modelType,
                 this.formLayout,
                 GetFieldName(setting.Field)
             ).CreateFields();

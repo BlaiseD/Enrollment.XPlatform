@@ -32,7 +32,8 @@ namespace Enrollment.XPlatform.Tests
             //act
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IUpdateOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.ResidencyForm
+                Descriptors.ResidencyForm,
+                typeof(ResidencyModel)
             ).Properties;
 
             //assert

@@ -58,7 +58,7 @@ namespace Enrollment.XPlatform.Tests
                 }
             };
 
-            ObservableCollection<IValidatable> modifiedProperties = CreateValidatablesFormSettings(formDescriptor);
+            ObservableCollection<IValidatable> modifiedProperties = CreateValidatablesFormSettings(formDescriptor, typeof(ResidencyModel));
             IDictionary<string, IValidatable> propertiesDictionary = modifiedProperties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 3;
             propertiesDictionary["CitizenshipStatus"].Value = "US";
@@ -156,7 +156,7 @@ namespace Enrollment.XPlatform.Tests
                 }
             };
 
-            ObservableCollection<IValidatable> modifiedProperties = CreateValidatablesFormSettings(formDescriptor);
+            ObservableCollection<IValidatable> modifiedProperties = CreateValidatablesFormSettings(formDescriptor, typeof(AcademicModel));
             IDictionary<string, IValidatable> propertiesDictionary = modifiedProperties.ToDictionary(property => property.Name);
 
             propertiesDictionary["LastHighSchoolLocation"].Value = "NC";
@@ -227,7 +227,7 @@ namespace Enrollment.XPlatform.Tests
             EditFormSettingsDescriptor formDescriptor = Descriptors.AcademicForm;
             AcademicModel academicModel = null;
 
-            ObservableCollection<IValidatable> modifiedProperties = CreateValidatablesFormSettings(formDescriptor);
+            ObservableCollection<IValidatable> modifiedProperties = CreateValidatablesFormSettings(formDescriptor, typeof(AcademicModel));
             IDictionary<string, IValidatable> propertiesDictionary = modifiedProperties.ToDictionary(property => property.Name);
             propertiesDictionary["LastHighSchoolLocation"].Value = "NC";
             propertiesDictionary["NcHighSchoolName"].Value = "NCSCHOOL1";
@@ -292,11 +292,12 @@ namespace Enrollment.XPlatform.Tests
         private IServiceProvider serviceProvider;
         #endregion Fields
 
-        private ObservableCollection<IValidatable> CreateValidatablesFormSettings(IFormGroupSettings formSettings)
+        private ObservableCollection<IValidatable> CreateValidatablesFormSettings(IFormGroupSettings formSettings, Type modelType)
         {
             return serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                formSettings
+                formSettings,
+                modelType
             ).Properties;
         }
         static MapperConfiguration MapperConfiguration;

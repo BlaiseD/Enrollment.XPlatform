@@ -14,7 +14,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
         protected override void CreateFieldsCollection()
         {
-            FormLayout = this.fieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
+            FormLayout = this.fieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings, typeof(T));
         }
 
         public event EventHandler AddCancelled;

@@ -19,6 +19,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
         public EditFormEntityViewModel(ScreenSettings<EditFormSettingsDescriptor> screenSettings, IContextProvider contextProvider)
             : base(screenSettings, contextProvider)
         {
+            FormLayout = contextProvider.FieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings, typeof(TModel));
             this.entityStateUpdater = contextProvider.EntityStateUpdater;
             this.httpService = contextProvider.HttpService;
             this.propertiesUpdater = contextProvider.PropertiesUpdater;

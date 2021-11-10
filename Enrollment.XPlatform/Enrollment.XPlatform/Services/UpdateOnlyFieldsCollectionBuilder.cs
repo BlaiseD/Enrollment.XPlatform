@@ -1,6 +1,7 @@
 ﻿using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels;
+using System;
 
 namespace Enrollment.XPlatform.Services
 {
@@ -13,7 +14,7 @@ namespace Enrollment.XPlatform.Services
             this.contextProvider = contextProvider;
         }
 
-        public EditFormLayout CreateFieldsCollection(IFormGroupSettings formSettings)
-            => new UpdateOnlyFieldsCollectionHelper(formSettings, this.contextProvider).CreateFields();
+        public EditFormLayout CreateFieldsCollection(IFormGroupSettings formSettings, Type modelType)
+            => new UpdateOnlyFieldsCollectionHelper(formSettings, this.contextProvider, modelType).CreateFields();
     }
 }

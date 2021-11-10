@@ -33,7 +33,8 @@ namespace Enrollment.XPlatform.Tests
             //arrange
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.ResidencyForm
+                Descriptors.ResidencyForm, 
+                typeof(ResidencyModel)
             ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 3;
@@ -88,7 +89,8 @@ namespace Enrollment.XPlatform.Tests
             //arrange
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.AcademicForm
+                Descriptors.AcademicForm,
+                typeof(AcademicModel)
             ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 1;
@@ -158,7 +160,8 @@ namespace Enrollment.XPlatform.Tests
             //arrange
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.AcademicForm
+                Descriptors.AcademicForm,
+                typeof(AcademicModel)
             ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 1;
@@ -227,7 +230,8 @@ namespace Enrollment.XPlatform.Tests
             //arrange
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.AcademicForm
+                Descriptors.AcademicForm,
+                typeof(AcademicModel)
             ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["NcHighSchoolName"].Value = null;
@@ -251,7 +255,8 @@ namespace Enrollment.XPlatform.Tests
             //arrange
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.ResidencyForm
+                Descriptors.ResidencyForm,
+                typeof(ResidencyModel)
             ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 3;
@@ -282,7 +287,8 @@ namespace Enrollment.XPlatform.Tests
             //arrange
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.AcademicForm
+                Descriptors.AcademicForm,
+                typeof(AcademicModel)
             ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["UserId"].Value = 1;
@@ -319,7 +325,8 @@ namespace Enrollment.XPlatform.Tests
             //arrange
             ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.PersonalFrom
+                Descriptors.PersonalFrom,
+                typeof(UserModel)
             ).Properties;
             IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
             propertiesDictionary["Personal.FirstName"].Value = "John";

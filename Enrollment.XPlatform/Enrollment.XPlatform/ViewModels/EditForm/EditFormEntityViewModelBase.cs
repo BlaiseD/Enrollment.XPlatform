@@ -22,7 +22,6 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
             this.UiNotificationService = contextProvider.UiNotificationService;
             FormSettings = screenSettings.Settings;
             Buttons = new ObservableCollection<CommandButtonDescriptor>(screenSettings.CommandButtons);
-            FormLayout = contextProvider.FieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
         }
 
         public Dictionary<string, IValidatable> BindingPropertiesDictionary

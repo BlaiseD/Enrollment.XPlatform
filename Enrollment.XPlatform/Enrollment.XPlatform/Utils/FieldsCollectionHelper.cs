@@ -6,6 +6,8 @@ using Enrollment.XPlatform.Validators;
 using Enrollment.XPlatform.Validators.Rules;
 using Enrollment.XPlatform.ViewModels;
 using Enrollment.XPlatform.ViewModels.Validatables;
+using LogicBuilder.Expressions.Utils;
+using LogicBuilder.RulesDirector;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,11 +22,13 @@ namespace Enrollment.XPlatform.Utils
         private readonly UiNotificationService uiNotificationService;
         protected readonly IContextProvider contextProvider;
         private readonly string parentName;
+        protected readonly Type modelType;
 
-        public FieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, EditFormLayout formLayout = null, string parentName = null)
+        public FieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, Type modelType, EditFormLayout formLayout = null, string parentName = null)
         {
             this.formSettings = formSettings;
             this.contextProvider = contextProvider;
+            this.modelType = modelType;
             this.uiNotificationService = contextProvider.UiNotificationService;
 
             if(formLayout == null)
@@ -97,6 +101,8 @@ namespace Enrollment.XPlatform.Utils
 
         private void AddFormGroupSettings(FormGroupSettingsDescriptor setting)
         {
+            ValidateSettingType(GetFieldName(setting.Field), setting.ModelType);
+
             if (setting.FormGroupTemplate == null
                 || string.IsNullOrEmpty(setting.FormGroupTemplate.TemplateName))
                 throw new ArgumentException($"{nameof(setting.FormGroupTemplate)}: 4817E6BF-0B48-4829-BAB8-7AD17E006EA7");
@@ -125,6 +131,7 @@ namespace Enrollment.XPlatform.Utils
             (
                 setting,
                 this.contextProvider,
+                this.modelType,
                 this.formLayout,
                 GetFieldName(setting.Field)
             ).CreateFields();
@@ -132,6 +139,8 @@ namespace Enrollment.XPlatform.Utils
 
         protected virtual void AddFormControl(FormControlSettingsDescriptor setting)
         {
+            ValidateSettingType(GetFieldName(setting.Field), setting.Type);
+
             if (setting.TextTemplate != null)
                 AddTextControl(setting, setting.TextTemplate);
             else if (setting.DropDownTemplate != null)
@@ -206,6 +215,8 @@ namespace Enrollment.XPlatform.Utils
 
         private void AddFormGroupArray(FormGroupArraySettingsDescriptor setting)
         {
+            ValidateSettingType(GetFieldName(setting.Field), setting.Type);
+
             if (setting.FormGroupTemplate == null
                 || string.IsNullOrEmpty(setting.FormGroupTemplate.TemplateName))
                 throw new ArgumentException($"{nameof(setting.FormGroupTemplate)}: 0B1F7121-915F-48B9-96A3-B410A67E6853");
@@ -222,6 +233,8 @@ namespace Enrollment.XPlatform.Utils
 
         private void AddMultiSelectControl(MultiSelectFormControlSettingsDescriptor setting)
         {
+            ValidateSettingType(GetFieldName(setting.Field), setting.Type);
+
             if (setting.MultiSelectTemplate.TemplateName == nameof(QuestionTemplateSelector.MultiSelectTemplate))
             {
                 formLayout.Add(CreateMultiSelectValidatableObject(setting));
@@ -404,5 +417,14 @@ namespace Enrollment.XPlatform.Utils
                 this.formSettings.ValidationMessages,
                 formLayout.Properties
             );
+
+        private void ValidateSettingType(string fullPropertyName, string settingFieldType)
+        {
+            if (!GetModelFieldType(fullPropertyName).AssignableFrom(Type.GetType(settingFieldType)))
+                throw new ArgumentException($"{nameof(settingFieldType)}: 24C9ECA2-D309-47A0-9510-C380C9C812C0");
+
+            Type GetModelFieldType(string fullPropertyName)
+                => this.modelType.GetMemberInfoFromFullName(fullPropertyName).GetMemberType();
+        }
     }
 }
