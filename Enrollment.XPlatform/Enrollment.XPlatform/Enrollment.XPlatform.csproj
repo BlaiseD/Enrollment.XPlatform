@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Rulesets\academic.module" />
+    <None Remove="Rulesets\academic.resources" />
     <None Remove="Rulesets\admin.module" />
     <None Remove="Rulesets\admin.resources" />
     <None Remove="Rulesets\admissions.module" />
@@ -20,6 +22,8 @@
     <None Remove="Rulesets\contactinfo.resources" />
     <None Remove="Rulesets\home.module" />
     <None Remove="Rulesets\home.resources" />
+    <None Remove="Rulesets\init_academic.module" />
+    <None Remove="Rulesets\init_academic.resources" />
     <None Remove="Rulesets\init_admissions.module" />
     <None Remove="Rulesets\init_admissions.resources" />
     <None Remove="Rulesets\init_contactinfo.module" />
@@ -28,6 +32,10 @@
     <None Remove="Rulesets\init_personal.resources" />
     <None Remove="Rulesets\init_residency.module" />
     <None Remove="Rulesets\init_residency.resources" />
+    <None Remove="Rulesets\institutionnameselector.module" />
+    <None Remove="Rulesets\institutionnameselector.resources" />
+    <None Remove="Rulesets\nav_academic.module" />
+    <None Remove="Rulesets\nav_academic.resources" />
     <None Remove="Rulesets\nav_admin.module" />
     <None Remove="Rulesets\nav_admin.resources" />
     <None Remove="Rulesets\nav_admissions.module" />
@@ -50,6 +58,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Rulesets\academic.module" />
+    <EmbeddedResource Include="Rulesets\academic.resources" />
     <EmbeddedResource Include="Rulesets\admin.module" />
     <EmbeddedResource Include="Rulesets\admin.resources" />
     <EmbeddedResource Include="Rulesets\admissions.module" />
@@ -60,6 +70,8 @@
     <EmbeddedResource Include="Rulesets\contactinfo.resources" />
     <EmbeddedResource Include="Rulesets\home.module" />
     <EmbeddedResource Include="Rulesets\home.resources" />
+    <EmbeddedResource Include="Rulesets\init_academic.module" />
+    <EmbeddedResource Include="Rulesets\init_academic.resources" />
     <EmbeddedResource Include="Rulesets\init_admissions.module" />
     <EmbeddedResource Include="Rulesets\init_admissions.resources" />
     <EmbeddedResource Include="Rulesets\init_contactinfo.module" />
@@ -68,6 +80,10 @@
     <EmbeddedResource Include="Rulesets\init_personal.resources" />
     <EmbeddedResource Include="Rulesets\init_residency.module" />
     <EmbeddedResource Include="Rulesets\init_residency.resources" />
+    <EmbeddedResource Include="Rulesets\institutionnameselector.module" />
+    <EmbeddedResource Include="Rulesets\institutionnameselector.resources" />
+    <EmbeddedResource Include="Rulesets\nav_academic.module" />
+    <EmbeddedResource Include="Rulesets\nav_academic.resources" />
     <EmbeddedResource Include="Rulesets\nav_admin.module" />
     <EmbeddedResource Include="Rulesets\nav_admin.resources" />
     <EmbeddedResource Include="Rulesets\nav_admissions.module" />

@@ -2,9 +2,10 @@
 using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.Validatables;
+using LogicBuilder.Expressions.Utils;
+using LogicBuilder.RulesDirector;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Enrollment.XPlatform.Services
@@ -31,12 +32,14 @@ namespace Enrollment.XPlatform.Services
                 {
                     if (existingValues.TryGetValue(multiSelectFormControlSetting.Field, out object @value) && @value != null)
                     {
-                        propertiesDictionary[GetFieldName(multiSelectFormControlSetting.Field)].Value = Activator.CreateInstance
+                        IValidatable multiSelectValidatable = propertiesDictionary[GetFieldName(multiSelectFormControlSetting.Field)];
+
+                        if (!multiSelectValidatable.Type.GetUnderlyingElementType().AssignableFrom(@value.GetType().GetUnderlyingElementType()))
+                            throw new ArgumentException($"{nameof(multiSelectFormControlSetting)}: 74B8794A-9C00-4A25-8089-10957DF0A5EC");
+
+                        multiSelectValidatable.Value = Activator.CreateInstance
                         (
-                            typeof(ObservableCollection<>).MakeGenericType
-                            (
-                                Type.GetType(multiSelectFormControlSetting.MultiSelectTemplate.ModelType)
-                            ),
+                            multiSelectValidatable.Type,
                             new object[] { @value }
                         );
                     }
@@ -44,7 +47,12 @@ namespace Enrollment.XPlatform.Services
                 else if (setting is FormControlSettingsDescriptor controlSetting)
                 {//must stay after MultiSelect because MultiSelect extends FormControl
                     if (existingValues.TryGetValue(controlSetting.Field, out object @value) && @value != null)
+                    {
+                        if (!propertiesDictionary[GetFieldName(controlSetting.Field)].Type.AssignableFrom(@value.GetType()))
+                            throw new ArgumentException($"{nameof(controlSetting)}: F4B014E4-B04C-455D-8AE5-1F2551BEC190");
+
                         propertiesDictionary[GetFieldName(controlSetting.Field)].Value = @value;
+                    }
                 }
                 else if (setting is FormGroupSettingsDescriptor formGroupSetting)
                 {
@@ -56,7 +64,12 @@ namespace Enrollment.XPlatform.Services
                         if (formGroupSetting.FormGroupTemplate.TemplateName == FromGroupTemplateNames.InlineFormGroupTemplate)
                             UpdateValidatables(properties, @value, formGroupSetting.FieldSettings, GetFieldName(formGroupSetting.Field));
                         else if (formGroupSetting.FormGroupTemplate.TemplateName == FromGroupTemplateNames.PopupFormGroupTemplate)
+                        {
+                            if (!propertiesDictionary[GetFieldName(formGroupSetting.Field)].Type.AssignableFrom(@value.GetType()))
+                                throw new ArgumentException($"{nameof(formGroupSetting)}: 83ADA1B9-5951-4643-BE40-E9BB6DB45C06");
+
                             propertiesDictionary[GetFieldName(formGroupSetting.Field)].Value = @value;
+                        }
                         else
                             throw new ArgumentException($"{nameof(formGroupSetting.FormGroupTemplate.TemplateName)}: 5504FE49-2766-4D7C-916D-8FC633477DB1");
                     }
@@ -65,12 +78,14 @@ namespace Enrollment.XPlatform.Services
                 {
                     if (existingValues.TryGetValue(formGroupArraySetting.Field, out object @value) && @value != null)
                     {
-                        propertiesDictionary[GetFieldName(formGroupArraySetting.Field)].Value = Activator.CreateInstance
+                        IValidatable forArrayValidatable = propertiesDictionary[GetFieldName(formGroupArraySetting.Field)];
+
+                        if (!forArrayValidatable.Type.GetUnderlyingElementType().AssignableFrom(@value.GetType().GetUnderlyingElementType()))
+                            throw new ArgumentException($"{nameof(multiSelectFormControlSetting)}: CCB454D1-8119-475B-9A2B-1EB10E513959");
+
+                        forArrayValidatable.Value = Activator.CreateInstance
                         (
-                            typeof(ObservableCollection<>).MakeGenericType
-                            (
-                                Type.GetType(formGroupArraySetting.ModelType)
-                            ),
+                            forArrayValidatable.Type,
                             new object[] { @value }
                         );
                     }

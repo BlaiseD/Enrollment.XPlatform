@@ -332,10 +332,10 @@ namespace Enrollment.XPlatform.Utils
                     {
                         EventName = nameof(DatePicker.DateSelected)
                     }
-                    .AddBinding(EventToCommandBehavior.CommandProperty, new Binding(nameof(DatePickerValidatableObject.DateChangedCommand)))
+                    .AddBinding(EventToCommandBehavior.CommandProperty, new Binding(nameof(DatePickerValidatableObject<DateTime>.DateChangedCommand)))
                 }
             }
-            .AddBinding(DatePicker.DateProperty, new Binding(nameof(DatePickerValidatableObject.Value)))
+            .AddBinding(DatePicker.DateProperty, new Binding(nameof(DatePickerValidatableObject<DateTime>.Value)))
             .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)));
 
         public static Entry GetEntryForMultiSelectControl()

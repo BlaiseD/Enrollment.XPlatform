@@ -1,4 +1,5 @@
 ﻿using Enrollment.XPlatform.Validators;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -139,6 +140,8 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
         public List<IValidationRule> Validations { get; }
 
         object IValidatable.Value { get => Value; set => Value = (T)value; }
+
+        public Type Type => typeof(T);
         #endregion Properties
 
         public virtual bool Validate()

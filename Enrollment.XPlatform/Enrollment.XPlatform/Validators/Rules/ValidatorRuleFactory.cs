@@ -1,6 +1,7 @@
 ﻿using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.Forms.Configuration.Validation;
 using Enrollment.XPlatform.ViewModels.Validatables;
+using LogicBuilder.RulesDirector;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -172,7 +173,7 @@ namespace Enrollment.XPlatform.Validators.Rules
             IValidationRule GetRequiredRule()
             {
                 if (setting.ValidationSetting?.DefaultValue != null
-                    && setting.ValidationSetting.DefaultValue.GetType() != typeof(T))
+                    && !typeof(T).AssignableFrom(setting.ValidationSetting.DefaultValue.GetType()))
                     throw new ArgumentException($"{nameof(setting.ValidationSetting.DefaultValue)}: C96394B8-B26B-45B2-8C34-B9BA3FF95088");
 
                 return new RequiredRule<T>

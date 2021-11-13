@@ -1,4 +1,5 @@
 ﻿using Enrollment.XPlatform.Validators;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -13,6 +14,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
         bool IsVisible { get; set; }
         bool IsEnabled { get; set; }
         object Value { get; set; }
+        Type Type { get; }
 
         List<IValidationRule> Validations { get; }
         Dictionary<string, string> Errors { get; set; }

@@ -41,8 +41,8 @@ namespace Enrollment.XPlatform.Tests
             Assert.Equal(typeof(HiddenValidatableObject<int>), propertiesDictionary["UserId"].GetType());
             Assert.Equal(typeof(PickerValidatableObject<string>), propertiesDictionary["LastHighSchoolLocation"].GetType());
             Assert.Equal(typeof(PickerValidatableObject<string>), propertiesDictionary["NcHighSchoolName"].GetType());
-            Assert.Equal(typeof(DatePickerValidatableObject), propertiesDictionary["FromDate"].GetType());
-            Assert.Equal(typeof(DatePickerValidatableObject), propertiesDictionary["ToDate"].GetType());
+            Assert.Equal(typeof(DatePickerValidatableObject<DateTime>), propertiesDictionary["FromDate"].GetType());
+            Assert.Equal(typeof(DatePickerValidatableObject<DateTime>), propertiesDictionary["ToDate"].GetType());
             Assert.Equal(typeof(PickerValidatableObject<string>), propertiesDictionary["GraduationStatus"].GetType());
             Assert.Equal(typeof(SwitchValidatableObject), propertiesDictionary["EarnedCreditAtCmc"].GetType());
             Assert.Equal(typeof(FormArrayValidatableObject<ObservableCollection<InstitutionModel>, InstitutionModel>), propertiesDictionary["Institutions"].GetType());

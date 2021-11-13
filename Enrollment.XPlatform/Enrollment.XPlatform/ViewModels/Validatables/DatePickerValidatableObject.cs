@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace Enrollment.XPlatform.ViewModels.Validatables
 {
-    public class DatePickerValidatableObject : ValidatableObjectBase<DateTime>
+    public class DatePickerValidatableObject<T> : ValidatableObjectBase<T>
     {
         public DatePickerValidatableObject(string name, string templateName, IEnumerable<IValidationRule> validations, UiNotificationService uiNotificationService) 
             : base(name, templateName, validations, uiNotificationService)
