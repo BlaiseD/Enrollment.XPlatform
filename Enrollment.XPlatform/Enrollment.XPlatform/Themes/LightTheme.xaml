@@ -25,4 +25,6 @@
     <Color x:Key="PopupViewBackgroundColor">#B2F2F2F2</Color>
     <Color x:Key="SwitchThumbColor">Black</Color>
     <Color x:Key="SwitchOnColor">#34C759</Color>
+    <Color x:Key="CheckBoxColor">#CCCCCC</Color>
+    <Color x:Key="CheckBoxCheckedColor">#34C759</Color>
 </ResourceDictionary>

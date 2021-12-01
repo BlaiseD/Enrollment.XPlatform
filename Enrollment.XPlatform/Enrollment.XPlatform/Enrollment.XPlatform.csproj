@@ -18,6 +18,8 @@
     <None Remove="Rulesets\admissions.resources" />
     <None Remove="Rulesets\admissionsprogramselector.module" />
     <None Remove="Rulesets\admissionsprogramselector.resources" />
+    <None Remove="Rulesets\certification.module" />
+    <None Remove="Rulesets\certification.resources" />
     <None Remove="Rulesets\contactinfo.module" />
     <None Remove="Rulesets\contactinfo.resources" />
     <None Remove="Rulesets\home.module" />
@@ -26,6 +28,8 @@
     <None Remove="Rulesets\init_academic.resources" />
     <None Remove="Rulesets\init_admissions.module" />
     <None Remove="Rulesets\init_admissions.resources" />
+    <None Remove="Rulesets\init_certification.module" />
+    <None Remove="Rulesets\init_certification.resources" />
     <None Remove="Rulesets\init_contactinfo.module" />
     <None Remove="Rulesets\init_contactinfo.resources" />
     <None Remove="Rulesets\init_moreinfo.module" />
@@ -44,6 +48,8 @@
     <None Remove="Rulesets\nav_admin.resources" />
     <None Remove="Rulesets\nav_admissions.module" />
     <None Remove="Rulesets\nav_admissions.resources" />
+    <None Remove="Rulesets\nav_certification.module" />
+    <None Remove="Rulesets\nav_certification.resources" />
     <None Remove="Rulesets\nav_contactinfo.module" />
     <None Remove="Rulesets\nav_contactinfo.resources" />
     <None Remove="Rulesets\nav_home.module" />
@@ -72,6 +78,8 @@
     <EmbeddedResource Include="Rulesets\admissions.resources" />
     <EmbeddedResource Include="Rulesets\admissionsprogramselector.module" />
     <EmbeddedResource Include="Rulesets\admissionsprogramselector.resources" />
+    <EmbeddedResource Include="Rulesets\certification.module" />
+    <EmbeddedResource Include="Rulesets\certification.resources" />
     <EmbeddedResource Include="Rulesets\contactinfo.module" />
     <EmbeddedResource Include="Rulesets\contactinfo.resources" />
     <EmbeddedResource Include="Rulesets\home.module" />
@@ -80,6 +88,8 @@
     <EmbeddedResource Include="Rulesets\init_academic.resources" />
     <EmbeddedResource Include="Rulesets\init_admissions.module" />
     <EmbeddedResource Include="Rulesets\init_admissions.resources" />
+    <EmbeddedResource Include="Rulesets\init_certification.module" />
+    <EmbeddedResource Include="Rulesets\init_certification.resources" />
     <EmbeddedResource Include="Rulesets\init_contactinfo.module" />
     <EmbeddedResource Include="Rulesets\init_contactinfo.resources" />
     <EmbeddedResource Include="Rulesets\init_moreinfo.module" />
@@ -98,6 +108,8 @@
     <EmbeddedResource Include="Rulesets\nav_admin.resources" />
     <EmbeddedResource Include="Rulesets\nav_admissions.module" />
     <EmbeddedResource Include="Rulesets\nav_admissions.resources" />
+    <EmbeddedResource Include="Rulesets\nav_certification.module" />
+    <EmbeddedResource Include="Rulesets\nav_certification.resources" />
     <EmbeddedResource Include="Rulesets\nav_contactinfo.module" />
     <EmbeddedResource Include="Rulesets\nav_contactinfo.resources" />
     <EmbeddedResource Include="Rulesets\nav_home.module" />

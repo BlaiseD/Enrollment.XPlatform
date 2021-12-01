@@ -88,7 +88,7 @@ namespace Enrollment.XPlatform.Validators.Rules
                 throw new ArgumentException($"{nameof(validator.ClassName)}: CF4FDB4D-F135-40E0-BB31-14DBA624FC25");
 
             IValidationRule GetIsValueTrueRule()
-                => new IsValidEmailRule
+                => new IsValueTrueRule
                 (
                     GetFieldName(setting.Field),
                     validationMessage,
