@@ -1,6 +1,8 @@
-﻿using Enrollment.XPlatform.Utils;
+﻿using Enrollment.Forms.Configuration;
+using Enrollment.XPlatform.Utils;
+using Enrollment.XPlatform.ViewModels;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
-
+using System.Linq;
 using Xamarin.Forms;
 
 namespace Enrollment.XPlatform.Views
@@ -10,6 +12,9 @@ namespace Enrollment.XPlatform.Views
         public ReadOnlyChildFormPageCS(IReadOnly formReadOnly)
         {
             this.formReadOnly = formReadOnly;
+            this.formLayout = (DetailFormLayout)this.formReadOnly.GetType()
+                .GetProperty(nameof(FormReadOnlyObject<string>.FormLayout))
+                .GetValue(this.formReadOnly);
 
             Content = new AbsoluteLayout
             {
@@ -35,12 +40,42 @@ namespace Enrollment.XPlatform.Views
                                         }.AddBinding(Label.TextProperty, new Binding("Title"))
                                     }
                                 },
-                                new CollectionView
+                                new ScrollView
                                 {
-                                    Style = LayoutHelpers.GetStaticStyleResource("ChildFormPopupCollectionViewStyle"),
-                                    ItemTemplate = DetailFormViewHelpers.ReadOnlyControlTemplateSelector
-                                }
-                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding("Properties")),
+                                    Style = LayoutHelpers.GetStaticStyleResource("ChildFormPopupScrollViewStyle"),
+                                    Content = this.formLayout.ControlGroupBoxList.Aggregate
+                                    (
+                                        new StackLayout(),
+                                        (stackLayout, controlBox) =>
+                                        {
+                                            stackLayout.Children.Add
+                                            (
+                                                new Label
+                                                {
+                                                    Style = LayoutHelpers.GetStaticStyleResource("DetailFormGroupHeaderStyle"),
+                                                    BindingContext = controlBox
+                                                }
+                                                .AddBinding
+                                                (
+                                                    Label.TextProperty,
+                                                    GetLabelBinding(controlBox.HeaderBindings, $"{nameof(ReadOnlyControlGroupBox.GroupHeader)}")
+                                                )
+                                            );
+                                            stackLayout.Children.Add
+                                            (
+                                                new StackLayout
+                                                {
+                                                    VerticalOptions = LayoutOptions.StartAndExpand,
+                                                    BindingContext = controlBox
+                                                }
+                                                .AddBinding(BindableLayout.ItemsSourceProperty, new Binding("."))
+                                                .SetDataTemplateSelector(DetailFormViewHelpers.ReadOnlyControlTemplateSelector)
+                                            );
+
+                                            return stackLayout;
+                                        }
+                                    )
+                                },
                                 new BoxView { Style = LayoutHelpers.GetStaticStyleResource("PopupFooterSeparatorStyle") },
                                 new Grid
                                 {
@@ -73,8 +108,26 @@ namespace Enrollment.XPlatform.Views
             this.BackgroundColor = Color.Transparent; 
             Visual = VisualMarker.Material;
             this.BindingContext = this.formReadOnly;
+
+            BindingBase GetLabelBinding(MultiBindingDescriptor multiBindingDescriptor, string bindingName)
+            {
+                if (multiBindingDescriptor == null)
+                    return new Binding(bindingName);
+
+                return new MultiBinding
+                {
+                    StringFormat = multiBindingDescriptor.StringFormat,
+                    Bindings = multiBindingDescriptor.Fields.Select
+                    (
+                        field => new Binding($"{nameof(ReadOnlyControlGroupBox.BindingPropertiesDictionary)}[{field.ToBindingDictionaryKey()}].{nameof(IReadOnly.Value)}")
+                    )
+                    .Cast<BindingBase>()
+                    .ToList()
+                };
+            }
         }
 
         private IReadOnly formReadOnly;
+        private DetailFormLayout formLayout;
     }
 }

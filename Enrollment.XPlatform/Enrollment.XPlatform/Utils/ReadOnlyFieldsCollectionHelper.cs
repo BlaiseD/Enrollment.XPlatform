@@ -1,35 +1,54 @@
 ﻿using Enrollment.Forms.Configuration.DetailForm;
 using Enrollment.XPlatform.Services;
+using Enrollment.XPlatform.ViewModels;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Enrollment.XPlatform.Utils
 {
     internal class ReadOnlyFieldsCollectionHelper
     {
         private IDetailGroupSettings formSettings;
-        private ObservableCollection<IReadOnly> properties;
+        private DetailFormLayout formLayout;
         private readonly IContextProvider contextProvider;
         private readonly string parentName;
 
-        public ReadOnlyFieldsCollectionHelper(IDetailGroupSettings formSettings, IContextProvider contextProvider, ObservableCollection<IReadOnly> properties = null, string parentName = null)
+        public ReadOnlyFieldsCollectionHelper(IDetailGroupSettings formSettings, IContextProvider contextProvider, DetailFormLayout formLayout = null, string parentName = null)
         {
             this.formSettings = formSettings;
             this.contextProvider = contextProvider;
-            this.properties = properties ?? new ObservableCollection<IReadOnly>();
+
+            if (formLayout == null)
+            {
+                this.formLayout = new DetailFormLayout();
+                if (this.formSettings.FieldSettings.ShouldCreateDefaultControlGroupBox())
+                    this.formLayout.AddControlGroupBox(this.formSettings);
+            }
+            else
+            {
+                this.formLayout = formLayout;
+            }
+
             this.parentName = parentName;
         }
 
-        public ObservableCollection<IReadOnly> CreateFields()
+        public DetailFormLayout CreateFields()
         {
             this.CreateFieldsCollection();
-            return this.properties;
+            return this.formLayout;
         }
 
         private void CreateFieldsCollection()
         {
-            this.formSettings.FieldSettings.ForEach
+            CreateFieldsCollection(this.formSettings.FieldSettings);
+        }
+
+        private void CreateFieldsCollection(List<DetailItemSettingsDescriptor> fieldSettings)
+        {
+            fieldSettings.ForEach
             (
                 setting =>
                 {
@@ -47,6 +66,9 @@ namespace Enrollment.XPlatform.Utils
                         case DetailGroupArraySettingsDescriptor formGroupArraySettings:
                             AddFormGroupArray(formGroupArraySettings);
                             break;
+                        case DetailGroupBoxSettingsDescriptor groupBoxSettingsDescriptor:
+                            AddGroupBoxSettings(groupBoxSettingsDescriptor);
+                            break;
                         default:
                             throw new ArgumentException($"{nameof(setting)}: B024F65A-50DC-4D45-B8F0-9EC0BE0E2FE2");
                     }
@@ -54,11 +76,21 @@ namespace Enrollment.XPlatform.Utils
             );
         }
 
+        private void AddGroupBoxSettings(DetailGroupBoxSettingsDescriptor setting)
+        {
+            this.formLayout.AddControlGroupBox(setting);
+
+            if (setting.FieldSettings.Any(s => s is DetailGroupBoxSettingsDescriptor))
+                throw new ArgumentException($"{nameof(setting.FieldSettings)}: E5DC0442-F3B9-4C50-B641-304358DF8EBA");
+
+            CreateFieldsCollection(setting.FieldSettings);
+        }
+
         private void AddMultiSelectControl(MultiSelectDetailControlSettingsDescriptor setting)
         {
             if (setting.MultiSelectTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.MultiSelectTemplate))
             {
-                properties.Add(CreateMultiSelectReadOnlyObject(setting));
+                formLayout.Add(CreateMultiSelectReadOnlyObject(setting));
             }
             else
             {
@@ -82,19 +114,19 @@ namespace Enrollment.XPlatform.Utils
                 || setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.PasswordTemplate)
                 || setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.DateTemplate))
             {
-                properties.Add(CreateTextFieldReadOnlyObject(setting));
+                formLayout.Add(CreateTextFieldReadOnlyObject(setting));
             }
             else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.HiddenTemplate))
             {
-                properties.Add(CreateHiddenReadOnlyObject(setting));
+                formLayout.Add(CreateHiddenReadOnlyObject(setting));
             }
             else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.CheckboxTemplate))
             {
-                properties.Add(CreateCheckboxReadOnlyObject(setting));
+                formLayout.Add(CreateCheckboxReadOnlyObject(setting));
             }
             else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.SwitchTemplate))
             {
-                properties.Add(CreateSwitchReadOnlyObject(setting));
+                formLayout.Add(CreateSwitchReadOnlyObject(setting));
             }
             else
             {
@@ -106,7 +138,7 @@ namespace Enrollment.XPlatform.Utils
         {
             if (setting.DropDownTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.PickerTemplate))
             {
-                properties.Add(CreatePickerReadOnlyObject(setting));
+                formLayout.Add(CreatePickerReadOnlyObject(setting));
             }
             else
             {
@@ -139,13 +171,13 @@ namespace Enrollment.XPlatform.Utils
             (
                 setting,
                 this.contextProvider,
-                this.properties,
+                this.formLayout,
                 GetFieldName(setting.Field)
             ).CreateFields();
         }
 
         private void AddFormGroupPopup(DetailGroupSettingsDescriptor setting)
-            => properties.Add(CreateFormReadOnlyObject(setting));
+            => formLayout.Add(CreateFormReadOnlyObject(setting));
 
         private void AddFormGroupArray(DetailGroupArraySettingsDescriptor setting)
         {
@@ -155,7 +187,7 @@ namespace Enrollment.XPlatform.Utils
 
             if (setting.FormGroupTemplate.TemplateName == nameof(QuestionTemplateSelector.FormGroupArrayTemplate))
             {
-                properties.Add(CreateFormArrayReadOnlyObject(setting));
+                formLayout.Add(CreateFormArrayReadOnlyObject(setting));
             }
             else
             {

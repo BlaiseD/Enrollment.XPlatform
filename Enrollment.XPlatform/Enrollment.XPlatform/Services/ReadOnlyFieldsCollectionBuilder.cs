@@ -1,7 +1,6 @@
 ﻿using Enrollment.Forms.Configuration.DetailForm;
 using Enrollment.XPlatform.Utils;
-using Enrollment.XPlatform.ViewModels.ReadOnlys;
-using System.Collections.ObjectModel;
+using Enrollment.XPlatform.ViewModels;
 
 namespace Enrollment.XPlatform.Services
 {
@@ -14,7 +13,7 @@ namespace Enrollment.XPlatform.Services
             this.contextProvider = contextProvider;
         }
 
-        public ObservableCollection<IReadOnly> CreateFieldsCollection(IDetailGroupSettings formSettings)
+        public DetailFormLayout CreateFieldsCollection(IDetailGroupSettings formSettings)
             => new ReadOnlyFieldsCollectionHelper(formSettings, this.contextProvider).CreateFields();
     }
 }

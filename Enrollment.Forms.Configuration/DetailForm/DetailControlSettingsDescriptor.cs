@@ -2,6 +2,7 @@
 {
     public class DetailControlSettingsDescriptor : DetailItemSettingsDescriptor
     {
+        public string Field { get; set; }
         public string Title { get; set; }
         public string Placeholder { get; set; }
         public string StringFormat { get; set; }

@@ -230,7 +230,7 @@ namespace Enrollment.XPlatform.Utils
             };
 
         static Entry GetEntry()
-            => new Entry()
+            => new Entry() { Style = LayoutHelpers.GetStaticStyleResource("DetailFormEntryStyle") }
             .AssignDynamicResource(VisualElement.BackgroundColorProperty, "EntryBackgroundColor")
             .AssignDynamicResource(Entry.TextColorProperty, "PrimaryTextColor");
     }

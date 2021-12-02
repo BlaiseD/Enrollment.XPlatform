@@ -36,17 +36,17 @@ namespace Enrollment.XPlatform.Views
             LayoutHelpers.AddToolBarItems(this.ToolbarItems, this.detailFormEntityViewModel.Buttons);
             Title = detailFormEntityViewModel.FormSettings.Title;
 
-            BindingBase GetLabelBinding(MultiBindingDescriptor multiBindingDescriptor)
+            BindingBase GetLabelBinding(MultiBindingDescriptor multiBindingDescriptor, string bindingName)
             {
                 if (multiBindingDescriptor == null)
-                    return new Binding($"{nameof(DetailFormEntityViewModelBase.FormSettings)}.{nameof(DetailFormSettingsDescriptor.Title)}");
+                    return new Binding(bindingName);
 
                 return new MultiBinding
                 {
                     StringFormat = multiBindingDescriptor.StringFormat,
                     Bindings = multiBindingDescriptor.Fields.Select
                     (
-                        field => new Binding($"{nameof(DetailFormEntityViewModelBase.BindingPropertiesDictionary)}[{field.ToBindingDictionaryKey()}].{nameof(IReadOnly.Value)}")
+                        field => new Binding($"{nameof(ReadOnlyControlGroupBox.BindingPropertiesDictionary)}[{field.ToBindingDictionaryKey()}].{nameof(IReadOnly.Value)}")
                     )
                     .Cast<BindingBase>()
                     .ToList()
@@ -70,7 +70,11 @@ namespace Enrollment.XPlatform.Views
                                 .AddBinding
                                 (
                                     Label.TextProperty,
-                                    GetLabelBinding(detailFormEntityViewModel.FormSettings.HeaderBindings)
+                                    GetLabelBinding
+                                    (
+                                        detailFormEntityViewModel.FormSettings.HeaderBindings,
+                                        $"{nameof(DetailFormEntityViewModelBase.FormSettings)}.{nameof(DetailFormSettingsDescriptor.Title)}"
+                                    )
                                 ),
                                 new Label
                                 {
@@ -80,14 +84,47 @@ namespace Enrollment.XPlatform.Views
                                 .AddBinding
                                 (
                                     Label.TextProperty,
-                                    GetLabelBinding(detailFormEntityViewModel.FormSettings.SubtitleBindings)
+                                    GetLabelBinding
+                                    (
+                                        detailFormEntityViewModel.FormSettings.SubtitleBindings,
+                                        $"{nameof(DetailFormEntityViewModelBase.FormSettings)}.{nameof(DetailFormSettingsDescriptor.Title)}"
+                                    )
                                 ),
-                                new CollectionView
+                                new ScrollView
                                 {
-                                    SelectionMode = SelectionMode.None,
-                                    ItemTemplate = DetailFormViewHelpers.ReadOnlyControlTemplateSelector
+                                    Content = detailFormEntityViewModel.FormLayout.ControlGroupBoxList.Aggregate
+                                    (
+                                        new StackLayout(),
+                                        (stackLayout, controlBox) =>
+                                        {
+                                            stackLayout.Children.Add
+                                            (
+                                                new Label
+                                                {
+                                                    Style = LayoutHelpers.GetStaticStyleResource("DetailFormGroupHeaderStyle"),
+                                                    BindingContext = controlBox
+                                                }
+                                                .AddBinding
+                                                (
+                                                    Label.TextProperty,
+                                                    GetLabelBinding(controlBox.HeaderBindings, $"{nameof(ReadOnlyControlGroupBox.GroupHeader)}")
+                                                )
+                                            );
+                                            stackLayout.Children.Add
+                                            (
+                                                new StackLayout
+                                                {
+                                                    VerticalOptions = LayoutOptions.StartAndExpand,
+                                                    BindingContext = controlBox
+                                                }
+                                                .AddBinding(BindableLayout.ItemsSourceProperty, new Binding("."))
+                                                .SetDataTemplateSelector(DetailFormViewHelpers.ReadOnlyControlTemplateSelector)
+                                            );
+
+                                            return stackLayout;
+                                        }
+                                    )
                                 }
-                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding(nameof(DetailFormEntityViewModelBase.Properties))),
                             }
                         }
                     ),

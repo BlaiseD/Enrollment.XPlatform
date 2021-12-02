@@ -1,11 +1,10 @@
 ﻿using Enrollment.Forms.Configuration.DetailForm;
-using Enrollment.XPlatform.ViewModels.ReadOnlys;
-using System.Collections.ObjectModel;
+using Enrollment.XPlatform.ViewModels;
 
 namespace Enrollment.XPlatform.Services
 {
     public interface IReadOnlyFieldsCollectionBuilder
     {
-        ObservableCollection<IReadOnly> CreateFieldsCollection(IDetailGroupSettings formSettings);
+        DetailFormLayout CreateFieldsCollection(IDetailGroupSettings formSettings);
     }
 }

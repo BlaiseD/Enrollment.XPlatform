@@ -61,7 +61,7 @@ namespace Enrollment.XPlatform.Tests
             ObservableCollection<IReadOnly> properties = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
                 ReadOnlyDescriptors.ResidencyForm
-            );
+            ).Properties;
 
             //act
             serviceProvider.GetRequiredService<IReadOnlyPropertiesUpdater>().UpdateProperties
@@ -127,7 +127,7 @@ namespace Enrollment.XPlatform.Tests
             ObservableCollection<IReadOnly> properties = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
                 ReadOnlyDescriptors.AcademicForm
-            );
+            ).Properties;
 
             //act
             serviceProvider.GetRequiredService<IReadOnlyPropertiesUpdater>().UpdateProperties
@@ -146,6 +146,60 @@ namespace Enrollment.XPlatform.Tests
             Assert.Equal(new DateTime(2021, 5, 20), propertiesDictionary["FromDate"]);
             Assert.Equal(new DateTime(2021, 5, 20), propertiesDictionary["ToDate"]);
             Assert.Equal("2011", ((IEnumerable<InstitutionModel>)propertiesDictionary["Institutions"]).First().StartYear);
+        }
+
+        [Fact]
+        public void MapUserModelPersonal_WithMultipleGroupBoxSettingsDescriptorFields_ToIReadOnlyList()
+        {
+            //arrange
+            UserModel user = new UserModel
+            {
+                UserId = 1,
+                Personal = new PersonalModel
+                {
+                    FirstName = "John",
+                    MiddleName = "Michael",
+                    LastName = "Jackson",
+                    PrimaryEmail = "mj@hotmail.com",
+                    Suffix = "jr",
+                    Address1 = "820 Jackson Street",
+                    Address2 = "UNIT 1975",
+                    City = "Detroit",
+                    County = "Dekalb",
+                    State = "MI",
+                    ZipCode = "23456",
+                    CellPhone = "770-888-9999",
+                    OtherPhone = "770-333-4444"
+                }
+            };
+
+            ObservableCollection<IReadOnly> properties = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
+            (
+                ReadOnlyDescriptors.PersonalFrom
+            ).Properties;
+
+            //act
+            serviceProvider.GetRequiredService<IReadOnlyPropertiesUpdater>().UpdateProperties
+            (
+                properties,
+                user,
+                ReadOnlyDescriptors.PersonalFrom.FieldSettings
+            );
+
+            IDictionary<string, object> propertiesDictionary = properties.ToDictionary(property => property.Name, property => property.Value);
+            Assert.Equal("John", propertiesDictionary["Personal.FirstName"]);
+            Assert.Equal("Michael", propertiesDictionary["Personal.MiddleName"]);
+            Assert.Equal("Jackson", propertiesDictionary["Personal.LastName"]);
+            Assert.Equal("mj@hotmail.com", propertiesDictionary["Personal.PrimaryEmail"]);
+            Assert.Equal("jr", propertiesDictionary["Personal.Suffix"]);
+            Assert.Equal("820 Jackson Street", propertiesDictionary["Personal.Address1"]);
+            Assert.Equal("UNIT 1975", propertiesDictionary["Personal.Address2"]);
+            Assert.Equal("Detroit", propertiesDictionary["Personal.City"]);
+            Assert.Equal("Dekalb", propertiesDictionary["Personal.County"]);
+            Assert.Equal("MI", propertiesDictionary["Personal.State"]);
+            Assert.Equal("23456", propertiesDictionary["Personal.ZipCode"]);
+            Assert.Equal("770-888-9999", propertiesDictionary["Personal.CellPhone"]);
+            Assert.Equal("770-333-4444", propertiesDictionary["Personal.OtherPhone"]);
         }
 
         static MapperConfiguration MapperConfiguration;

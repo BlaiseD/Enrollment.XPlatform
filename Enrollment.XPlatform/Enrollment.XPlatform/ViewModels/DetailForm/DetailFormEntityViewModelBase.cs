@@ -21,14 +21,14 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
             this.UiNotificationService = contextProvider.UiNotificationService;
             FormSettings = screenSettings.Settings;
             Buttons = new ObservableCollection<CommandButtonDescriptor>(screenSettings.CommandButtons);
-            Properties = contextProvider.ReadOnlyFieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
+            FormLayout = contextProvider.ReadOnlyFieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
         }
 
         public Dictionary<string, IReadOnly> BindingPropertiesDictionary
-            => Properties.ToDictionary(p => p.Name.ToBindingDictionaryKey());
+            => FormLayout.Properties.ToDictionary(p => p.Name.ToBindingDictionaryKey());
 
         public DetailFormSettingsDescriptor FormSettings { get; set; }
-        public ObservableCollection<IReadOnly> Properties { get; set; }
+        public DetailFormLayout FormLayout { get; set; }
         public UiNotificationService UiNotificationService { get; set; }
         public ObservableCollection<CommandButtonDescriptor> Buttons { get; set; }
 

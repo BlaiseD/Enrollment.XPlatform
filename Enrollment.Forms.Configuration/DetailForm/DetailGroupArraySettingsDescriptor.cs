@@ -5,6 +5,7 @@ namespace Enrollment.Forms.Configuration.DetailForm
 {
     public class DetailGroupArraySettingsDescriptor : DetailItemSettingsDescriptor, IChildDetailGroupSettings
     {
+        public string Field { get; set; }
         public string Title { get; set; }
         public string Placeholder { get; set; }
         public List<string> KeyFields { get; set; }
@@ -13,5 +14,7 @@ namespace Enrollment.Forms.Configuration.DetailForm
         public FormsCollectionDisplayTemplateDescriptor FormsCollectionDisplayTemplate { get; set; }
         public FormGroupTemplateDescriptor FormGroupTemplate { get; set; }
         public List<DetailItemSettingsDescriptor> FieldSettings { get; set; }
+
+        public MultiBindingDescriptor HeaderBindings => null;
     }
 }

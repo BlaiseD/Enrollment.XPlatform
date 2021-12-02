@@ -33,8 +33,9 @@ namespace Enrollment.Forms.Parameters.DetailForm
 			[ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
 			[Comments("Fully qualified class name for the model type.")]
 			string fieldTypeSource = "Enrollment.Domain.Entities"
-		) : base(field)
+		)
 		{
+			Field = field;
 			Title = title;
 			ModelType = modelType;
 			Placeholder = placeholder;
@@ -42,6 +43,7 @@ namespace Enrollment.Forms.Parameters.DetailForm
 			FieldSettings = fieldSettings;
 		}
 
+		public string Field { get; set; }
 		public string Title { get; set; }
 		public Type ModelType { get; set; }
 		public string Placeholder { get; set; }

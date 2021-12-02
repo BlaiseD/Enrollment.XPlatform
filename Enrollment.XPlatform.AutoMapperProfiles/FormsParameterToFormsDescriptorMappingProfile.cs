@@ -33,6 +33,7 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 			CreateMap<DetailGroupArraySettingsParameters, DetailGroupArraySettingsDescriptor>()
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName))
 				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
+			CreateMap<DetailGroupBoxSettingsParameters, DetailGroupBoxSettingsDescriptor>();
 			CreateMap<DetailGroupSettingsParameters, DetailGroupSettingsDescriptor>()
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
 			CreateMap<DirectiveArgumentParameters, DirectiveArgumentDescriptor>()
@@ -102,6 +103,7 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
             CreateMap<DetailItemSettingsParameters, DetailItemSettingsDescriptor>()
 				.Include<DetailControlSettingsParameters, DetailControlSettingsDescriptor>()
 				.Include<DetailGroupArraySettingsParameters, DetailGroupArraySettingsDescriptor>()
+				.Include<DetailGroupBoxSettingsParameters, DetailGroupBoxSettingsDescriptor>()
 				.Include<DetailGroupSettingsParameters, DetailGroupSettingsDescriptor>()
 				.Include<MultiSelectDetailControlSettingsParameters, MultiSelectDetailControlSettingsDescriptor>();
 

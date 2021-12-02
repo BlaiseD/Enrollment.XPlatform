@@ -67,6 +67,13 @@
                 <Setter Property="Margin" Value="0,15,0,0" />
             </Style>
 
+            <Style TargetType="Label" x:Key="DetailFormGroupHeaderStyle" BaseResourceKey="SubtitleStyle">
+                <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="0,15,0,0" />
+            </Style>
+
             <Style TargetType="Label" x:Key="DetailFormDeleteQuestionStyle" BaseResourceKey="SubtitleStyle">
                 <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}" />
                 <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}" />
@@ -102,11 +109,18 @@
                 <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}" />
             </Style>
 
-            <Style TargetType="Entry">
+            <Style TargetType="Entry" x:Key="BaseEntryStyle" >
                 <Setter Property="Margin" Value = "0,10,0,0" />
                 <Setter Property="BackgroundColor" Value = "{DynamicResource EntryBackgroundColor}" />
                 <Setter Property="TextColor" Value = "{DynamicResource PrimaryTextColor}" />
                 <Setter Property="PlaceholderColor" Value = "{DynamicResource TertiaryTextColor}" />
+            </Style>
+
+            <Style TargetType="Entry" x:Key="DetailFormEntryStyle" BasedOn="{StaticResource BaseEntryStyle}">
+                <Setter Property="HeightRequest" Value = "45" />
+            </Style>
+
+            <Style TargetType="Entry" BasedOn="{StaticResource BaseEntryStyle}">
             </Style>
 
             <Style TargetType="CheckBox">

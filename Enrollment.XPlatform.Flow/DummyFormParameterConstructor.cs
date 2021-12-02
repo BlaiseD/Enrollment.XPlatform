@@ -20,6 +20,7 @@ namespace Enrollment.XPlatform.Flow
             DetailControlSettingsParameters detailControlSettingsParameters,
             DetailGroupArraySettingsParameters detailGroupArraySettingsParameters,
             DetailGroupSettingsParameters detailGroupSettingsParameters,
+            DetailGroupBoxSettingsParameters detailGroupBoxSettingsParameters,
             MultiSelectDetailControlSettingsParameters multiSelectDetailControlSettingsParameters,
             SearchFilterGroupParameters searchFilterGroupParameters,
             SearchFilterParameters searchFilterParameters,

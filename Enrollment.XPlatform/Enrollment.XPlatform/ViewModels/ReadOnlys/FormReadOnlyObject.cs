@@ -15,13 +15,13 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
             this.Title = this.FormSettings.Title;
             this.propertiesUpdater = contextProvider.ReadOnlyPropertiesUpdater;
             this.Placeholder = this.FormSettings.Placeholder;
-            Properties = contextProvider.ReadOnlyFieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
+            FormLayout = contextProvider.ReadOnlyFieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
         }
 
         public IChildDetailGroupSettings FormSettings { get; set; }
         private readonly IReadOnlyPropertiesUpdater propertiesUpdater;
 
-        public ObservableCollection<IReadOnly> Properties { get; }
+        public DetailFormLayout FormLayout { get; set; }
 
         public string DisplayText => string.Empty;
 
@@ -60,7 +60,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
                 base.Value = value;
                 this.propertiesUpdater.UpdateProperties
                 (
-                    Properties,
+                    FormLayout.Properties,
                     base.Value,
                     FormSettings.FieldSettings
                 );
