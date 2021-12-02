@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using LogicBuilder.Attributes;
+using System.Collections.Generic;
 
 namespace Enrollment.Parameters.Expansions
 {
@@ -8,7 +9,20 @@ namespace Enrollment.Parameters.Expansions
         {
         }
 
-        public SelectExpandDefinitionParameters(List<string> selects, List<SelectExpandItemParameters> expandedItems)
+        public SelectExpandDefinitionParameters
+        (
+            [Comments("Update fieldTypeSource first. List of fields to select when a subset of fields is required.")]
+            [ParameterEditorControl(ParameterControlType.ParameterSourcedPropertyInput)]
+            [NameValue(AttributeNames.PROPERTYSOURCEPARAMETER, "fieldTypeSource")]
+            List<string> selects,
+
+            [Comments("List of navigation properties to expand.")]
+            List<SelectExpandItemParameters> expandedItems,
+
+            [ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
+            [Comments("Fully qualified class name for the model type.")]
+            string fieldTypeSource = "Enrollment.Domain.Entities"
+        )
         {
             Selects = selects;
             ExpandedItems = expandedItems;

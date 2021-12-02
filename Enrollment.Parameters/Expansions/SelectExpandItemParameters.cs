@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using LogicBuilder.Attributes;
+using System.Collections.Generic;
 
 namespace Enrollment.Parameters.Expansions
 {
@@ -8,7 +9,35 @@ namespace Enrollment.Parameters.Expansions
         {
         }
 
-        public SelectExpandItemParameters(string memberName, SelectExpandItemFilterParameters filter = null, SelectExpandItemQueryFunctionParameters queryFunction = null, List<string> selects = null, List<SelectExpandItemParameters> expandedItems = null)
+        public SelectExpandItemParameters
+        (
+            [Comments("Update fieldTypeSource first. This is the navigation property name.")]
+            [ParameterEditorControl(ParameterControlType.ParameterSourcedPropertyInput)]
+            [NameValue(AttributeNames.PROPERTYSOURCEPARAMETER, "fieldTypeSource")]
+            string memberName,
+
+            [Comments("Used to filter the navigation property when it is a collection.")]
+            SelectExpandItemFilterParameters filter = null,
+
+            [Comments("Used to apply sort, skip and take to the navigation property when it is a collection.")]
+            SelectExpandItemQueryFunctionParameters queryFunction = null,
+
+            [Comments("Update navigationProperyType first. This is a list of fields to select when a subset of fields is required.")]
+            [ParameterEditorControl(ParameterControlType.ParameterSourcedPropertyInput)]
+            [NameValue(AttributeNames.PROPERTYSOURCEPARAMETER, "navigationProperyType")]
+            List<string> selects = null,
+
+            [Comments("List of navigation properties to expand.")]
+            List<SelectExpandItemParameters> expandedItems = null,
+
+            [ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
+            [Comments("Fully qualified class name for the model type.")]
+            string fieldTypeSource = "Enrollment.Domain.Entities",
+
+            [ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
+            [Comments("Fully qualified class name for the model type.")]
+            string navigationProperyType = "Enrollment.Domain.Entities"
+        )
         {
             MemberName = memberName;
             Filter = filter;
