@@ -41,6 +41,9 @@ namespace Enrollment.Forms.Parameters.DetailForm
 			[Comments("Configuration for each field in one of the array's form groups.")]
 			List<DetailItemSettingsParameters> fieldSettings,
 
+			[Comments("Multibindings list for the form header field.")]
+			MultiBindingParameters headerBindings = null,
+
 			[ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
 			[Comments("Fully qualified class name for the model type.")]
 			string fieldTypeSource = "Enrollment.Domain.Entities",
@@ -59,6 +62,7 @@ namespace Enrollment.Forms.Parameters.DetailForm
 			FormsCollectionDisplayTemplate = formsCollectionDisplayTemplate;
 			FormGroupTemplate = formGroupTemplate;
 			FieldSettings = fieldSettings;
+			HeaderBindings = headerBindings;
 		}
 
 		public string Field { get; set; }
@@ -70,5 +74,6 @@ namespace Enrollment.Forms.Parameters.DetailForm
 		public FormsCollectionDisplayTemplateParameters FormsCollectionDisplayTemplate { get; set; }
 		public FormGroupTemplateParameters FormGroupTemplate { get; set; }
 		public List<DetailItemSettingsParameters> FieldSettings { get; set; }
-    }
+		public MultiBindingParameters HeaderBindings { get; set; }
+	}
 }

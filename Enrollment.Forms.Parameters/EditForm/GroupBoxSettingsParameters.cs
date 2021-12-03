@@ -17,7 +17,10 @@ namespace Enrollment.Forms.Parameters.EditForm
 			List<FormItemSettingsParameters> fieldSettings,
 
 			[Comments("Multibindings list for the group header field - typically used in edit mode.")]
-			MultiBindingParameters headerBindings = null
+			MultiBindingParameters headerBindings = null,
+
+			[Comments("Hide this group box.")]
+			bool isHidden = false
 		)
 		{
 			if (fieldSettings.Any(s => s is GroupBoxSettingsParameters))
@@ -26,10 +29,12 @@ namespace Enrollment.Forms.Parameters.EditForm
 			GroupHeader = groupHeader;
 			FieldSettings = fieldSettings;
 			HeaderBindings = headerBindings;
+			IsHidden = isHidden;
 		}
 
 		public string GroupHeader { get; set; }
 		public List<FormItemSettingsParameters> FieldSettings { get; set; }
 		public MultiBindingParameters HeaderBindings { get; set; }
-    }
+		public bool IsHidden { get; set; }
+	}
 }

@@ -18,7 +18,10 @@ namespace Enrollment.Forms.Parameters.DetailForm
 			List<DetailItemSettingsParameters> fieldSettings,
 
 			[Comments("Multibindings list for the group header field.")]
-			MultiBindingParameters headerBindings = null
+			MultiBindingParameters headerBindings = null,
+
+			[Comments("Hide this group box.")]
+			bool isHidden = false
 		)
 		{
 			if (fieldSettings.Any(s => s is DetailGroupBoxSettingsParameters))
@@ -27,10 +30,12 @@ namespace Enrollment.Forms.Parameters.DetailForm
 			GroupHeader = groupHeader;
 			FieldSettings = fieldSettings;
 			HeaderBindings = headerBindings;
+			IsHidden = isHidden;
 		}
 
 		public string GroupHeader { get; set; }
 		public List<DetailItemSettingsParameters> FieldSettings { get; set; }
 		public MultiBindingParameters HeaderBindings { get; set; }
+		public bool IsHidden { get; set; }
 	}
 }

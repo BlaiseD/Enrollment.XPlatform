@@ -43,6 +43,9 @@ namespace Enrollment.Forms.Parameters.EditForm
 			[Comments("Conditional directtives for each field.")]
 			List<VariableDirectivesParameters> conditionalDirectives = null,
 
+			[Comments("Multibindings list for the form header field.")]
+			MultiBindingParameters headerBindings = null,
+
 			[ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
 			[Comments("Fully qualified class name for the model type.")]
 			string fieldTypeSource = "Enrollment.Domain.Entities"
@@ -65,6 +68,7 @@ namespace Enrollment.Forms.Parameters.EditForm
 				cd => cd.Field,
 				cd => cd.ConditionalDirectives ?? new List<DirectiveParameters>()
 			);
+			HeaderBindings = headerBindings;
 		}
 
 		public string Field { get; set; }
@@ -76,5 +80,6 @@ namespace Enrollment.Forms.Parameters.EditForm
 		public List<FormItemSettingsParameters> FieldSettings { get; set; }
 		public Dictionary<string, List<ValidationRuleParameters>> ValidationMessages { get; set; }
 		public Dictionary<string, List<DirectiveParameters>> ConditionalDirectives { get; set; }
-    }
+		public MultiBindingParameters HeaderBindings { get; set; }
+	}
 }

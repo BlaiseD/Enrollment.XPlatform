@@ -14,7 +14,6 @@ namespace Enrollment.Forms.Configuration.DetailForm
         public FormsCollectionDisplayTemplateDescriptor FormsCollectionDisplayTemplate { get; set; }
         public FormGroupTemplateDescriptor FormGroupTemplate { get; set; }
         public List<DetailItemSettingsDescriptor> FieldSettings { get; set; }
-
-        public MultiBindingDescriptor HeaderBindings => null;
+        public MultiBindingDescriptor HeaderBindings { get; set; }
     }
 }

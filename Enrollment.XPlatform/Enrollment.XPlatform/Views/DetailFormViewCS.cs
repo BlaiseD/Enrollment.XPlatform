@@ -97,6 +97,9 @@ namespace Enrollment.XPlatform.Views
                                         new StackLayout(),
                                         (stackLayout, controlBox) =>
                                         {
+                                            if (controlBox.IsVisible == false)
+                                                return stackLayout;
+
                                             stackLayout.Children.Add
                                             (
                                                 new Label

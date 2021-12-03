@@ -9,5 +9,6 @@ namespace Enrollment.Forms.Configuration.EditForm
         public string GroupHeader { get; set; }
         public List<FormItemSettingsDescriptor> FieldSettings { get; set; }
         public MultiBindingDescriptor HeaderBindings { get; set; }
+        public bool IsHidden { get; set; }
     }
 }

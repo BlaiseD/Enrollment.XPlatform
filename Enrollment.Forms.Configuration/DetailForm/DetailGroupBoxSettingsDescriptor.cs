@@ -7,5 +7,6 @@ namespace Enrollment.Forms.Configuration.DetailForm
         public string GroupHeader { get; set; }
         public List<DetailItemSettingsDescriptor> FieldSettings { get; set; }
         public MultiBindingDescriptor HeaderBindings { get; set; }
+        public bool IsHidden { get; set; }
     }
 }
