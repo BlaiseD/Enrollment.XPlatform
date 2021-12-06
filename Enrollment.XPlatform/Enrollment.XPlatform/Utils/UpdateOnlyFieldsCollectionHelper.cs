@@ -1,13 +1,28 @@
 ﻿using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.Validation;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Enrollment.XPlatform.Utils
 {
     internal class UpdateOnlyFieldsCollectionHelper : FieldsCollectionHelper
     {
-        public UpdateOnlyFieldsCollectionHelper(IFormGroupSettings formSettings, IContextProvider contextProvider, Type modelType, EditFormLayout formLayout = null, string parentName = null) : base(formSettings, contextProvider, modelType, formLayout, parentName)
+        public UpdateOnlyFieldsCollectionHelper(List<FormItemSettingsDescriptor> fieldSettings,
+            IFormGroupBoxSettings groupBoxSettings,
+            Dictionary<string, List<ValidationRuleDescriptor>> validationMessages,
+            IContextProvider contextProvider, 
+            Type modelType, 
+            EditFormLayout formLayout = null, 
+            string parentName = null) : base(fieldSettings,
+                groupBoxSettings,
+                validationMessages,
+                contextProvider, 
+                modelType, 
+                formLayout, 
+                parentName)
         {
         }
 
@@ -25,16 +40,35 @@ namespace Enrollment.XPlatform.Utils
                 throw new ArgumentException($"{nameof(setting)}: 32652CB4-2574-4E5B-9B3F-7E47B37425AD");
         }
 
-        protected override void AddFormGroupInline(FormGroupSettingsDescriptor setting)
+        protected override void AddGroupBoxSettings(FormGroupBoxSettingsDescriptor setting)
         {
+            this.formLayout.AddControlGroupBox(setting);
+
+            if (setting.FieldSettings.Any(s => s is FormGroupBoxSettingsDescriptor))
+                throw new ArgumentException($"{nameof(setting.FieldSettings)}: 25BFA228-1B14-4B32-AA1C-8F8002DF4413");
+
             new UpdateOnlyFieldsCollectionHelper
             (
+                setting.FieldSettings,
                 setting,
+                this.validationMessages,
+                this.contextProvider,
+                this.modelType,
+                this.formLayout,
+                this.parentName
+            ).CreateFields();
+        }
+
+        protected override void AddFormGroupInline(FormGroupSettingsDescriptor setting) 
+            => new UpdateOnlyFieldsCollectionHelper
+            (
+                setting.FieldSettings,
+                this.groupBoxSettings,
+                setting.ValidationMessages,
                 this.contextProvider,
                 this.modelType,
                 this.formLayout,
                 GetFieldName(setting.Field)
             ).CreateFields();
-        }
     }
 }

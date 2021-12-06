@@ -1110,5 +1110,304 @@ namespace Enrollment.XPlatform.Tests
             DetailType = DetailType.Detail,
             ModelType = typeof(UserModel).AssemblyQualifiedName
         };
+
+        internal static DetailFormSettingsDescriptor PersonalFromWithDefaultGroupForSomeFields = new DetailFormSettingsDescriptor
+        {
+            Title = "PersonalRoot",
+            RequestDetails = new FormRequestDetailsDescriptor
+            {
+                GetUrl = "/Personal/GetSingle"
+            },
+            FieldSettings = new List<DetailItemSettingsDescriptor>
+            {
+                new DetailGroupSettingsDescriptor
+                {
+                    Field = "Personal",
+                    Title = "Personal",
+                    ModelType = typeof(PersonalModel).AssemblyQualifiedName,
+                    FormGroupTemplate = new FormGroupTemplateDescriptor
+                    {
+                        TemplateName = "InlineFormGroupTemplate",
+                    },
+                    FieldSettings = new List<DetailItemSettingsDescriptor>
+                    {
+                        new DetailGroupBoxSettingsDescriptor
+                        {
+                            GroupHeader = "Address",
+                            FieldSettings = new List<DetailItemSettingsDescriptor>
+                            {
+                                new DetailControlSettingsDescriptor
+                                {
+                                    Field = "Address1",
+                                    Type = "System.String",
+                                    Title = "Address1",
+                                    Placeholder = "Address1 (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                                },
+                                new DetailControlSettingsDescriptor
+                                {
+                                    Field = "Address2",
+                                    Type = "System.String",
+                                    Title = "Address2",
+                                    Placeholder = "Address2",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                                },
+                                new DetailControlSettingsDescriptor
+                                {
+                                    Field = "City",
+                                    Type = "System.String",
+                                    Title = "City",
+                                    Placeholder = "City (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                                },
+                                new DetailControlSettingsDescriptor
+                                {
+                                    Field = "County",
+                                    Type = "System.String",
+                                    Title = "County",
+                                    Placeholder = "County (required)",
+                                    DropDownTemplate = new DropDownTemplateDescriptor
+                                    {
+                                        TemplateName = "PickerTemplate",
+                                        TitleText = "Select County:",
+                                        LoadingIndicatorText = "Loading ...",
+                                        TextField = "Text",
+                                        ValueField = "Value",
+                                        TextAndValueSelector = new SelectorLambdaOperatorDescriptor
+                                        {
+                                            Selector = new SelectOperatorDescriptor
+                                            {
+                                                SourceOperand = new OrderByOperatorDescriptor
+                                                {
+                                                    SourceOperand = new WhereOperatorDescriptor
+                                                    {
+                                                        SourceOperand = new ParameterOperatorDescriptor { ParameterName = "$it" },
+                                                        FilterBody = new EqualsBinaryOperatorDescriptor
+                                                        {
+                                                            Left = new MemberSelectorOperatorDescriptor
+                                                            {
+                                                                SourceOperand = new ParameterOperatorDescriptor { ParameterName = "l" },
+                                                                MemberFullName = "ListName"
+                                                            },
+                                                            Right = new ConstantOperatorDescriptor
+                                                            {
+                                                                ConstantValue = "counties",
+                                                                Type = typeof(string).AssemblyQualifiedName
+                                                            }
+                                                        },
+                                                        FilterParameterName = "l"
+                                                    },
+                                                    SelectorBody = new MemberSelectorOperatorDescriptor
+                                                    {
+                                                        SourceOperand = new ParameterOperatorDescriptor { ParameterName = "l" },
+                                                        MemberFullName = "Text"
+                                                    },
+                                                    SortDirection = LogicBuilder.Expressions.Utils.Strutures.ListSortDirection.Descending,
+                                                    SelectorParameterName = "l"
+                                                },
+                                                SelectorBody = new MemberInitOperatorDescriptor
+                                                {
+                                                    MemberBindings = new Dictionary<string, OperatorDescriptorBase>
+                                                    {
+                                                        ["Value"] = new MemberSelectorOperatorDescriptor
+                                                        {
+                                                            SourceOperand = new ParameterOperatorDescriptor { ParameterName = "s" },
+                                                            MemberFullName = "Value"
+                                                        },
+                                                        ["Text"] = new MemberSelectorOperatorDescriptor
+                                                        {
+                                                            SourceOperand = new ParameterOperatorDescriptor { ParameterName = "s" },
+                                                            MemberFullName = "Text"
+                                                        }
+                                                    },
+                                                    NewType = typeof(LookUpsModel).AssemblyQualifiedName
+                                                },
+                                                SelectorParameterName = "s"
+                                            },
+                                            SourceElementType = typeof(IQueryable<LookUpsModel>).AssemblyQualifiedName,
+                                            ParameterName = "$it",
+                                            BodyType = typeof(IEnumerable<LookUpsModel>).AssemblyQualifiedName
+                                        },
+                                        RequestDetails = new RequestDetailsDescriptor
+                                        {
+                                            DataSourceUrl = "api/Dropdown/GetObjectDropdown",
+                                            ModelType = typeof(LookUpsModel).AssemblyQualifiedName,
+                                            DataType = typeof(LookUps).AssemblyQualifiedName,
+                                            ModelReturnType = typeof(IEnumerable<LookUpsModel>).AssemblyQualifiedName,
+                                            DataReturnType = typeof(IEnumerable<LookUps>).AssemblyQualifiedName
+                                        }
+                                    }
+                                },
+                                new DetailControlSettingsDescriptor
+                                {
+                                    Field = "State",
+                                    Type = "System.String",
+                                    Title = "State",
+                                    Placeholder = "State (required)",
+                                    DropDownTemplate = new DropDownTemplateDescriptor
+                                    {
+                                        TemplateName = "PickerTemplate",
+                                        TitleText = "Select State:",
+                                        LoadingIndicatorText = "Loading ...",
+                                        TextField = "Text",
+                                        ValueField = "Value",
+                                        TextAndValueSelector = new SelectorLambdaOperatorDescriptor
+                                        {
+                                            Selector = new SelectOperatorDescriptor
+                                            {
+                                                SourceOperand = new OrderByOperatorDescriptor
+                                                {
+                                                    SourceOperand = new WhereOperatorDescriptor
+                                                    {
+                                                        SourceOperand = new ParameterOperatorDescriptor { ParameterName = "$it" },
+                                                        FilterBody = new EqualsBinaryOperatorDescriptor
+                                                        {
+                                                            Left = new MemberSelectorOperatorDescriptor
+                                                            {
+                                                                SourceOperand = new ParameterOperatorDescriptor { ParameterName = "l" },
+                                                                MemberFullName = "ListName"
+                                                            },
+                                                            Right = new ConstantOperatorDescriptor
+                                                            {
+                                                                ConstantValue = "states",
+                                                                Type = typeof(string).AssemblyQualifiedName
+                                                            }
+                                                        },
+                                                        FilterParameterName = "l"
+                                                    },
+                                                    SelectorBody = new MemberSelectorOperatorDescriptor
+                                                    {
+                                                        SourceOperand = new ParameterOperatorDescriptor { ParameterName = "l" },
+                                                        MemberFullName = "Text"
+                                                    },
+                                                    SortDirection = LogicBuilder.Expressions.Utils.Strutures.ListSortDirection.Descending,
+                                                    SelectorParameterName = "l"
+                                                },
+                                                SelectorBody = new MemberInitOperatorDescriptor
+                                                {
+                                                    MemberBindings = new Dictionary<string, OperatorDescriptorBase>
+                                                    {
+                                                        ["Value"] = new MemberSelectorOperatorDescriptor
+                                                        {
+                                                            SourceOperand = new ParameterOperatorDescriptor { ParameterName = "s" },
+                                                            MemberFullName = "Value"
+                                                        },
+                                                        ["Text"] = new MemberSelectorOperatorDescriptor
+                                                        {
+                                                            SourceOperand = new ParameterOperatorDescriptor { ParameterName = "s" },
+                                                            MemberFullName = "Text"
+                                                        }
+                                                    },
+                                                    NewType = typeof(LookUpsModel).AssemblyQualifiedName
+                                                },
+                                                SelectorParameterName = "s"
+                                            },
+                                            SourceElementType = typeof(IQueryable<LookUpsModel>).AssemblyQualifiedName,
+                                            ParameterName = "$it",
+                                            BodyType = typeof(IEnumerable<LookUpsModel>).AssemblyQualifiedName
+                                        },
+                                        RequestDetails = new RequestDetailsDescriptor
+                                        {
+                                            DataSourceUrl = "api/Dropdown/GetObjectDropdown",
+                                            ModelType = typeof(LookUpsModel).AssemblyQualifiedName,
+                                            DataType = typeof(LookUps).AssemblyQualifiedName,
+                                            ModelReturnType = typeof(IEnumerable<LookUpsModel>).AssemblyQualifiedName,
+                                            DataReturnType = typeof(IEnumerable<LookUps>).AssemblyQualifiedName
+                                        }
+                                    }
+                                },
+                                new DetailControlSettingsDescriptor
+                                {
+                                    Field = "ZipCode",
+                                    Type = "System.String",
+                                    Title = "Zip Code",
+                                    Placeholder = "Zip Code (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                                },
+                            }
+                        },
+                        new DetailGroupBoxSettingsDescriptor
+                        {
+                            GroupHeader = "Phone Numbers",
+                            FieldSettings = new List<DetailItemSettingsDescriptor>
+                            {
+                                new DetailControlSettingsDescriptor
+                                {
+                                    Field = "CellPhone",
+                                    Type = "System.String",
+                                    Title = "Cell Phone",
+                                    Placeholder = "Cell Phone (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                                },
+                                new DetailControlSettingsDescriptor
+                                {
+                                    Field = "OtherPhone",
+                                    Type = "System.String",
+                                    Title = "Other Phone",
+                                    Placeholder = "Other Phone (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                                }
+                            }
+                        }
+                    }
+                },
+                new DetailGroupSettingsDescriptor
+                {
+                    Field = "Personal0",
+                    Title = "Personal0",
+                    ModelType = typeof(PersonalModel).AssemblyQualifiedName,
+                    FormGroupTemplate = new FormGroupTemplateDescriptor
+                    {
+                        TemplateName = "InlineFormGroupTemplate",
+                    },
+                    FieldSettings = new List<DetailItemSettingsDescriptor>
+                    {
+                        new DetailControlSettingsDescriptor
+                        {
+                            Field = "FirstName",
+                            Type = "System.String",
+                            Title = "First Name",
+                            Placeholder = "First Name (required)",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                        },
+                        new DetailControlSettingsDescriptor
+                        {
+                            Field = "MiddleName",
+                            Type = "System.String",
+                            Title = "Middle Name",
+                            Placeholder = "Middle Name (required)",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                        },
+                        new DetailControlSettingsDescriptor
+                        {
+                            Field = "LastName",
+                            Type = "System.String",
+                            Title = "Last Name",
+                            Placeholder = "Last Name (required)",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                        },
+                        new DetailControlSettingsDescriptor
+                        {
+                            Field = "PrimaryEmail",
+                            Type = "System.String",
+                            Title = "Primary Email",
+                            Placeholder = "Primary Email (required)",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                        },
+                        new DetailControlSettingsDescriptor
+                        {
+                            Field = "Suffix",
+                            Type = "System.String",
+                            Title = "Suffix",
+                            Placeholder = "Suffix",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
+                        },
+                    }
+                },
+
+            },
+            DetailType = DetailType.Detail,
+            ModelType = typeof(UserModel).AssemblyQualifiedName
+        };
     }
 }

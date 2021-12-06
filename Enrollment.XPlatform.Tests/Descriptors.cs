@@ -4,7 +4,6 @@ using Enrollment.Domain.Entities;
 using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.Bindings;
 using Enrollment.Forms.Configuration.EditForm;
-using Enrollment.Forms.Configuration.Navigation;
 using Enrollment.Forms.Configuration.Validation;
 using System;
 using System.Collections.Generic;
@@ -1428,6 +1427,566 @@ namespace Enrollment.XPlatform.Tests
                                 }
                             }
                         }
+                    }
+                }
+            },
+            EditType = EditType.Update,
+            ModelType = typeof(UserModel).AssemblyQualifiedName
+        };
+
+        internal static EditFormSettingsDescriptor PersonalFromWithDefaultGroupForSomeFields = new EditFormSettingsDescriptor
+        {
+            Title = "PersonalRoot",
+            RequestDetails = new FormRequestDetailsDescriptor
+            {
+                GetUrl = "/Personal/GetSingle"
+            },
+            FieldSettings = new List<FormItemSettingsDescriptor>
+            {
+                new FormGroupSettingsDescriptor
+                {
+                    Field = "Personal",
+                    Title = "Personal",
+                    ValidFormControlText = "(Personal)",
+                    InvalidFormControlText ="(Invalid Personal)",
+                    ModelType = typeof(PersonalModel).AssemblyQualifiedName,
+                    FormGroupTemplate = new FormGroupTemplateDescriptor
+                    {
+                        TemplateName = "InlineFormGroupTemplate",
+                    },
+                    ValidationMessages = new Dictionary<string, List<ValidationRuleDescriptor>>
+                    {
+                        ["FirstName"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "First Name is required." }
+                        },
+                        ["MiddleName"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Middle Name is required." }
+                        },
+                        ["LastName"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Last Name is required." }
+                        },
+                        ["PrimaryEmail"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Primary Email is required." },
+                            new ValidationRuleDescriptor { ClassName = "IsValidEmailRule", Message = "Primary Email must be a valid email address." }
+                        },
+                        ["Address1"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Address1 is required." }
+                        },
+                        ["City"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "City is required." }
+                        },
+                        ["County"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "County is required." }
+                        },
+                        ["State"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "State is required." }
+                        },
+                        ["ZipCode"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Zip Code is required." },
+                            new ValidationRuleDescriptor { ClassName = "IsPatternMatchRule", Message = "Zip Code must be a valid zip code (12345)" }
+                        },
+                        ["CellPhone"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Cell Phone is required." },
+                            new ValidationRuleDescriptor { ClassName = "IsPatternMatchRule", Message = "Cell Phone must be a valid phone number." }
+                        },
+                        ["OtherPhone"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Other Phone is required." },
+                            new ValidationRuleDescriptor { ClassName = "IsPatternMatchRule", Message = "Other Phone must be a valid phone number." }
+                        }
+                    },
+                    FieldSettings = new List<FormItemSettingsDescriptor>
+                    {
+                        new FormGroupBoxSettingsDescriptor
+                        {
+                            GroupHeader = "Address",
+                            FieldSettings = new List<FormItemSettingsDescriptor>
+                            {
+                                new FormControlSettingsDescriptor
+                                {
+                                    Field = "Address1",
+                                    Type = "System.String",
+                                    Title = "Address1",
+                                    Placeholder = "Address1 (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                                    ValidationSetting = new FieldValidationSettingsDescriptor
+                                    {
+                                        DefaultValue = "",
+                                        Validators = new List<ValidatorDefinitionDescriptor>
+                                        {
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "RequiredRule",
+                                                FunctionName = "Check"
+                                            }
+                                        }
+                                    }
+                                },
+                                new FormControlSettingsDescriptor
+                                {
+                                    Field = "Address2",
+                                    Type = "System.String",
+                                    Title = "Address2",
+                                    Placeholder = "Address2",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                                    ValidationSetting = new FieldValidationSettingsDescriptor
+                                    {
+                                        DefaultValue = ""
+                                    }
+                                },
+                                new FormControlSettingsDescriptor
+                                {
+                                    Field = "City",
+                                    Type = "System.String",
+                                    Title = "City",
+                                    Placeholder = "City (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                                    ValidationSetting = new FieldValidationSettingsDescriptor
+                                    {
+                                        DefaultValue = "",
+                                        Validators = new List<ValidatorDefinitionDescriptor>
+                                        {
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "RequiredRule",
+                                                FunctionName = "Check"
+                                            }
+                                        }
+                                    }
+                                },
+                                new FormControlSettingsDescriptor
+                                {
+                                    Field = "County",
+                                    Type = "System.String",
+                                    Title = "County",
+                                    Placeholder = "County (required)",
+                                    DropDownTemplate = new DropDownTemplateDescriptor
+                                    {
+                                        TemplateName = "PickerTemplate",
+                                        TitleText = "Select County:",
+                                        LoadingIndicatorText = "Loading ...",
+                                        TextField = "Text",
+                                        ValueField = "Value",
+                                        TextAndValueSelector = new SelectorLambdaOperatorDescriptor
+                                        {
+                                            Selector = new SelectOperatorDescriptor
+                                            {
+                                                SourceOperand = new OrderByOperatorDescriptor
+                                                {
+                                                    SourceOperand = new WhereOperatorDescriptor
+                                                    {
+                                                        SourceOperand = new ParameterOperatorDescriptor { ParameterName = "$it" },
+                                                        FilterBody = new EqualsBinaryOperatorDescriptor
+                                                        {
+                                                            Left = new MemberSelectorOperatorDescriptor
+                                                            {
+                                                                SourceOperand = new ParameterOperatorDescriptor { ParameterName = "l" },
+                                                                MemberFullName = "ListName"
+                                                            },
+                                                            Right = new ConstantOperatorDescriptor
+                                                            {
+                                                                ConstantValue = "counties",
+                                                                Type = typeof(string).AssemblyQualifiedName
+                                                            }
+                                                        },
+                                                        FilterParameterName = "l"
+                                                    },
+                                                    SelectorBody = new MemberSelectorOperatorDescriptor
+                                                    {
+                                                        SourceOperand = new ParameterOperatorDescriptor { ParameterName = "l" },
+                                                        MemberFullName = "Text"
+                                                    },
+                                                    SortDirection = LogicBuilder.Expressions.Utils.Strutures.ListSortDirection.Descending,
+                                                    SelectorParameterName = "l"
+                                                },
+                                                SelectorBody = new MemberInitOperatorDescriptor
+                                                {
+                                                    MemberBindings = new Dictionary<string, OperatorDescriptorBase>
+                                                    {
+                                                        ["Value"] = new MemberSelectorOperatorDescriptor
+                                                        {
+                                                            SourceOperand = new ParameterOperatorDescriptor { ParameterName = "s" },
+                                                            MemberFullName = "Value"
+                                                        },
+                                                        ["Text"] = new MemberSelectorOperatorDescriptor
+                                                        {
+                                                            SourceOperand = new ParameterOperatorDescriptor { ParameterName = "s" },
+                                                            MemberFullName = "Text"
+                                                        }
+                                                    },
+                                                    NewType = typeof(LookUpsModel).AssemblyQualifiedName
+                                                },
+                                                SelectorParameterName = "s"
+                                            },
+                                            SourceElementType = typeof(IQueryable<LookUpsModel>).AssemblyQualifiedName,
+                                            ParameterName = "$it",
+                                            BodyType = typeof(IEnumerable<LookUpsModel>).AssemblyQualifiedName
+                                        },
+                                        RequestDetails = new RequestDetailsDescriptor
+                                        {
+                                            DataSourceUrl = "api/Dropdown/GetObjectDropdown",
+                                            ModelType = typeof(LookUpsModel).AssemblyQualifiedName,
+                                            DataType = typeof(LookUps).AssemblyQualifiedName,
+                                            ModelReturnType = typeof(IEnumerable<LookUpsModel>).AssemblyQualifiedName,
+                                            DataReturnType = typeof(IEnumerable<LookUps>).AssemblyQualifiedName
+                                        }
+                                    },
+                                    ValidationSetting = new FieldValidationSettingsDescriptor
+                                    {
+                                        DefaultValue = "",
+                                        Validators = new List<ValidatorDefinitionDescriptor>
+                                        {
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "RequiredRule",
+                                                FunctionName = "Check"
+                                            }
+                                        }
+                                    }
+                                },
+                                new FormControlSettingsDescriptor
+                                {
+                                    Field = "State",
+                                    Type = "System.String",
+                                    Title = "State",
+                                    Placeholder = "State (required)",
+                                    DropDownTemplate = new DropDownTemplateDescriptor
+                                    {
+                                        TemplateName = "PickerTemplate",
+                                        TitleText = "Select State:",
+                                        LoadingIndicatorText = "Loading ...",
+                                        TextField = "Text",
+                                        ValueField = "Value",
+                                        TextAndValueSelector = new SelectorLambdaOperatorDescriptor
+                                        {
+                                            Selector = new SelectOperatorDescriptor
+                                            {
+                                                SourceOperand = new OrderByOperatorDescriptor
+                                                {
+                                                    SourceOperand = new WhereOperatorDescriptor
+                                                    {
+                                                        SourceOperand = new ParameterOperatorDescriptor { ParameterName = "$it" },
+                                                        FilterBody = new EqualsBinaryOperatorDescriptor
+                                                        {
+                                                            Left = new MemberSelectorOperatorDescriptor
+                                                            {
+                                                                SourceOperand = new ParameterOperatorDescriptor { ParameterName = "l" },
+                                                                MemberFullName = "ListName"
+                                                            },
+                                                            Right = new ConstantOperatorDescriptor
+                                                            {
+                                                                ConstantValue = "states",
+                                                                Type = typeof(string).AssemblyQualifiedName
+                                                            }
+                                                        },
+                                                        FilterParameterName = "l"
+                                                    },
+                                                    SelectorBody = new MemberSelectorOperatorDescriptor
+                                                    {
+                                                        SourceOperand = new ParameterOperatorDescriptor { ParameterName = "l" },
+                                                        MemberFullName = "Text"
+                                                    },
+                                                    SortDirection = LogicBuilder.Expressions.Utils.Strutures.ListSortDirection.Descending,
+                                                    SelectorParameterName = "l"
+                                                },
+                                                SelectorBody = new MemberInitOperatorDescriptor
+                                                {
+                                                    MemberBindings = new Dictionary<string, OperatorDescriptorBase>
+                                                    {
+                                                        ["Value"] = new MemberSelectorOperatorDescriptor
+                                                        {
+                                                            SourceOperand = new ParameterOperatorDescriptor { ParameterName = "s" },
+                                                            MemberFullName = "Value"
+                                                        },
+                                                        ["Text"] = new MemberSelectorOperatorDescriptor
+                                                        {
+                                                            SourceOperand = new ParameterOperatorDescriptor { ParameterName = "s" },
+                                                            MemberFullName = "Text"
+                                                        }
+                                                    },
+                                                    NewType = typeof(LookUpsModel).AssemblyQualifiedName
+                                                },
+                                                SelectorParameterName = "s"
+                                            },
+                                            SourceElementType = typeof(IQueryable<LookUpsModel>).AssemblyQualifiedName,
+                                            ParameterName = "$it",
+                                            BodyType = typeof(IEnumerable<LookUpsModel>).AssemblyQualifiedName
+                                        },
+                                        RequestDetails = new RequestDetailsDescriptor
+                                        {
+                                            DataSourceUrl = "api/Dropdown/GetObjectDropdown",
+                                            ModelType = typeof(LookUpsModel).AssemblyQualifiedName,
+                                            DataType = typeof(LookUps).AssemblyQualifiedName,
+                                            ModelReturnType = typeof(IEnumerable<LookUpsModel>).AssemblyQualifiedName,
+                                            DataReturnType = typeof(IEnumerable<LookUps>).AssemblyQualifiedName
+                                        }
+                                    },
+                                    ValidationSetting = new FieldValidationSettingsDescriptor
+                                    {
+                                        DefaultValue = "",
+                                        Validators = new List<ValidatorDefinitionDescriptor>
+                                        {
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "RequiredRule",
+                                                FunctionName = "Check"
+                                            }
+                                        }
+                                    }
+                                },
+                                new FormControlSettingsDescriptor
+                                {
+                                    Field = "ZipCode",
+                                    Type = "System.String",
+                                    Title = "Zip Code",
+                                    Placeholder = "Zip Code (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                                    ValidationSetting = new FieldValidationSettingsDescriptor
+                                    {
+                                        DefaultValue = "",
+                                        Validators = new List<ValidatorDefinitionDescriptor>
+                                        {
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "RequiredRule",
+                                                FunctionName = "Check"
+                                            },
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "IsPatternMatchRule",
+                                                FunctionName = "Check",
+                                                Arguments = new Dictionary<string, ValidatorArgumentDescriptor>
+                                                {
+                                                    ["pattern"] = new ValidatorArgumentDescriptor
+                                                    {
+                                                        Name = "pattern",
+                                                        Value  = @"^[\d]{5}$",
+                                                        Type = "System.String"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                            }
+                        },
+                        new FormGroupBoxSettingsDescriptor
+                        {
+                            GroupHeader = "Phone Numbers",
+                            FieldSettings = new List<FormItemSettingsDescriptor>
+                            {
+                                new FormControlSettingsDescriptor
+                                {
+                                    Field = "CellPhone",
+                                    Type = "System.String",
+                                    Title = "Cell Phone",
+                                    Placeholder = "Cell Phone (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                                    ValidationSetting = new FieldValidationSettingsDescriptor
+                                    {
+                                        DefaultValue = "",
+                                        Validators = new List<ValidatorDefinitionDescriptor>
+                                        {
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "RequiredRule",
+                                                FunctionName = "Check"
+                                            },
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "IsPatternMatchRule",
+                                                FunctionName = "Check",
+                                                Arguments = new Dictionary<string, ValidatorArgumentDescriptor>
+                                                {
+                                                    ["pattern"] = new ValidatorArgumentDescriptor
+                                                    {
+                                                        Name = "pattern",
+                                                        Value  = @"^[\d]{3}-[\d]{3}-[\d]{4}$",
+                                                        Type = "System.String"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                new FormControlSettingsDescriptor
+                                {
+                                    Field = "OtherPhone",
+                                    Type = "System.String",
+                                    Title = "Other Phone",
+                                    Placeholder = "Other Phone (required)",
+                                    TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                                    ValidationSetting = new FieldValidationSettingsDescriptor
+                                    {
+                                        DefaultValue = "",
+                                        Validators = new List<ValidatorDefinitionDescriptor>
+                                        {
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "RequiredRule",
+                                                FunctionName = "Check"
+                                            },
+                                            new ValidatorDefinitionDescriptor
+                                            {
+                                                ClassName = "IsPatternMatchRule",
+                                                FunctionName = "Check",
+                                                Arguments = new Dictionary<string, ValidatorArgumentDescriptor>
+                                                {
+                                                    ["pattern"] = new ValidatorArgumentDescriptor
+                                                    {
+                                                        Name = "pattern",
+                                                        Value  = @"^[\d]{3}-[\d]{3}-[\d]{4}$",
+                                                        Type = "System.String"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                new FormGroupSettingsDescriptor
+                {
+                    Field = "Personal",
+                    Title = "Personal0",
+                    ValidFormControlText = "(Personal)",
+                    InvalidFormControlText ="(Invalid Personal)",
+                    ModelType = typeof(PersonalModel).AssemblyQualifiedName,
+                    FormGroupTemplate = new FormGroupTemplateDescriptor
+                    {
+                        TemplateName = "InlineFormGroupTemplate",
+                    },
+                    ValidationMessages = new Dictionary<string, List<ValidationRuleDescriptor>>
+                    {
+                        ["FirstName"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "First Name is required." }
+                        },
+                        ["MiddleName"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Middle Name is required." }
+                        },
+                        ["LastName"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Last Name is required." }
+                        },
+                        ["PrimaryEmail"] = new List<ValidationRuleDescriptor>
+                        {
+                            new ValidationRuleDescriptor { ClassName = "RequiredRule", Message = "Primary Email is required." },
+                            new ValidationRuleDescriptor { ClassName = "IsValidEmailRule", Message = "Primary Email must be a valid email address." }
+                        }
+                    },
+                    FieldSettings = new List<FormItemSettingsDescriptor>
+                    {
+                        new FormControlSettingsDescriptor
+                        {
+                            Field = "FirstName",
+                            Type = "System.String",
+                            Title = "First Name",
+                            Placeholder = "First Name (required)",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                            ValidationSetting = new FieldValidationSettingsDescriptor
+                            {
+                                DefaultValue = "",
+                                Validators = new List<ValidatorDefinitionDescriptor>
+                                {
+                                    new ValidatorDefinitionDescriptor
+                                    {
+                                        ClassName = "RequiredRule",
+                                        FunctionName = "Check"
+                                    }
+                                }
+                            }
+                        },
+                        new FormControlSettingsDescriptor
+                        {
+                            Field = "MiddleName",
+                            Type = "System.String",
+                            Title = "Middle Name",
+                            Placeholder = "Middle Name (required)",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                            ValidationSetting = new FieldValidationSettingsDescriptor
+                            {
+                                DefaultValue = "",
+                                Validators = new List<ValidatorDefinitionDescriptor>
+                                {
+                                    new ValidatorDefinitionDescriptor
+                                    {
+                                        ClassName = "RequiredRule",
+                                        FunctionName = "Check"
+                                    }
+                                }
+                            }
+                        },
+                        new FormControlSettingsDescriptor
+                        {
+                            Field = "LastName",
+                            Type = "System.String",
+                            Title = "Last Name",
+                            Placeholder = "Last Name (required)",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                            ValidationSetting = new FieldValidationSettingsDescriptor
+                            {
+                                DefaultValue = "",
+                                Validators = new List<ValidatorDefinitionDescriptor>
+                                {
+                                    new ValidatorDefinitionDescriptor
+                                    {
+                                        ClassName = "RequiredRule",
+                                        FunctionName = "Check"
+                                    }
+                                }
+                            }
+                        },
+                        new FormControlSettingsDescriptor
+                        {
+                            Field = "PrimaryEmail",
+                            Type = "System.String",
+                            Title = "Primary Email",
+                            Placeholder = "Primary Email (required)",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                            ValidationSetting = new FieldValidationSettingsDescriptor
+                            {
+                                DefaultValue = "",
+                                Validators = new List<ValidatorDefinitionDescriptor>
+                                {
+                                    new ValidatorDefinitionDescriptor
+                                    {
+                                        ClassName = "RequiredRule",
+                                        FunctionName = "Check"
+                                    },
+                                    new ValidatorDefinitionDescriptor
+                                    {
+                                        ClassName = "IsValidEmailRule",
+                                        FunctionName = "Check"
+                                    }
+                                }
+                            }
+                        },
+                        new FormControlSettingsDescriptor
+                        {
+                            Field = "Suffix",
+                            Type = "System.String",
+                            Title = "Suffix",
+                            Placeholder = "Suffix",
+                            TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" },
+                            ValidationSetting = new FieldValidationSettingsDescriptor
+                            {
+                                DefaultValue = ""
+                            }
+                        },
                     }
                 }
             },

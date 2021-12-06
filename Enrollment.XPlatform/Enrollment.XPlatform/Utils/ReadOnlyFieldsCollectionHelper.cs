@@ -11,21 +11,23 @@ namespace Enrollment.XPlatform.Utils
 {
     internal class ReadOnlyFieldsCollectionHelper
     {
-        private IDetailGroupSettings formSettings;
+        private List<DetailItemSettingsDescriptor> fieldSettings;
+        private IDetailGroupBoxSettings groupBoxSettings;
         private DetailFormLayout formLayout;
         private readonly IContextProvider contextProvider;
         private readonly string parentName;
 
-        public ReadOnlyFieldsCollectionHelper(IDetailGroupSettings formSettings, IContextProvider contextProvider, DetailFormLayout formLayout = null, string parentName = null)
+        public ReadOnlyFieldsCollectionHelper(List<DetailItemSettingsDescriptor> fieldSettings, IDetailGroupBoxSettings groupBoxSettings, IContextProvider contextProvider, DetailFormLayout formLayout = null, string parentName = null)
         {
-            this.formSettings = formSettings;
+            this.fieldSettings = fieldSettings;
+            this.groupBoxSettings = groupBoxSettings;
             this.contextProvider = contextProvider;
 
             if (formLayout == null)
             {
                 this.formLayout = new DetailFormLayout();
-                if (this.formSettings.FieldSettings.ShouldCreateDefaultControlGroupBox())
-                    this.formLayout.AddControlGroupBox(this.formSettings);
+                if (this.fieldSettings.ShouldCreateDefaultControlGroupBox())
+                    this.formLayout.AddControlGroupBox(this.groupBoxSettings);
             }
             else
             {
@@ -37,13 +39,8 @@ namespace Enrollment.XPlatform.Utils
 
         public DetailFormLayout CreateFields()
         {
-            this.CreateFieldsCollection();
+            this.CreateFieldsCollection(this.fieldSettings);
             return this.formLayout;
-        }
-
-        private void CreateFieldsCollection()
-        {
-            CreateFieldsCollection(this.formSettings.FieldSettings);
         }
 
         private void CreateFieldsCollection(List<DetailItemSettingsDescriptor> fieldSettings)
@@ -83,14 +80,21 @@ namespace Enrollment.XPlatform.Utils
             if (setting.FieldSettings.Any(s => s is DetailGroupBoxSettingsDescriptor))
                 throw new ArgumentException($"{nameof(setting.FieldSettings)}: E5DC0442-F3B9-4C50-B641-304358DF8EBA");
 
-            CreateFieldsCollection(setting.FieldSettings);
+            new ReadOnlyFieldsCollectionHelper
+            (
+                setting.FieldSettings,
+                setting,
+                this.contextProvider,
+                this.formLayout,
+                this.parentName
+            ).CreateFields();
         }
 
         private void AddMultiSelectControl(MultiSelectDetailControlSettingsDescriptor setting)
         {
             if (setting.MultiSelectTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.MultiSelectTemplate))
             {
-                formLayout.Add(CreateMultiSelectReadOnlyObject(setting));
+                formLayout.Add(CreateMultiSelectReadOnlyObject(setting), this.groupBoxSettings);
             }
             else
             {
@@ -114,19 +118,19 @@ namespace Enrollment.XPlatform.Utils
                 || setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.PasswordTemplate)
                 || setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.DateTemplate))
             {
-                formLayout.Add(CreateTextFieldReadOnlyObject(setting));
+                formLayout.Add(CreateTextFieldReadOnlyObject(setting), this.groupBoxSettings);
             }
             else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.HiddenTemplate))
             {
-                formLayout.Add(CreateHiddenReadOnlyObject(setting));
+                formLayout.Add(CreateHiddenReadOnlyObject(setting), this.groupBoxSettings);
             }
             else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.CheckboxTemplate))
             {
-                formLayout.Add(CreateCheckboxReadOnlyObject(setting));
+                formLayout.Add(CreateCheckboxReadOnlyObject(setting), this.groupBoxSettings);
             }
             else if (setting.TextTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.SwitchTemplate))
             {
-                formLayout.Add(CreateSwitchReadOnlyObject(setting));
+                formLayout.Add(CreateSwitchReadOnlyObject(setting), this.groupBoxSettings);
             }
             else
             {
@@ -138,7 +142,7 @@ namespace Enrollment.XPlatform.Utils
         {
             if (setting.DropDownTemplate.TemplateName == nameof(ReadOnlyControlTemplateSelector.PickerTemplate))
             {
-                formLayout.Add(CreatePickerReadOnlyObject(setting));
+                formLayout.Add(CreatePickerReadOnlyObject(setting), this.groupBoxSettings);
             }
             else
             {
@@ -165,19 +169,18 @@ namespace Enrollment.XPlatform.Utils
             }
         }
 
-        private void AddFormGroupInline(DetailGroupSettingsDescriptor setting)
-        {
-            new ReadOnlyFieldsCollectionHelper
+        private void AddFormGroupInline(DetailGroupSettingsDescriptor setting) 
+            => new ReadOnlyFieldsCollectionHelper
             (
-                setting,
+                setting.FieldSettings,
+                this.groupBoxSettings,
                 this.contextProvider,
                 this.formLayout,
                 GetFieldName(setting.Field)
             ).CreateFields();
-        }
 
         private void AddFormGroupPopup(DetailGroupSettingsDescriptor setting)
-            => formLayout.Add(CreateFormReadOnlyObject(setting));
+            => formLayout.Add(CreateFormReadOnlyObject(setting), this.groupBoxSettings);
 
         private void AddFormGroupArray(DetailGroupArraySettingsDescriptor setting)
         {
@@ -187,7 +190,7 @@ namespace Enrollment.XPlatform.Utils
 
             if (setting.FormGroupTemplate.TemplateName == nameof(QuestionTemplateSelector.FormGroupArrayTemplate))
             {
-                formLayout.Add(CreateFormArrayReadOnlyObject(setting));
+                formLayout.Add(CreateFormArrayReadOnlyObject(setting), this.groupBoxSettings);
             }
             else
             {

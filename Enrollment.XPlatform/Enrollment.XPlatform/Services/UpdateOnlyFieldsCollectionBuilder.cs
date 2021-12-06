@@ -15,6 +15,6 @@ namespace Enrollment.XPlatform.Services
         }
 
         public EditFormLayout CreateFieldsCollection(IFormGroupSettings formSettings, Type modelType)
-            => new UpdateOnlyFieldsCollectionHelper(formSettings, this.contextProvider, modelType).CreateFields();
+            => new UpdateOnlyFieldsCollectionHelper(formSettings.FieldSettings, formSettings, formSettings.ValidationMessages, this.contextProvider, modelType).CreateFields();
     }
 }

@@ -13,5 +13,7 @@ namespace Enrollment.Forms.Configuration.DetailForm
         public MultiBindingDescriptor HeaderBindings { get; set; }
         public MultiBindingDescriptor SubtitleBindings { get; set; }
         public ItemFilterGroupDescriptor ItemFilterGroup { get; set; }
+        public string GroupHeader => Title;
+        public bool IsHidden => false;
     }
 }

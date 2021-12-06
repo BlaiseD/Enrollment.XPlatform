@@ -14,6 +14,6 @@ namespace Enrollment.XPlatform.Services
         }
 
         public DetailFormLayout CreateFieldsCollection(IDetailGroupSettings formSettings)
-            => new ReadOnlyFieldsCollectionHelper(formSettings, this.contextProvider).CreateFields();
+            => new ReadOnlyFieldsCollectionHelper(formSettings.FieldSettings, formSettings, this.contextProvider).CreateFields();
     }
 }

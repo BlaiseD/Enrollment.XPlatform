@@ -15,43 +15,20 @@ namespace Enrollment.XPlatform.ViewModels
             Properties = new ObservableCollection<IValidatable>();
         }
 
-        public void Add(IValidatable validatable)
+        public void Add(IValidatable validatable, IFormGroupBoxSettings groupBoxSettings)
         {
             Properties.Add(validatable);
 
             if (!ControlGroupBoxList.Any())
                 throw new InvalidOperationException("{AA443C6C-7007-498B-9404-54D87CE1278C}");
 
-            ControlGroupBoxList.Last().Add(validatable);
+            ControlGroupBoxList
+                .Single(g => object.ReferenceEquals(g.GroupBoxSettings, groupBoxSettings))
+                .Add(validatable);
         }
 
-        public void AddControlGroupBox(IFormGroupSettings formSettings)
-        {
-            ControlGroupBoxList.Add
-            (
-                new ControlGroupBox
-                (
-                    formSettings.Title,
-                    formSettings.HeaderBindings,
-                    new List<IValidatable>(),
-                    true
-                )
-            );
-        }
-
-        public void AddControlGroupBox(FormGroupBoxSettingsDescriptor groupBoxSettingsDescriptor)
-        {
-            ControlGroupBoxList.Add
-            (
-                new ControlGroupBox
-                (
-                    groupBoxSettingsDescriptor.GroupHeader,
-                    groupBoxSettingsDescriptor.HeaderBindings,
-                    new List<IValidatable>(),
-                    groupBoxSettingsDescriptor.IsHidden == false
-                )
-            );
-        }
+        public void AddControlGroupBox(IFormGroupBoxSettings groupBoxSettings)
+            => ControlGroupBoxList.Add(new ControlGroupBox(groupBoxSettings));
 
         public List<ControlGroupBox> ControlGroupBoxList { get; }
 

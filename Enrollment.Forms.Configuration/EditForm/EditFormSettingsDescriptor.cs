@@ -14,5 +14,7 @@ namespace Enrollment.Forms.Configuration.EditForm
         public string ModelType { get; set; }
         public Dictionary<string, List<DirectiveDescriptor>> ConditionalDirectives { get; set; }
         public MultiBindingDescriptor HeaderBindings { get; set; }
+        public string GroupHeader => Title;
+        public bool IsHidden => false;
     }
 }

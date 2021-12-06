@@ -1,24 +1,20 @@
 ﻿using AutoMapper;
-using Enrollment.Domain.Entities;
 using Enrollment.XPlatform.Flow;
 using Enrollment.XPlatform.Flow.Cache;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Tests.Mocks;
 using Enrollment.XPlatform.ViewModels;
-using Enrollment.XPlatform.ViewModels.Validatables;
 using LogicBuilder.RulesDirector;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Xunit;
 
 namespace Enrollment.XPlatform.Tests
 {
-    public class FieldsCollectionBuilderTest
+    public class ReadOnlyFieldsCollectionBuilderTest
     {
-        public FieldsCollectionBuilderTest()
+        public ReadOnlyFieldsCollectionBuilderTest()
         {
             Initialize();
         }
@@ -28,34 +24,11 @@ namespace Enrollment.XPlatform.Tests
         #endregion Fields
 
         [Fact]
-        public void MapCourseModelToIValidatableList()
+        public void CreateDetailFormLayoutForUserModelPersonal()
         {
-            //act
-            ObservableCollection<IValidatable> properties = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
+            DetailFormLayout formLayout = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.AcademicForm,
-                typeof(AcademicModel)
-            ).Properties;
-
-            //assert
-            IDictionary<string, IValidatable> propertiesDictionary = properties.ToDictionary(property => property.Name);
-            Assert.Equal(typeof(HiddenValidatableObject<int>), propertiesDictionary["UserId"].GetType());
-            Assert.Equal(typeof(PickerValidatableObject<string>), propertiesDictionary["LastHighSchoolLocation"].GetType());
-            Assert.Equal(typeof(PickerValidatableObject<string>), propertiesDictionary["NcHighSchoolName"].GetType());
-            Assert.Equal(typeof(DatePickerValidatableObject<DateTime>), propertiesDictionary["FromDate"].GetType());
-            Assert.Equal(typeof(DatePickerValidatableObject<DateTime>), propertiesDictionary["ToDate"].GetType());
-            Assert.Equal(typeof(PickerValidatableObject<string>), propertiesDictionary["GraduationStatus"].GetType());
-            Assert.Equal(typeof(SwitchValidatableObject), propertiesDictionary["EarnedCreditAtCmc"].GetType());
-            Assert.Equal(typeof(FormArrayValidatableObject<ObservableCollection<InstitutionModel>, InstitutionModel>), propertiesDictionary["Institutions"].GetType());
-        }
-
-        [Fact]
-        public void CreateEditFormLayoutForUserModelPersonal()
-        {
-            EditFormLayout formLayout = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
-            (
-                Descriptors.PersonalFrom,
-                typeof(UserModel)
+                ReadOnlyDescriptors.PersonalFrom
             );
 
             Assert.Equal(3, formLayout.ControlGroupBoxList.Count);
@@ -65,12 +38,11 @@ namespace Enrollment.XPlatform.Tests
         }
 
         [Fact]
-        public void CreateEditFormLayoutForUserModelPersonalWithDefaultGroupForSomeFields()
+        public void CreateDetailFormLayoutForUserModelPersonalWithDefaultGroupForSomeFields()
         {
-            EditFormLayout formLayout = serviceProvider.GetRequiredService<IFieldsCollectionBuilder>().CreateFieldsCollection
+            DetailFormLayout formLayout = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                Descriptors.PersonalFromWithDefaultGroupForSomeFields,
-                typeof(UserModel)
+                ReadOnlyDescriptors.PersonalFromWithDefaultGroupForSomeFields
             );
 
             Assert.Equal(3, formLayout.ControlGroupBoxList.Count);
