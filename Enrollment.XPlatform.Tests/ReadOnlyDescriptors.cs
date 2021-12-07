@@ -4,6 +4,7 @@ using Enrollment.Domain.Entities;
 using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.Bindings;
 using Enrollment.Forms.Configuration.DetailForm;
+using Enrollment.Forms.Configuration.EditForm;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -1107,7 +1108,7 @@ namespace Enrollment.XPlatform.Tests
                     }
                 }
             },
-            DetailType = DetailType.Detail,
+            FormType = FormType.Detail,
             ModelType = typeof(UserModel).AssemblyQualifiedName
         };
 
@@ -1406,7 +1407,7 @@ namespace Enrollment.XPlatform.Tests
                 },
 
             },
-            DetailType = DetailType.Detail,
+            FormType = FormType.Detail,
             ModelType = typeof(UserModel).AssemblyQualifiedName
         };
     }

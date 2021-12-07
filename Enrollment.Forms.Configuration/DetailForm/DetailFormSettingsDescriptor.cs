@@ -8,7 +8,7 @@ namespace Enrollment.Forms.Configuration.DetailForm
         public string Title { get; set; }
         public FormRequestDetailsDescriptor RequestDetails { get; set; }
         public List<DetailItemSettingsDescriptor> FieldSettings { get; set; }
-        public DetailType DetailType { get; set; }
+        public EditForm.FormType FormType { get; set; }
         public string ModelType { get; set; }
         public MultiBindingDescriptor HeaderBindings { get; set; }
         public MultiBindingDescriptor SubtitleBindings { get; set; }

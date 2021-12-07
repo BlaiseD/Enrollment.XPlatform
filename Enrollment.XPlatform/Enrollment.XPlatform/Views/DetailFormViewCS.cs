@@ -1,5 +1,6 @@
 ﻿using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.DetailForm;
+using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels;
 using Enrollment.XPlatform.ViewModels.DetailForm;
@@ -78,7 +79,7 @@ namespace Enrollment.XPlatform.Views
                                 ),
                                 new Label
                                 {
-                                    IsVisible = detailFormEntityViewModel.FormSettings.DetailType == DetailType.Delete,
+                                    IsVisible = detailFormEntityViewModel.FormSettings.FormType == FormType.Delete,
                                     Style = LayoutHelpers.GetStaticStyleResource("DetailFormDeleteQuestionStyle")
                                 }
                                 .AddBinding

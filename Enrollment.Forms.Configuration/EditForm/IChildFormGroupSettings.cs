@@ -4,6 +4,7 @@
     {
         string ValidFormControlText { get; }
         string InvalidFormControlText { get; }
+        string Placeholder { get; set; }
         FormGroupTemplateDescriptor FormGroupTemplate { get; }
     }
 }

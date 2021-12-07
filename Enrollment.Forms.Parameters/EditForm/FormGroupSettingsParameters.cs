@@ -28,6 +28,10 @@ namespace Enrollment.Forms.Parameters.EditForm
 			[Comments("Placeholder text for the for control when the form is a one-to-one form field and the form is invalid. May need to remove this for form arrays..")]
 			string invalidFormControlText,
 
+			[Comments("Place holder text.")]
+			[NameValue(AttributeNames.DEFAULTVALUE, "(Property name)")]
+			string placeholder,
+
 			[Comments("The entity type for the object being edited. Click the function button and use the configured GetType function.  Use the Assembly qualified type name for the type argument.")]
 			Type modelType,
 
@@ -55,6 +59,7 @@ namespace Enrollment.Forms.Parameters.EditForm
 			Title = title;
 			ValidFormControlText = validFormControlText;
 			InvalidFormControlText = invalidFormControlText;
+			Placeholder = placeholder;
 			ModelType = modelType;
 			FormGroupTemplate = formGroupTemplate;
 			FieldSettings = fieldSettings;
@@ -75,6 +80,7 @@ namespace Enrollment.Forms.Parameters.EditForm
 		public string Title { get; set; }
 		public string ValidFormControlText { get; set; }
 		public string InvalidFormControlText { get; set; }
+		public string Placeholder { get; set; }
 		public Type ModelType { get; set; }
 		public FormGroupTemplateParameters FormGroupTemplate { get; set; }
 		public List<FormItemSettingsParameters> FieldSettings { get; set; }

@@ -16,8 +16,8 @@ namespace Enrollment.Forms.Parameters.DetailForm
 			[Comments("List of fields and form groups for this form.")]
 			List<DetailItemSettingsParameters> fieldSettings,
 
-			[Comments("Click the Variable button and select the configured DetailType enum field.")]
-			DetailType detailType,
+			[Comments("Click the Variable button and select the configured FormType enum field.")]
+			EditForm.FormType formType,
 
 			[Comments("The model type for the object being edited. Click the function button and use the configured GetType function.  Use the Assembly qualified type name for the type argument.")]
 			Type modelType,
@@ -38,7 +38,7 @@ namespace Enrollment.Forms.Parameters.DetailForm
 			Title = title;
 			RequestDetails = requestDetails;
 			FieldSettings = fieldSettings;
-			DetailType = detailType;
+			FormType = formType;
 			ModelType = modelType;
 			HeaderBindings = headerBindings;
 			SubtitleBindings = subtitleBindings;
@@ -48,7 +48,7 @@ namespace Enrollment.Forms.Parameters.DetailForm
 		public string Title { get; set; }
 		public FormRequestDetailsParameters RequestDetails { get; set; }
 		public List<DetailItemSettingsParameters> FieldSettings { get; set; }
-		public DetailType DetailType { get; set; }
+		public EditForm.FormType FormType { get; set; }
 		public Type ModelType { get; set; }
 		public MultiBindingParameters HeaderBindings { get; set; }
 		public MultiBindingParameters SubtitleBindings { get; set; }

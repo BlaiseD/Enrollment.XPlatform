@@ -1430,7 +1430,7 @@ namespace Enrollment.XPlatform.Tests
                     }
                 }
             },
-            EditType = EditType.Update,
+            FormType = FormType.Update,
             ModelType = typeof(UserModel).AssemblyQualifiedName
         };
 
@@ -1990,7 +1990,7 @@ namespace Enrollment.XPlatform.Tests
                     }
                 }
             },
-            EditType = EditType.Update,
+            FormType = FormType.Update,
             ModelType = typeof(UserModel).AssemblyQualifiedName
         };
     }
