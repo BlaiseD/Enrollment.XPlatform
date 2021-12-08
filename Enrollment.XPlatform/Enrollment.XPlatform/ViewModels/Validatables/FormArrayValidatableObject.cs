@@ -1,5 +1,5 @@
 ﻿using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Validators;
 using System;

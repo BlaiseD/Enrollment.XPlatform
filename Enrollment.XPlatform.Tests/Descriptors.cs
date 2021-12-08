@@ -3,7 +3,7 @@ using Enrollment.Data.Entities;
 using Enrollment.Domain.Entities;
 using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.Bindings;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.Forms.Configuration.Validation;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Enrollment.XPlatform.Tests
 {
     internal static class Descriptors
     {
-        internal static EditFormSettingsDescriptor ResidencyForm = new EditFormSettingsDescriptor
+        internal static DataFormSettingsDescriptor ResidencyForm = new DataFormSettingsDescriptor
         {
             Title = "Residency",
             RequestDetails = new FormRequestDetailsDescriptor
@@ -275,7 +275,7 @@ namespace Enrollment.XPlatform.Tests
             ModelType = typeof(ResidencyModel).AssemblyQualifiedName
         };
 
-        internal static EditFormSettingsDescriptor AcademicForm = new EditFormSettingsDescriptor
+        internal static DataFormSettingsDescriptor AcademicForm = new DataFormSettingsDescriptor
         {
             Title = "Academic",
             RequestDetails = new FormRequestDetailsDescriptor
@@ -902,7 +902,7 @@ namespace Enrollment.XPlatform.Tests
             }
         };
 
-        internal static EditFormSettingsDescriptor PersonalFrom = new EditFormSettingsDescriptor
+        internal static DataFormSettingsDescriptor PersonalFrom = new DataFormSettingsDescriptor
         {
             Title = "Personal",
             RequestDetails = new FormRequestDetailsDescriptor
@@ -1434,7 +1434,7 @@ namespace Enrollment.XPlatform.Tests
             ModelType = typeof(UserModel).AssemblyQualifiedName
         };
 
-        internal static EditFormSettingsDescriptor PersonalFromWithDefaultGroupForSomeFields = new EditFormSettingsDescriptor
+        internal static DataFormSettingsDescriptor PersonalFromWithDefaultGroupForSomeFields = new DataFormSettingsDescriptor
         {
             Title = "PersonalRoot",
             RequestDetails = new FormRequestDetailsDescriptor

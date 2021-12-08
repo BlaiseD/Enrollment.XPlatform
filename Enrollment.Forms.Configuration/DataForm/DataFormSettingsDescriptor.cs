@@ -3,9 +3,9 @@ using Enrollment.Forms.Configuration.Directives;
 using Enrollment.Forms.Configuration.Validation;
 using System.Collections.Generic;
 
-namespace Enrollment.Forms.Configuration.EditForm
+namespace Enrollment.Forms.Configuration.DataForm
 {
-    public class EditFormSettingsDescriptor : IFormGroupSettings
+    public class DataFormSettingsDescriptor : IFormGroupSettings
     {
         public string Title { get; set; }
         public FormRequestDetailsDescriptor RequestDetails { get; set; }

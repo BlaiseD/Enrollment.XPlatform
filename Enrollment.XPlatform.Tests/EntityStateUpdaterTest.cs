@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Enrollment.Domain.Entities;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Flow;
 using Enrollment.XPlatform.Flow.Cache;
 using Enrollment.XPlatform.Services;
@@ -28,7 +28,7 @@ namespace Enrollment.XPlatform.Tests
         public void ShouldCorrectlySetEntityStatesForMultiSelects()
         {
             //arrange
-            EditFormSettingsDescriptor formDescriptor = Descriptors.ResidencyForm;
+            DataFormSettingsDescriptor formDescriptor = Descriptors.ResidencyForm;
             ResidencyModel residencyModel = new ResidencyModel
             {
                 UserId = 3,
@@ -114,7 +114,7 @@ namespace Enrollment.XPlatform.Tests
         public void ShouldCorrectlySetEntityStatesForChildFormGroupArray()
         {
             //arrange
-            EditFormSettingsDescriptor formDescriptor = Descriptors.AcademicForm;
+            DataFormSettingsDescriptor formDescriptor = Descriptors.AcademicForm;
             AcademicModel academicModel = new AcademicModel
             {
                 UserId = 1,
@@ -224,7 +224,7 @@ namespace Enrollment.XPlatform.Tests
         public void ShouldCorrectlySetEntityStatesForAddedObjectGraph()
         {
             //arrange
-            EditFormSettingsDescriptor formDescriptor = Descriptors.AcademicForm;
+            DataFormSettingsDescriptor formDescriptor = Descriptors.AcademicForm;
             AcademicModel academicModel = null;
 
             ObservableCollection<IValidatable> modifiedProperties = CreateValidatablesFormSettings(formDescriptor, typeof(AcademicModel));

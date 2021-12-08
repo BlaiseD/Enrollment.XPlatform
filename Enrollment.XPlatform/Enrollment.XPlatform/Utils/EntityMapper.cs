@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.ViewModels.Validatables;
 using System;
 using System.Collections.Generic;

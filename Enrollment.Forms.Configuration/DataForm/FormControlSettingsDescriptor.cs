@@ -1,6 +1,6 @@
 ﻿using Enrollment.Forms.Configuration.Validation;
 
-namespace Enrollment.Forms.Configuration.EditForm
+namespace Enrollment.Forms.Configuration.DataForm
 {
     public class FormControlSettingsDescriptor : FormItemSettingsDescriptor
     {

@@ -1,7 +1,7 @@
 ﻿using Enrollment.Bsl.Business.Requests;
 using Enrollment.Bsl.Business.Responses;
 using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.Utils;
 using Enrollment.XPlatform.Services;
 using System;

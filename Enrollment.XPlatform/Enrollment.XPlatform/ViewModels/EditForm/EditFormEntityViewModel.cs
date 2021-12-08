@@ -2,7 +2,7 @@
 using Enrollment.Bsl.Business.Requests;
 using Enrollment.Bsl.Business.Responses;
 using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Utils;
@@ -16,7 +16,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
 {
     public class EditFormEntityViewModel<TModel> : EditFormEntityViewModelBase where TModel : Domain.EntityModelBase
     {
-        public EditFormEntityViewModel(ScreenSettings<EditFormSettingsDescriptor> screenSettings, IContextProvider contextProvider)
+        public EditFormEntityViewModel(ScreenSettings<DataFormSettingsDescriptor> screenSettings, IContextProvider contextProvider)
             : base(screenSettings, contextProvider)
         {
             FormLayout = contextProvider.FieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings, typeof(TModel));

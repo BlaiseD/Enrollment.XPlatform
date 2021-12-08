@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Enrollment.Forms.Configuration.Directives;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Validators;
 using Enrollment.XPlatform.ViewModels.Validatables;
 using LogicBuilder.Expressions.Utils.ExpressionBuilder.Lambda;

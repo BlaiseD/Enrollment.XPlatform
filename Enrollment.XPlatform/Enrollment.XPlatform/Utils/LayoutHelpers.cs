@@ -1,6 +1,6 @@
 ﻿using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.Bindings;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.ViewModels;
 using Enrollment.XPlatform.Views;

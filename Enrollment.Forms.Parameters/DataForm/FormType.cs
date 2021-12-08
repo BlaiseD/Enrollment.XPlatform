@@ -1,4 +1,4 @@
-﻿namespace Enrollment.Forms.Parameters.EditForm
+﻿namespace Enrollment.Forms.Parameters.DataForm
 {
     public enum FormType
     {

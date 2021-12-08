@@ -2,7 +2,7 @@
 using LogicBuilder.Attributes;
 using System;
 
-namespace Enrollment.Forms.Parameters.EditForm
+namespace Enrollment.Forms.Parameters.DataForm
 {
     public class FormControlSettingsParameters : FormItemSettingsParameters
     {

@@ -1,4 +1,4 @@
-﻿namespace Enrollment.Forms.Configuration.EditForm
+﻿namespace Enrollment.Forms.Configuration.DataForm
 {
     public abstract class FormItemSettingsDescriptor
     {

@@ -2,7 +2,7 @@
 using Enrollment.Forms.Configuration.Validation;
 using System.Collections.Generic;
 
-namespace Enrollment.Forms.Configuration.EditForm
+namespace Enrollment.Forms.Configuration.DataForm
 {
     public interface IFormGroupSettings : IFormGroupBoxSettings
     {

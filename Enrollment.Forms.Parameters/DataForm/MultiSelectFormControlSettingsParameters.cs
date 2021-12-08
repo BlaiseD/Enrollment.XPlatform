@@ -3,7 +3,7 @@ using LogicBuilder.Attributes;
 using System;
 using System.Collections.Generic;
 
-namespace Enrollment.Forms.Parameters.EditForm
+namespace Enrollment.Forms.Parameters.DataForm
 {
     public class MultiSelectFormControlSettingsParameters : FormControlSettingsParameters
     {

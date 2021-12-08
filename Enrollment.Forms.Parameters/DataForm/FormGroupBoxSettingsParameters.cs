@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Enrollment.Forms.Parameters.EditForm
+namespace Enrollment.Forms.Parameters.DataForm
 {
     public class FormGroupBoxSettingsParameters : FormItemSettingsParameters
     {

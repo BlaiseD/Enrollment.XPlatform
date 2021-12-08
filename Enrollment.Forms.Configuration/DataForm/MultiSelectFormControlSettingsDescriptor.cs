@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Enrollment.Forms.Configuration.EditForm
+namespace Enrollment.Forms.Configuration.DataForm
 {
     public class MultiSelectFormControlSettingsDescriptor : FormControlSettingsDescriptor
     {

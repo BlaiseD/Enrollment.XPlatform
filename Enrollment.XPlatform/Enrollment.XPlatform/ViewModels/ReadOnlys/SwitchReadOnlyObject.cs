@@ -1,4 +1,4 @@
-﻿using Enrollment.Forms.Configuration.EditForm;
+﻿using Enrollment.Forms.Configuration.DataForm;
 
 namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {

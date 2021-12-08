@@ -1,5 +1,5 @@
 ﻿using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Flow.Requests;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
@@ -17,7 +17,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
 {
     public abstract class EditFormEntityViewModelBase : ViewModelBase, IDisposable
     {
-        protected EditFormEntityViewModelBase(ScreenSettings<EditFormSettingsDescriptor> screenSettings, IContextProvider contextProvider)
+        protected EditFormEntityViewModelBase(ScreenSettings<DataFormSettingsDescriptor> screenSettings, IContextProvider contextProvider)
         {
             this.UiNotificationService = contextProvider.UiNotificationService;
             FormSettings = screenSettings.Settings;
@@ -27,7 +27,7 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
         public Dictionary<string, IValidatable> BindingPropertiesDictionary
             => FormLayout.Properties.ToDictionary(p => p.Name.ToBindingDictionaryKey());
 
-        public EditFormSettingsDescriptor FormSettings { get; set; }
+        public DataFormSettingsDescriptor FormSettings { get; set; }
         public EditFormLayout FormLayout { get; set; }
         public UiNotificationService UiNotificationService { get; set; }
         public ObservableCollection<CommandButtonDescriptor> Buttons { get; set; }

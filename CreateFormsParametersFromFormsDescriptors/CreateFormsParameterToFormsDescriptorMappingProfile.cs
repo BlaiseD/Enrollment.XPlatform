@@ -68,8 +68,8 @@ namespace CreateFormsParametersFromFormsDescriptors
 
             List<string> formItemSettingsIncludes = types.Where
             (
-                t => t != typeof(Enrollment.Forms.Parameters.EditForm.FormItemSettingsParameters)
-                    && typeof(Enrollment.Forms.Parameters.EditForm.FormItemSettingsParameters).IsAssignableFrom(t)
+                t => t != typeof(Enrollment.Forms.Parameters.DataForm.FormItemSettingsParameters)
+                    && typeof(Enrollment.Forms.Parameters.DataForm.FormItemSettingsParameters).IsAssignableFrom(t)
             )
             .Select
             (

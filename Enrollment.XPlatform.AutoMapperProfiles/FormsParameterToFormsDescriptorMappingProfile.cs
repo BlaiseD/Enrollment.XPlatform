@@ -2,7 +2,7 @@
 using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.Bindings;
 using Enrollment.Forms.Configuration.Directives;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.Forms.Configuration.ListForm;
 using Enrollment.Forms.Configuration.Navigation;
 using Enrollment.Forms.Configuration.SearchForm;
@@ -11,7 +11,7 @@ using Enrollment.Forms.Configuration.Validation;
 using Enrollment.Forms.Parameters;
 using Enrollment.Forms.Parameters.Bindings;
 using Enrollment.Forms.Parameters.Directives;
-using Enrollment.Forms.Parameters.EditForm;
+using Enrollment.Forms.Parameters.DataForm;
 using Enrollment.Forms.Parameters.ListForm;
 using Enrollment.Forms.Parameters.Navigation;
 using Enrollment.Forms.Parameters.SearchForm;
@@ -29,7 +29,7 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 			CreateMap<DirectiveDefinitionParameters, DirectiveDefinitionDescriptor>();
 			CreateMap<DirectiveParameters, DirectiveDescriptor>();
 			CreateMap<DropDownTemplateParameters, DropDownTemplateDescriptor>();
-			CreateMap<EditFormSettingsParameters, EditFormSettingsDescriptor>()
+			CreateMap<DataFormSettingsParameters, DataFormSettingsDescriptor>()
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
 			CreateMap<FieldValidationSettingsParameters, FieldValidationSettingsDescriptor>();
 			CreateMap<FormattedLabelItemParameters, FormattedLabelItemDescriptor>();

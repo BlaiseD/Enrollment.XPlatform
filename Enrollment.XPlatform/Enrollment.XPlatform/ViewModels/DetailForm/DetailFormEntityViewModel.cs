@@ -1,7 +1,7 @@
 ﻿using Enrollment.Bsl.Business.Requests;
 using Enrollment.Bsl.Business.Responses;
 using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.EditForm;
+using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.Parameters.Expressions;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
@@ -14,7 +14,7 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
 {
     public class DetailFormEntityViewModel<TModel> : DetailFormEntityViewModelBase where TModel : Domain.EntityModelBase
     {
-        public DetailFormEntityViewModel(ScreenSettings<EditFormSettingsDescriptor> screenSettings, IContextProvider contextProvider) 
+        public DetailFormEntityViewModel(ScreenSettings<DataFormSettingsDescriptor> screenSettings, IContextProvider contextProvider) 
             : base(screenSettings, contextProvider)
         {
             this.httpService = contextProvider.HttpService;

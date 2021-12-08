@@ -1,4 +1,4 @@
-﻿using Enrollment.Forms.Configuration.EditForm;
+﻿using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.Utils;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System;

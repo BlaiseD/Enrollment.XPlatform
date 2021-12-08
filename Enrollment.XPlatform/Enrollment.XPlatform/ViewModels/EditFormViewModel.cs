@@ -1,4 +1,4 @@
-﻿using Enrollment.Forms.Configuration.EditForm;
+﻿using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.ViewModels.EditForm;
@@ -18,12 +18,12 @@ namespace Enrollment.XPlatform.ViewModels
 
         public override void Initialize(ScreenSettingsBase screenSettings)
         {
-            EditFormEntityViewModel = CreateEditFormViewModel((ScreenSettings<EditFormSettingsDescriptor>)screenSettings);
+            EditFormEntityViewModel = CreateEditFormViewModel((ScreenSettings<DataFormSettingsDescriptor>)screenSettings);
         }
 
         public EditFormEntityViewModelBase EditFormEntityViewModel { get; set; }
 
-        private EditFormEntityViewModelBase CreateEditFormViewModel(ScreenSettings<EditFormSettingsDescriptor> screenSettings)
+        private EditFormEntityViewModelBase CreateEditFormViewModel(ScreenSettings<DataFormSettingsDescriptor> screenSettings)
         {
             return (EditFormEntityViewModelBase)Activator.CreateInstance
             (
