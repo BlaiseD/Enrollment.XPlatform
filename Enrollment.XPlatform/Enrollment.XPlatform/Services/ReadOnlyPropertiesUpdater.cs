@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Enrollment.Forms.Configuration.DetailForm;
+using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System;
@@ -18,16 +18,16 @@ namespace Enrollment.XPlatform.Services
             this.mapper = mapper;
         }
 
-        public void UpdateProperties(IEnumerable<IReadOnly> properties, object entity, List<DetailItemSettingsDescriptor> fieldSettings, string parentField = null) 
+        public void UpdateProperties(IEnumerable<IReadOnly> properties, object entity, List<FormItemSettingsDescriptor> fieldSettings, string parentField = null) 
             => UpdateReadOnlys(properties, entity, fieldSettings, parentField);
 
-        private void UpdateReadOnlys(IEnumerable<IReadOnly> properties, object source, List<DetailItemSettingsDescriptor> fieldSettings, string parentField = null)
+        private void UpdateReadOnlys(IEnumerable<IReadOnly> properties, object source, List<FormItemSettingsDescriptor> fieldSettings, string parentField = null)
         {
             IDictionary<string, object> existingValues = mapper.Map<Dictionary<string, object>>(source) ?? new Dictionary<string, object>();
             IDictionary<string, IReadOnly> propertiesDictionary = properties.ToDictionary(p => p.Name);
             foreach (var setting in fieldSettings)
             {
-                if (setting is MultiSelectDetailControlSettingsDescriptor multiSelectDetailControlSetting)
+                if (setting is MultiSelectFormControlSettingsDescriptor multiSelectDetailControlSetting)
                 {
                     if (existingValues.TryGetValue(multiSelectDetailControlSetting.Field, out object @value) && @value != null)
                     {
@@ -41,12 +41,12 @@ namespace Enrollment.XPlatform.Services
                         );
                     }
                 }
-                else if (setting is DetailControlSettingsDescriptor controlSetting)
+                else if (setting is FormControlSettingsDescriptor controlSetting)
                 {//must stay after MultiSelect because MultiSelect extends FormControl
                     if (existingValues.TryGetValue(controlSetting.Field, out object @value) && @value != null)
                         propertiesDictionary[GetFieldName(controlSetting.Field)].Value = @value;
                 }
-                else if (setting is DetailGroupSettingsDescriptor formGroupSetting)
+                else if (setting is FormGroupSettingsDescriptor formGroupSetting)
                 {
                     if (existingValues.TryGetValue(formGroupSetting.Field, out object @value) && @value != null)
                     {
@@ -61,7 +61,7 @@ namespace Enrollment.XPlatform.Services
                             throw new ArgumentException($"{nameof(formGroupSetting.FormGroupTemplate.TemplateName)}: 6CCB1B68-6D5B-4417-9074-70A536872EFA");
                     }
                 }
-                else if (setting is DetailGroupArraySettingsDescriptor formGroupArraySetting)
+                else if (setting is FormGroupArraySettingsDescriptor formGroupArraySetting)
                 {
                     if (existingValues.TryGetValue(formGroupArraySetting.Field, out object @value) && @value != null)
                     {
@@ -75,7 +75,7 @@ namespace Enrollment.XPlatform.Services
                         );
                     }
                 }
-                else if (setting is DetailGroupBoxSettingsDescriptor groupBoxSettingsDescriptor)
+                else if (setting is FormGroupBoxSettingsDescriptor groupBoxSettingsDescriptor)
                 {
                     UpdateReadOnlys(properties, source, groupBoxSettingsDescriptor.FieldSettings, parentField);
                 }

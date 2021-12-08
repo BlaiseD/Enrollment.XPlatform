@@ -1,7 +1,7 @@
 ﻿using Enrollment.Bsl.Business.Requests;
 using Enrollment.Bsl.Business.Responses;
 using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.DetailForm;
+using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Utils;
 using System;
@@ -16,7 +16,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class MultiSelectReadOnlyObject<T, E> : ReadOnlyObjectBase<T> where T : ObservableCollection<E>
     {
-        public MultiSelectReadOnlyObject(string name, MultiSelectDetailControlSettingsDescriptor setting, IContextProvider contextProvider) 
+        public MultiSelectReadOnlyObject(string name, MultiSelectFormControlSettingsDescriptor setting, IContextProvider contextProvider) 
             : base(name, setting.MultiSelectTemplate.TemplateName)
         {
             this._multiSelectDetailControlSettingsDescriptor = setting;
@@ -31,7 +31,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 
         private readonly IHttpService httpService;
         private readonly MultiSelectTemplateDescriptor _multiSelectTemplate;
-        private readonly MultiSelectDetailControlSettingsDescriptor _multiSelectDetailControlSettingsDescriptor;
+        private readonly MultiSelectFormControlSettingsDescriptor _multiSelectDetailControlSettingsDescriptor;
         private readonly MultiSelectItemComparer<E> itemComparer;
 
         public MultiSelectTemplateDescriptor MultiSelectTemplate => _multiSelectTemplate;

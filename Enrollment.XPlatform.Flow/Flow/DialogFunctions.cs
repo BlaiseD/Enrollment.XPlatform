@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.DetailForm;
 using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.Forms.Configuration.ListForm;
 using Enrollment.Forms.Configuration.SearchForm;
 using Enrollment.Forms.Configuration.TextForm;
-using Enrollment.Forms.Parameters.DetailForm;
 using Enrollment.Forms.Parameters.EditForm;
 using Enrollment.Forms.Parameters.ListForm;
 using Enrollment.Forms.Parameters.SearchForm;
@@ -52,11 +50,11 @@ namespace Enrollment.XPlatform.Flow
             );
         }
 
-        public void DisplayDetailForm([Comments("Configuration details for the form.")] DetailFormSettingsParameters setting, [ListEditorControl(ListControlType.Connectors)] ICollection<ConnectorParameters> buttons)
+        public void DisplayDetailForm([Comments("Configuration details for the form.")] EditFormSettingsParameters setting, [ListEditorControl(ListControlType.Connectors)] ICollection<ConnectorParameters> buttons)
         {
-            this.screenData.ScreenSettings = new ScreenSettings<DetailFormSettingsDescriptor>
+            this.screenData.ScreenSettings = new ScreenSettings<EditFormSettingsDescriptor>
             (
-                mapper.Map<DetailFormSettingsDescriptor>(setting),
+                mapper.Map<EditFormSettingsDescriptor>(setting),
                 mapper.Map<IEnumerable<ConnectorParameters>, IEnumerable<CommandButtonDescriptor>>(buttons),
                 ViewType.DetailForm
             );

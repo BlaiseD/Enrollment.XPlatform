@@ -1,25 +1,25 @@
-﻿using Enrollment.Forms.Configuration.DetailForm;
+﻿using Enrollment.Forms.Configuration.EditForm;
 using System.Globalization;
 
 namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class CheckboxReadOnlyObject : ReadOnlyObjectBase<bool>
     {
-        public CheckboxReadOnlyObject(string name, DetailControlSettingsDescriptor setting) : base(name, setting.TextTemplate.TemplateName)
+        public CheckboxReadOnlyObject(string name, FormControlSettingsDescriptor setting) : base(name, setting.TextTemplate.TemplateName)
         {
-            DetailControlSettingsDescriptor = setting;
+            FormControlSettingsDescriptor = setting;
         }
 
-        public DetailControlSettingsDescriptor DetailControlSettingsDescriptor { get; }
+        public FormControlSettingsDescriptor FormControlSettingsDescriptor { get; }
 
         public string DisplayText
         {
             get
             {
-                if (string.IsNullOrEmpty(DetailControlSettingsDescriptor.StringFormat))
+                if (string.IsNullOrEmpty(FormControlSettingsDescriptor.StringFormat))
                     return Value ? "\u2713" : "";
 
-                return string.Format(CultureInfo.CurrentCulture, DetailControlSettingsDescriptor.StringFormat, Value ? "\u2713" : "");
+                return string.Format(CultureInfo.CurrentCulture, FormControlSettingsDescriptor.StringFormat, Value ? "\u2713" : "");
             }
         }
     }

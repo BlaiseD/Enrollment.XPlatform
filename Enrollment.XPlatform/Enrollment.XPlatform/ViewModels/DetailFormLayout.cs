@@ -1,4 +1,4 @@
-﻿using Enrollment.Forms.Configuration.DetailForm;
+﻿using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace Enrollment.XPlatform.ViewModels
             Properties = new ObservableCollection<IReadOnly>();
         }
 
-        public void Add(IReadOnly readOnly, IDetailGroupBoxSettings groupBoxSettings)
+        public void Add(IReadOnly readOnly, IFormGroupBoxSettings groupBoxSettings)
         {
             Properties.Add(readOnly);
 
@@ -27,7 +27,7 @@ namespace Enrollment.XPlatform.ViewModels
                 .Add(readOnly);
         }
 
-        public void AddControlGroupBox(IDetailGroupBoxSettings groupBoxSettings) 
+        public void AddControlGroupBox(IFormGroupBoxSettings groupBoxSettings) 
             => ControlGroupBoxList.Add(new ReadOnlyControlGroupBox(groupBoxSettings));
 
         public List<ReadOnlyControlGroupBox> ControlGroupBoxList { get; }

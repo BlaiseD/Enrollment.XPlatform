@@ -1,5 +1,5 @@
 ﻿using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.DetailForm;
+using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Enrollment.XPlatform.ViewModels
 {
     public class ReadOnlyControlGroupBox : ObservableCollection<IReadOnly>
     {
-        public ReadOnlyControlGroupBox(IDetailGroupBoxSettings groupBoxSettings) : base(new List<IReadOnly>())
+        public ReadOnlyControlGroupBox(IFormGroupBoxSettings groupBoxSettings) : base(new List<IReadOnly>())
         {
             GroupHeader = groupBoxSettings.GroupHeader;
             HeaderBindings = groupBoxSettings.HeaderBindings;
@@ -21,7 +21,7 @@ namespace Enrollment.XPlatform.ViewModels
         public string GroupHeader { get; set; }
         public bool IsVisible { get; set; }
         public MultiBindingDescriptor HeaderBindings { get; set; }
-        public IDetailGroupBoxSettings GroupBoxSettings { get; set; }
+        public IFormGroupBoxSettings GroupBoxSettings { get; set; }
         public Dictionary<string, IReadOnly> BindingPropertiesDictionary
             => this.ToDictionary(p => p.Name.ToBindingDictionaryKey());
     }

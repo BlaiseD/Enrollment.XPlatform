@@ -1,4 +1,4 @@
-﻿using Enrollment.Forms.Configuration.DetailForm;
+﻿using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels;
 
@@ -13,7 +13,7 @@ namespace Enrollment.XPlatform.Services
             this.contextProvider = contextProvider;
         }
 
-        public DetailFormLayout CreateFieldsCollection(IDetailGroupSettings formSettings)
+        public DetailFormLayout CreateFieldsCollection(IFormGroupSettings formSettings)
             => new ReadOnlyFieldsCollectionHelper(formSettings.FieldSettings, formSettings, this.contextProvider).CreateFields();
     }
 }

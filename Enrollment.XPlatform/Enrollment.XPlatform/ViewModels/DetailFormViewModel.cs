@@ -1,4 +1,4 @@
-﻿using Enrollment.Forms.Configuration.DetailForm;
+﻿using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.ViewModels.DetailForm;
@@ -18,12 +18,12 @@ namespace Enrollment.XPlatform.ViewModels
 
         public override void Initialize(ScreenSettingsBase screenSettings)
         {
-            DetailFormEntityViewModel = CreateDetailFormViewModel((ScreenSettings<DetailFormSettingsDescriptor>)screenSettings);
+            DetailFormEntityViewModel = CreateDetailFormViewModel((ScreenSettings<EditFormSettingsDescriptor>)screenSettings);
         }
 
         public DetailFormEntityViewModelBase DetailFormEntityViewModel { get; set; }
 
-        private DetailFormEntityViewModelBase CreateDetailFormViewModel(ScreenSettings<DetailFormSettingsDescriptor> screenSettings)
+        private DetailFormEntityViewModelBase CreateDetailFormViewModel(ScreenSettings<EditFormSettingsDescriptor> screenSettings)
         {
             return (DetailFormEntityViewModelBase)Activator.CreateInstance
             (

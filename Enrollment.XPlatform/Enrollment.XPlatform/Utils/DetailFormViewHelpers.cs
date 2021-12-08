@@ -166,7 +166,7 @@ namespace Enrollment.XPlatform.Utils
                     new TapGestureRecognizer().AddBinding
                     (
                         TapGestureRecognizer.CommandProperty,
-                        new Binding(path: "OpenCommand")
+                        new Binding(path: nameof(MultiSelectReadOnlyObject<ObservableCollection<string>, string>.OpenCommand))
                     )
                 }
             };
@@ -185,7 +185,7 @@ namespace Enrollment.XPlatform.Utils
                     new TapGestureRecognizer().AddBinding
                     (
                         TapGestureRecognizer.CommandProperty,
-                        new Binding(path: "OpenCommand")
+                        new Binding(path: nameof(FormReadOnlyObject<string>.OpenCommand))
                     )
                 }
             };
@@ -204,7 +204,7 @@ namespace Enrollment.XPlatform.Utils
                     new TapGestureRecognizer().AddBinding
                     (
                         TapGestureRecognizer.CommandProperty,
-                        new Binding(path: "OpenCommand")
+                        new Binding(path: nameof(FormReadOnlyObject<string>.OpenCommand))
                     )
                 }
             };

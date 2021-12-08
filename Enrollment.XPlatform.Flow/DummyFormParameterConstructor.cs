@@ -1,5 +1,4 @@
 ﻿using Enrollment.Forms.Parameters;
-using Enrollment.Forms.Parameters.DetailForm;
 using Enrollment.Forms.Parameters.EditForm;
 using Enrollment.Forms.Parameters.SearchForm;
 using Enrollment.Forms.Parameters.TextForm;
@@ -17,11 +16,6 @@ namespace Enrollment.XPlatform.Flow
             FormGroupSettingsParameters formGroupSettingsParameters,
             FormGroupBoxSettingsParameters groupBoxSettingsParameters,
             MultiSelectFormControlSettingsParameters multiSelectFormControlSettingsParameters,
-            DetailControlSettingsParameters detailControlSettingsParameters,
-            DetailGroupArraySettingsParameters detailGroupArraySettingsParameters,
-            DetailGroupSettingsParameters detailGroupSettingsParameters,
-            DetailGroupBoxSettingsParameters detailGroupBoxSettingsParameters,
-            MultiSelectDetailControlSettingsParameters multiSelectDetailControlSettingsParameters,
             SearchFilterGroupParameters searchFilterGroupParameters,
             SearchFilterParameters searchFilterParameters,
             ItemFilterGroupParameters itemFilterGroupParameters,

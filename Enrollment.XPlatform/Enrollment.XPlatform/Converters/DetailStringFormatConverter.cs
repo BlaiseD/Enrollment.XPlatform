@@ -1,4 +1,4 @@
-﻿using Enrollment.Forms.Configuration.DetailForm;
+﻿using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.Utils;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System;
@@ -13,7 +13,7 @@ namespace Enrollment.XPlatform.Converters
         {
             return GetFormattedString(GetFormControlSettingsDescriptor());
 
-            object GetFormattedString(DetailControlSettingsDescriptor formControlSettings)
+            object GetFormattedString(FormControlSettingsDescriptor formControlSettings)
             {
                 if (value == null)
                     return null;
@@ -24,10 +24,10 @@ namespace Enrollment.XPlatform.Converters
                 return string.Format(CultureInfo.CurrentCulture, formControlSettings.StringFormat, value);
             }
 
-            DetailControlSettingsDescriptor GetFormControlSettingsDescriptor()
-                => ((VisualElement)parameter).BindingContext.GetPropertyValue<DetailControlSettingsDescriptor>
+            FormControlSettingsDescriptor GetFormControlSettingsDescriptor()
+                => ((VisualElement)parameter).BindingContext.GetPropertyValue<FormControlSettingsDescriptor>
                 (
-                    nameof(TextFieldReadOnlyObject<string>.DetailControlSettingsDescriptor)
+                    nameof(TextFieldReadOnlyObject<string>.FormControlSettingsDescriptor)
                 );
         }
 

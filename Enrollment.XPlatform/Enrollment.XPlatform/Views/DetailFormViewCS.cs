@@ -1,5 +1,4 @@
 ﻿using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.DetailForm;
 using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels;
@@ -74,7 +73,7 @@ namespace Enrollment.XPlatform.Views
                                     GetLabelBinding
                                     (
                                         detailFormEntityViewModel.FormSettings.HeaderBindings,
-                                        $"{nameof(DetailFormEntityViewModelBase.FormSettings)}.{nameof(DetailFormSettingsDescriptor.Title)}"
+                                        $"{nameof(DetailFormEntityViewModelBase.FormSettings)}.{nameof(EditFormSettingsDescriptor.Title)}"
                                     )
                                 ),
                                 new Label
@@ -88,7 +87,7 @@ namespace Enrollment.XPlatform.Views
                                     GetLabelBinding
                                     (
                                         detailFormEntityViewModel.FormSettings.SubtitleBindings,
-                                        $"{nameof(DetailFormEntityViewModelBase.FormSettings)}.{nameof(DetailFormSettingsDescriptor.Title)}"
+                                        $"{nameof(DetailFormEntityViewModelBase.FormSettings)}.{nameof(EditFormSettingsDescriptor.Title)}"
                                     )
                                 ),
                                 new ScrollView

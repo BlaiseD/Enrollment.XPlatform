@@ -1,5 +1,5 @@
 ﻿using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.DetailForm;
+using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.XPlatform.Flow.Requests;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
@@ -16,7 +16,7 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
 {
     public abstract class DetailFormEntityViewModelBase : ViewModelBase
     {
-        protected DetailFormEntityViewModelBase(ScreenSettings<DetailFormSettingsDescriptor> screenSettings, IContextProvider contextProvider)
+        protected DetailFormEntityViewModelBase(ScreenSettings<EditFormSettingsDescriptor> screenSettings, IContextProvider contextProvider)
         {
             this.UiNotificationService = contextProvider.UiNotificationService;
             FormSettings = screenSettings.Settings;
@@ -27,7 +27,7 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
         public Dictionary<string, IReadOnly> BindingPropertiesDictionary
             => FormLayout.Properties.ToDictionary(p => p.Name.ToBindingDictionaryKey());
 
-        public DetailFormSettingsDescriptor FormSettings { get; set; }
+        public EditFormSettingsDescriptor FormSettings { get; set; }
         public DetailFormLayout FormLayout { get; set; }
         public UiNotificationService UiNotificationService { get; set; }
         public ObservableCollection<CommandButtonDescriptor> Buttons { get; set; }

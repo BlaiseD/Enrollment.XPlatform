@@ -1,16 +1,16 @@
-﻿using Enrollment.Forms.Configuration.DetailForm;
+﻿using Enrollment.Forms.Configuration.EditForm;
 
 namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class SwitchReadOnlyObject : ReadOnlyObjectBase<bool>
     {
-        public SwitchReadOnlyObject(string name, DetailControlSettingsDescriptor setting) : base(name, setting.TextTemplate.TemplateName)
+        public SwitchReadOnlyObject(string name, FormControlSettingsDescriptor setting) : base(name, setting.TextTemplate.TemplateName)
         {
-            DetailControlSettingsDescriptor = setting;
+            FormControlSettingsDescriptor = setting;
             SwitchLabel = setting.Title;
         }
 
-        public DetailControlSettingsDescriptor DetailControlSettingsDescriptor { get; }
+        public FormControlSettingsDescriptor FormControlSettingsDescriptor { get; }
 
         private string _switchLabel;
         public string SwitchLabel

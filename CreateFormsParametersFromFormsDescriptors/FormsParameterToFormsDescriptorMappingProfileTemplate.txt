@@ -31,9 +31,6 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
             CreateMap<FormItemSettingsParameters, FormItemSettingsDescriptor>()
 #FormItemSettingsIncludes#
 
-            CreateMap<DetailItemSettingsParameters, DetailItemSettingsDescriptor>()
-#DetailItemSettingsIncludes#
-
             CreateMap<SearchFilterParametersBase, SearchFilterDescriptorBase>()
 #SearchFilterParametersBaseIncludes#
 

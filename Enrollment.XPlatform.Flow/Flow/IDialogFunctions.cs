@@ -1,5 +1,4 @@
-﻿using Enrollment.Forms.Parameters.DetailForm;
-using Enrollment.Forms.Parameters.EditForm;
+﻿using Enrollment.Forms.Parameters.EditForm;
 using Enrollment.Forms.Parameters.ListForm;
 using Enrollment.Forms.Parameters.SearchForm;
 using Enrollment.Forms.Parameters.TextForm;
@@ -36,7 +35,7 @@ namespace Enrollment.XPlatform.Flow
         void DisplayDetailForm
         (
             [Comments("Configuration details for the form.")]
-            DetailFormSettingsParameters setting,
+            EditFormSettingsParameters setting,
             [ListEditorControl(ListControlType.Connectors)]
             ICollection<ConnectorParameters> buttons
         );

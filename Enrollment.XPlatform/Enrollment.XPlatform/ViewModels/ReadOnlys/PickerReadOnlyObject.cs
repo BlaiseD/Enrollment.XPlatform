@@ -1,7 +1,7 @@
 ﻿using Enrollment.Bsl.Business.Requests;
 using Enrollment.Bsl.Business.Responses;
 using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.DetailForm;
+using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.Utils;
 using Enrollment.XPlatform.Services;
 using System;
@@ -13,11 +13,11 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class PickerReadOnlyObject<T> : ReadOnlyObjectBase<T>
     {
-        public PickerReadOnlyObject(string name, DetailControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.DropDownTemplate.TemplateName)
+        public PickerReadOnlyObject(string name, FormControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.DropDownTemplate.TemplateName)
         {
             this._dropDownTemplate = setting.DropDownTemplate;
             this.httpService = contextProvider.HttpService;
-            DetailControlSettingsDescriptor = setting;
+            FormControlSettingsDescriptor = setting;
             this.Title = setting.Title;
             GetItemSource();
         }
@@ -26,7 +26,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
         private readonly DropDownTemplateDescriptor _dropDownTemplate;
         private List<object> _items;
 
-        public DetailControlSettingsDescriptor DetailControlSettingsDescriptor { get; }
+        public FormControlSettingsDescriptor FormControlSettingsDescriptor { get; }
         public DropDownTemplateDescriptor DropDownTemplate => _dropDownTemplate;
 
         public string DisplayText
@@ -36,13 +36,13 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
                 if (SelectedItem == null)
                     return string.Empty;
 
-                if (string.IsNullOrEmpty(DetailControlSettingsDescriptor.StringFormat))
+                if (string.IsNullOrEmpty(FormControlSettingsDescriptor.StringFormat))
                     return SelectedItem.GetPropertyValue<string>(_dropDownTemplate.TextField);
 
                 return string.Format
                 (
                     CultureInfo.CurrentCulture, 
-                    DetailControlSettingsDescriptor.StringFormat,
+                    FormControlSettingsDescriptor.StringFormat,
                     SelectedItem.GetPropertyValue<string>(_dropDownTemplate.TextField)
                 );
             }

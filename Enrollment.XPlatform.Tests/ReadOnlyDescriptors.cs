@@ -3,7 +3,6 @@ using Enrollment.Data.Entities;
 using Enrollment.Domain.Entities;
 using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.Bindings;
-using Enrollment.Forms.Configuration.DetailForm;
 using Enrollment.Forms.Configuration.EditForm;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,23 +11,23 @@ namespace Enrollment.XPlatform.Tests
 {
     public static class ReadOnlyDescriptors
     {
-        internal static DetailFormSettingsDescriptor ResidencyForm = new DetailFormSettingsDescriptor
+        internal static EditFormSettingsDescriptor ResidencyForm = new EditFormSettingsDescriptor
         {
             Title = "Residency",
             RequestDetails = new FormRequestDetailsDescriptor
             {
                 GetUrl = "/Residency/GetSingle"
             },
-            FieldSettings = new List<DetailItemSettingsDescriptor>
+            FieldSettings = new List<FormItemSettingsDescriptor>
             {
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "UserId",
                     Type = "System.Int32",
                     Title = "User ID",
                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "HiddenTemplate" }
                 },
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "CitizenshipStatus",
                     Type = "System.String",
@@ -106,7 +105,7 @@ namespace Enrollment.XPlatform.Tests
                         }
                     },
                 },
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "ResidentState",
                     Type = "System.String",
@@ -184,7 +183,7 @@ namespace Enrollment.XPlatform.Tests
                         }
                     }
                 },
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "HasValidDriversLicense",
                     Type = "System.Boolean",
@@ -192,7 +191,7 @@ namespace Enrollment.XPlatform.Tests
                     StringFormat = "{0}",
                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "SwitchTemplate" }
                 },
-                new MultiSelectDetailControlSettingsDescriptor
+                new MultiSelectFormControlSettingsDescriptor
                 {
                     KeyFields = new List<string> { "State" },
                     Field = "StatesLivedIn",
@@ -253,23 +252,23 @@ namespace Enrollment.XPlatform.Tests
             ModelType = typeof(ResidencyModel).AssemblyQualifiedName
         };
 
-        internal static DetailFormSettingsDescriptor AcademicForm = new DetailFormSettingsDescriptor
+        internal static EditFormSettingsDescriptor AcademicForm = new EditFormSettingsDescriptor
         {
             Title = "Academic",
             RequestDetails = new FormRequestDetailsDescriptor
             {
                 GetUrl = "/Academic/GetSingle"
             },
-            FieldSettings = new List<DetailItemSettingsDescriptor>
+            FieldSettings = new List<FormItemSettingsDescriptor>
             {
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "UserId",
                     Type = "System.Int32",
                     Title = "User ID",
                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "HiddenTemplate" }
                 },
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "LastHighSchoolLocation",
                     Type = "System.String",
@@ -347,7 +346,7 @@ namespace Enrollment.XPlatform.Tests
                         }
                     }
                 },
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "NcHighSchoolName",
                     Type = "System.String",
@@ -425,7 +424,7 @@ namespace Enrollment.XPlatform.Tests
                         }
                     }
                 },
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "FromDate",
                     Type = "System.DateTime",
@@ -433,7 +432,7 @@ namespace Enrollment.XPlatform.Tests
                     Placeholder = "",
                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "DateTemplate" }
                 },
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "ToDate",
                     Type = "System.DateTime",
@@ -441,7 +440,7 @@ namespace Enrollment.XPlatform.Tests
                     Placeholder = "",
                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "DateTemplate" }
                 },
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "GraduationStatus",
                     Type = "System.String",
@@ -519,7 +518,7 @@ namespace Enrollment.XPlatform.Tests
                         }
                     }
                 },
-                new DetailControlSettingsDescriptor
+                new FormControlSettingsDescriptor
                 {
                     Field = "EarnedCreditAtCmc",
                     Type = "System.Boolean",
@@ -527,7 +526,7 @@ namespace Enrollment.XPlatform.Tests
                     Placeholder = "",
                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "SwitchTemplate" }
                 },
-                new DetailGroupArraySettingsDescriptor
+                new FormGroupArraySettingsDescriptor
                 {
                     Field = "Institutions",
                     Placeholder = "(Institutions)",
@@ -554,16 +553,16 @@ namespace Enrollment.XPlatform.Tests
                             }
                         }.ToDictionary(b => b.Name)
                     },
-                    FieldSettings = new List<DetailItemSettingsDescriptor>
+                    FieldSettings = new List<FormItemSettingsDescriptor>
                     {
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "InstitutionId",
                             Type = "System.Int32",
                             Title = "ID",
                             TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "HiddenTemplate" }
                         },
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "InstitutionState",
                             Type = "System.String",
@@ -641,7 +640,7 @@ namespace Enrollment.XPlatform.Tests
                                 }
                             }
                         },
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "InstitutionName",
                             Type = "System.String",
@@ -719,7 +718,7 @@ namespace Enrollment.XPlatform.Tests
                                 }
                             }
                         },
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "StartYear",
                             Type = "System.String",
@@ -727,7 +726,7 @@ namespace Enrollment.XPlatform.Tests
                             Placeholder = "StartYear (required)",
                             TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                         },
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "EndYear",
                             Type = "System.String",
@@ -735,7 +734,7 @@ namespace Enrollment.XPlatform.Tests
                             Placeholder = "EndYear (required)",
                             TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                         },
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "HighestDegreeEarned",
                             Type = "System.String",
@@ -820,16 +819,16 @@ namespace Enrollment.XPlatform.Tests
             }
         };
 
-        internal static DetailFormSettingsDescriptor PersonalFrom = new DetailFormSettingsDescriptor
+        internal static EditFormSettingsDescriptor PersonalFrom = new EditFormSettingsDescriptor
         {
             Title = "Personal",
             RequestDetails = new FormRequestDetailsDescriptor
             {
                 GetUrl = "/Personal/GetSingle"
             },
-            FieldSettings = new List<DetailItemSettingsDescriptor>
+            FieldSettings = new List<FormItemSettingsDescriptor>
             {
-                new DetailGroupSettingsDescriptor
+                new FormGroupSettingsDescriptor
                 {
                     Field = "Personal",
                     Title = "Personal",
@@ -838,14 +837,14 @@ namespace Enrollment.XPlatform.Tests
                     {
                         TemplateName = "InlineFormGroupTemplate",
                     },
-                    FieldSettings = new List<DetailItemSettingsDescriptor>
+                    FieldSettings = new List<FormItemSettingsDescriptor>
                     {
-                        new DetailGroupBoxSettingsDescriptor
+                        new FormGroupBoxSettingsDescriptor
                         {
                             GroupHeader = "Name",
-                            FieldSettings = new List<DetailItemSettingsDescriptor>
+                            FieldSettings = new List<FormItemSettingsDescriptor>
                             {
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "FirstName",
                                     Type = "System.String",
@@ -853,7 +852,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "First Name (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "MiddleName",
                                     Type = "System.String",
@@ -861,7 +860,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "Middle Name (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "LastName",
                                     Type = "System.String",
@@ -869,7 +868,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "Last Name (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "PrimaryEmail",
                                     Type = "System.String",
@@ -877,7 +876,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "Primary Email (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "Suffix",
                                     Type = "System.String",
@@ -887,12 +886,12 @@ namespace Enrollment.XPlatform.Tests
                                 },
                             }
                         },
-                        new DetailGroupBoxSettingsDescriptor
+                        new FormGroupBoxSettingsDescriptor
                         {
                             GroupHeader = "Address",
-                            FieldSettings = new List<DetailItemSettingsDescriptor>
+                            FieldSettings = new List<FormItemSettingsDescriptor>
                             {
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "Address1",
                                     Type = "System.String",
@@ -900,7 +899,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "Address1 (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "Address2",
                                     Type = "System.String",
@@ -908,7 +907,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "Address2",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "City",
                                     Type = "System.String",
@@ -916,7 +915,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "City (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "County",
                                     Type = "System.String",
@@ -994,7 +993,7 @@ namespace Enrollment.XPlatform.Tests
                                         }
                                     }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "State",
                                     Type = "System.String",
@@ -1072,7 +1071,7 @@ namespace Enrollment.XPlatform.Tests
                                         }
                                     }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "ZipCode",
                                     Type = "System.String",
@@ -1082,12 +1081,12 @@ namespace Enrollment.XPlatform.Tests
                                 },
                             }
                         },
-                        new DetailGroupBoxSettingsDescriptor
+                        new FormGroupBoxSettingsDescriptor
                         {
                             GroupHeader = "Phone Numbers",
-                            FieldSettings = new List<DetailItemSettingsDescriptor>
+                            FieldSettings = new List<FormItemSettingsDescriptor>
                             {
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "CellPhone",
                                     Type = "System.String",
@@ -1095,7 +1094,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "Cell Phone (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "OtherPhone",
                                     Type = "System.String",
@@ -1112,16 +1111,16 @@ namespace Enrollment.XPlatform.Tests
             ModelType = typeof(UserModel).AssemblyQualifiedName
         };
 
-        internal static DetailFormSettingsDescriptor PersonalFromWithDefaultGroupForSomeFields = new DetailFormSettingsDescriptor
+        internal static EditFormSettingsDescriptor PersonalFromWithDefaultGroupForSomeFields = new EditFormSettingsDescriptor
         {
             Title = "PersonalRoot",
             RequestDetails = new FormRequestDetailsDescriptor
             {
                 GetUrl = "/Personal/GetSingle"
             },
-            FieldSettings = new List<DetailItemSettingsDescriptor>
+            FieldSettings = new List<FormItemSettingsDescriptor>
             {
-                new DetailGroupSettingsDescriptor
+                new FormGroupSettingsDescriptor
                 {
                     Field = "Personal",
                     Title = "Personal",
@@ -1130,14 +1129,14 @@ namespace Enrollment.XPlatform.Tests
                     {
                         TemplateName = "InlineFormGroupTemplate",
                     },
-                    FieldSettings = new List<DetailItemSettingsDescriptor>
+                    FieldSettings = new List<FormItemSettingsDescriptor>
                     {
-                        new DetailGroupBoxSettingsDescriptor
+                        new FormGroupBoxSettingsDescriptor
                         {
                             GroupHeader = "Address",
-                            FieldSettings = new List<DetailItemSettingsDescriptor>
+                            FieldSettings = new List<FormItemSettingsDescriptor>
                             {
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "Address1",
                                     Type = "System.String",
@@ -1145,7 +1144,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "Address1 (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "Address2",
                                     Type = "System.String",
@@ -1153,7 +1152,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "Address2",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "City",
                                     Type = "System.String",
@@ -1161,7 +1160,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "City (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "County",
                                     Type = "System.String",
@@ -1239,7 +1238,7 @@ namespace Enrollment.XPlatform.Tests
                                         }
                                     }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "State",
                                     Type = "System.String",
@@ -1317,7 +1316,7 @@ namespace Enrollment.XPlatform.Tests
                                         }
                                     }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "ZipCode",
                                     Type = "System.String",
@@ -1327,12 +1326,12 @@ namespace Enrollment.XPlatform.Tests
                                 },
                             }
                         },
-                        new DetailGroupBoxSettingsDescriptor
+                        new FormGroupBoxSettingsDescriptor
                         {
                             GroupHeader = "Phone Numbers",
-                            FieldSettings = new List<DetailItemSettingsDescriptor>
+                            FieldSettings = new List<FormItemSettingsDescriptor>
                             {
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "CellPhone",
                                     Type = "System.String",
@@ -1340,7 +1339,7 @@ namespace Enrollment.XPlatform.Tests
                                     Placeholder = "Cell Phone (required)",
                                     TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                                 },
-                                new DetailControlSettingsDescriptor
+                                new FormControlSettingsDescriptor
                                 {
                                     Field = "OtherPhone",
                                     Type = "System.String",
@@ -1352,7 +1351,7 @@ namespace Enrollment.XPlatform.Tests
                         }
                     }
                 },
-                new DetailGroupSettingsDescriptor
+                new FormGroupSettingsDescriptor
                 {
                     Field = "Personal0",
                     Title = "Personal0",
@@ -1361,9 +1360,9 @@ namespace Enrollment.XPlatform.Tests
                     {
                         TemplateName = "InlineFormGroupTemplate",
                     },
-                    FieldSettings = new List<DetailItemSettingsDescriptor>
+                    FieldSettings = new List<FormItemSettingsDescriptor>
                     {
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "FirstName",
                             Type = "System.String",
@@ -1371,7 +1370,7 @@ namespace Enrollment.XPlatform.Tests
                             Placeholder = "First Name (required)",
                             TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                         },
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "MiddleName",
                             Type = "System.String",
@@ -1379,7 +1378,7 @@ namespace Enrollment.XPlatform.Tests
                             Placeholder = "Middle Name (required)",
                             TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                         },
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "LastName",
                             Type = "System.String",
@@ -1387,7 +1386,7 @@ namespace Enrollment.XPlatform.Tests
                             Placeholder = "Last Name (required)",
                             TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                         },
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "PrimaryEmail",
                             Type = "System.String",
@@ -1395,7 +1394,7 @@ namespace Enrollment.XPlatform.Tests
                             Placeholder = "Primary Email (required)",
                             TextTemplate = new TextFieldTemplateDescriptor { TemplateName = "TextTemplate" }
                         },
-                        new DetailControlSettingsDescriptor
+                        new FormControlSettingsDescriptor
                         {
                             Field = "Suffix",
                             Type = "System.String",

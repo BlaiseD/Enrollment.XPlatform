@@ -1,4 +1,4 @@
-﻿using Enrollment.Forms.Configuration.DetailForm;
+﻿using Enrollment.Forms.Configuration.EditForm;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -6,13 +6,13 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class TextFieldReadOnlyObject<T> : ReadOnlyObjectBase<T>
     {
-        public TextFieldReadOnlyObject(string name, DetailControlSettingsDescriptor setting) : base(name, setting.TextTemplate.TemplateName)
+        public TextFieldReadOnlyObject(string name, FormControlSettingsDescriptor setting) : base(name, setting.TextTemplate.TemplateName)
         {
-            DetailControlSettingsDescriptor = setting;
+            FormControlSettingsDescriptor = setting;
             this.Title = setting.Title;
         }
 
-        public DetailControlSettingsDescriptor DetailControlSettingsDescriptor { get; }
+        public FormControlSettingsDescriptor FormControlSettingsDescriptor { get; }
 
         public string DisplayText
         {
@@ -21,10 +21,10 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
                 if (EqualityComparer<T>.Default.Equals(Value, default(T)))
                     return string.Empty;
 
-                if (string.IsNullOrEmpty(DetailControlSettingsDescriptor.StringFormat))
+                if (string.IsNullOrEmpty(FormControlSettingsDescriptor.StringFormat))
                     return Value.ToString();
 
-                return string.Format(CultureInfo.CurrentCulture, DetailControlSettingsDescriptor.StringFormat, Value);
+                return string.Format(CultureInfo.CurrentCulture, FormControlSettingsDescriptor.StringFormat, Value);
             }
         }
 

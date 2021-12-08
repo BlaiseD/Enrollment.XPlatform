@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.Bindings;
-using Enrollment.Forms.Configuration.DetailForm;
 using Enrollment.Forms.Configuration.Directives;
 using Enrollment.Forms.Configuration.EditForm;
 using Enrollment.Forms.Configuration.ListForm;
@@ -11,7 +10,6 @@ using Enrollment.Forms.Configuration.TextForm;
 using Enrollment.Forms.Configuration.Validation;
 using Enrollment.Forms.Parameters;
 using Enrollment.Forms.Parameters.Bindings;
-using Enrollment.Forms.Parameters.DetailForm;
 using Enrollment.Forms.Parameters.Directives;
 using Enrollment.Forms.Parameters.EditForm;
 using Enrollment.Forms.Parameters.ListForm;
@@ -26,16 +24,6 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
     {
         public FormsParameterToFormsDescriptorMappingProfile()
         {
-			CreateMap<DetailControlSettingsParameters, DetailControlSettingsDescriptor>()
-				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
-			CreateMap<DetailFormSettingsParameters, DetailFormSettingsDescriptor>()
-				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
-			CreateMap<DetailGroupArraySettingsParameters, DetailGroupArraySettingsDescriptor>()
-				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName))
-				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
-			CreateMap<DetailGroupBoxSettingsParameters, DetailGroupBoxSettingsDescriptor>();
-			CreateMap<DetailGroupSettingsParameters, DetailGroupSettingsDescriptor>()
-				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
 			CreateMap<DirectiveArgumentParameters, DirectiveArgumentDescriptor>()
 				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
 			CreateMap<DirectiveDefinitionParameters, DirectiveDefinitionDescriptor>();
@@ -65,8 +53,6 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 			CreateMap<ListFormSettingsParameters, ListFormSettingsDescriptor>()
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
 			CreateMap<MultiBindingParameters, MultiBindingDescriptor>();
-			CreateMap<MultiSelectDetailControlSettingsParameters, MultiSelectDetailControlSettingsDescriptor>()
-				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
 			CreateMap<MultiSelectFormControlSettingsParameters, MultiSelectFormControlSettingsDescriptor>()
 				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
 			CreateMap<MultiSelectTemplateParameters, MultiSelectTemplateDescriptor>()
@@ -99,13 +85,6 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 				.Include<FormGroupSettingsParameters, FormGroupSettingsDescriptor>()
 				.Include<FormGroupBoxSettingsParameters, FormGroupBoxSettingsDescriptor>()
 				.Include<MultiSelectFormControlSettingsParameters, MultiSelectFormControlSettingsDescriptor>();
-
-            CreateMap<DetailItemSettingsParameters, DetailItemSettingsDescriptor>()
-				.Include<DetailControlSettingsParameters, DetailControlSettingsDescriptor>()
-				.Include<DetailGroupArraySettingsParameters, DetailGroupArraySettingsDescriptor>()
-				.Include<DetailGroupBoxSettingsParameters, DetailGroupBoxSettingsDescriptor>()
-				.Include<DetailGroupSettingsParameters, DetailGroupSettingsDescriptor>()
-				.Include<MultiSelectDetailControlSettingsParameters, MultiSelectDetailControlSettingsDescriptor>();
 
             CreateMap<SearchFilterParametersBase, SearchFilterDescriptorBase>()
 				.Include<SearchFilterGroupParameters, SearchFilterGroupDescriptor>()
