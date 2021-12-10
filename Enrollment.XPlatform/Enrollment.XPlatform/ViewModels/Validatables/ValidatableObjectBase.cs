@@ -116,7 +116,14 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             set
             {
                 if (EqualityComparer<T>.Default.Equals(_value, value))
+                {
+                    if (EqualityComparer<T>.Default.Equals(_value, default(T)))
+                    {
+                        this.uiNotificationService.NotifyPropertyChanged(this.Name);
+                    }
+
                     return;
+                }
 
                 _value = value;
                 this.uiNotificationService.NotifyPropertyChanged(this.Name);
@@ -139,7 +146,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
         public List<IValidationRule> Validations { get; }
 
-        object IValidatable.Value { get => Value; set => Value = (T)value; }
+        object IFormField.Value { get => Value; set => Value = (T)value; }
 
         public Type Type => typeof(T);
         #endregion Properties

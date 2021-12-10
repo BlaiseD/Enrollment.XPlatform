@@ -814,6 +814,7 @@ namespace Enrollment.XPlatform.Tests
                         },
                     },
                     ModelType = typeof(InstitutionModel).AssemblyQualifiedName,
+                    Type = typeof(ICollection<InstitutionModel>).AssemblyQualifiedName,
                     KeyFields = new List<string> { "InstitutionId" }
                 }
             }
@@ -1353,8 +1354,8 @@ namespace Enrollment.XPlatform.Tests
                 },
                 new FormGroupSettingsDescriptor
                 {
-                    Field = "Personal0",
-                    Title = "Personal0",
+                    Field = "Personal",
+                    Title = "Personal",
                     ModelType = typeof(PersonalModel).AssemblyQualifiedName,
                     FormGroupTemplate = new FormGroupTemplateDescriptor
                     {

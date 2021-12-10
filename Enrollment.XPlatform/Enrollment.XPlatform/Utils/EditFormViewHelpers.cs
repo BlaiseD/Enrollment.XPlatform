@@ -1,6 +1,7 @@
 ﻿using Enrollment.Forms.Configuration;
 using Enrollment.XPlatform.Behaviours;
 using Enrollment.XPlatform.Converters;
+using Enrollment.XPlatform.ViewModels;
 using Enrollment.XPlatform.ViewModels.Validatables;
 using System;
 using System.Collections.ObjectModel;
@@ -54,7 +55,7 @@ namespace Enrollment.XPlatform.Utils
                         GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             LabelTemplate = new DataTemplate
             (
@@ -66,7 +67,7 @@ namespace Enrollment.XPlatform.Utils
                         GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             PasswordTemplate = new DataTemplate
             (
@@ -78,7 +79,7 @@ namespace Enrollment.XPlatform.Utils
                         GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             DateTemplate = new DataTemplate
             (
@@ -90,7 +91,7 @@ namespace Enrollment.XPlatform.Utils
                        GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             CheckboxTemplate = new DataTemplate
             (
@@ -102,7 +103,7 @@ namespace Enrollment.XPlatform.Utils
                         GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             SwitchTemplate = new DataTemplate
             (
@@ -114,7 +115,7 @@ namespace Enrollment.XPlatform.Utils
                         GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             PickerTemplate = new DataTemplate
             (
@@ -126,7 +127,7 @@ namespace Enrollment.XPlatform.Utils
                         GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             MultiSelectTemplate = new DataTemplate
             (
@@ -138,7 +139,7 @@ namespace Enrollment.XPlatform.Utils
                         GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             PopupFormGroupTemplate = new DataTemplate
             (
@@ -150,7 +151,7 @@ namespace Enrollment.XPlatform.Utils
                         GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             FormGroupArrayTemplate = new DataTemplate
             (
@@ -162,7 +163,7 @@ namespace Enrollment.XPlatform.Utils
                         GetLabelForValidation()
                     }
                 }
-                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             HiddenTemplate = new DataTemplate
             (
@@ -197,7 +198,7 @@ namespace Enrollment.XPlatform.Utils
                         VerticalOptions = LayoutOptions.Center
                     }
                     .AddBinding(Label.TextProperty, new Binding(nameof(CheckboxValidatableObject.CheckboxLabel)))
-                    .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                    .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
                 }
             };
 
@@ -228,7 +229,7 @@ namespace Enrollment.XPlatform.Utils
                         VerticalOptions = LayoutOptions.Center
                     }
                     .AddBinding(Label.TextProperty, new Binding(nameof(SwitchValidatableObject.SwitchLabel)))
-                    .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)))
+                    .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
                 }
             };
 
@@ -251,7 +252,7 @@ namespace Enrollment.XPlatform.Utils
             .AddBinding(Picker.SelectedItemProperty, new Binding(nameof(PickerValidatableObject<string>.SelectedItem), BindingMode.TwoWay))
             .AddBinding(Picker.TitleProperty, new Binding(nameof(PickerValidatableObject<string>.Title)))
             .AddBinding(Picker.ItemsSourceProperty, new Binding(nameof(PickerValidatableObject<string>.Items)))
-            .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)));
+            .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)));
 
             picker.ItemDisplayBinding = new Binding
             (
@@ -336,7 +337,7 @@ namespace Enrollment.XPlatform.Utils
                 }
             }
             .AddBinding(DatePicker.DateProperty, new Binding(nameof(DatePickerValidatableObject<DateTime>.Value)))
-            .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)));
+            .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)));
 
         public static Entry GetEntryForMultiSelectControl()
             => GetEntry().AddBinding
@@ -398,7 +399,7 @@ namespace Enrollment.XPlatform.Utils
             .AddBinding(Entry.PlaceholderProperty, new Binding(nameof(EntryValidatableObject<string>.Placeholder)))
             .AssignDynamicResource(VisualElement.BackgroundColorProperty, "EntryBackgroundColor")
             .AssignDynamicResource(Entry.TextColorProperty, "PrimaryTextColor")
-            .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IValidatable.IsVisible)));
+            .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)));
 
         public static Label GetLabelForValidation() 
             => new Label

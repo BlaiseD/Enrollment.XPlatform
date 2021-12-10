@@ -60,7 +60,8 @@ namespace Enrollment.XPlatform.Tests
             };
             ObservableCollection<IReadOnly> properties = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                ReadOnlyDescriptors.ResidencyForm
+                ReadOnlyDescriptors.ResidencyForm,
+                typeof(ResidencyModel)
             ).Properties;
 
             //act
@@ -126,7 +127,8 @@ namespace Enrollment.XPlatform.Tests
             };
             ObservableCollection<IReadOnly> properties = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                ReadOnlyDescriptors.AcademicForm
+                ReadOnlyDescriptors.AcademicForm,
+                typeof(AcademicModel)
             ).Properties;
 
             //act
@@ -175,7 +177,8 @@ namespace Enrollment.XPlatform.Tests
 
             ObservableCollection<IReadOnly> properties = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                ReadOnlyDescriptors.PersonalFrom
+                ReadOnlyDescriptors.PersonalFrom,
+                typeof(UserModel)
             ).Properties;
 
             //act

@@ -10,7 +10,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
     public class FormArrayReadOnlyObject<T, E> : ReadOnlyObjectBase<T> where T : ObservableCollection<E> where E : class
     {
         public FormArrayReadOnlyObject(string name, FormGroupArraySettingsDescriptor setting, IContextProvider contextProvider) 
-            : base(name, setting.FormGroupTemplate.TemplateName)
+            : base(name, setting.FormGroupTemplate.TemplateName, contextProvider.UiNotificationService)
         {
             this.FormSettings = setting;
             this.formsCollectionDisplayTemplateDescriptor = setting.FormsCollectionDisplayTemplate;

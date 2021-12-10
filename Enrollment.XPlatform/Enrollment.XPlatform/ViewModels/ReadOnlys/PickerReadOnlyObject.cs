@@ -1,30 +1,37 @@
-﻿using Enrollment.Bsl.Business.Requests;
+﻿using AutoMapper;
+using Enrollment.Bsl.Business.Requests;
 using Enrollment.Bsl.Business.Responses;
+using Enrollment.Common.Configuration.ExpressionDescriptors;
 using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.DataForm;
+using Enrollment.Parameters.Expressions;
 using Enrollment.Utils;
+using Enrollment.XPlatform.Flow.Requests;
 using Enrollment.XPlatform.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
-    public class PickerReadOnlyObject<T> : ReadOnlyObjectBase<T>
+    public class PickerReadOnlyObject<T> : ReadOnlyObjectBase<T>, IHasItemsSourceReadOnly
     {
-        public PickerReadOnlyObject(string name, FormControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.DropDownTemplate.TemplateName)
+        public PickerReadOnlyObject(string name, FormControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.DropDownTemplate.TemplateName, contextProvider.UiNotificationService)
         {
             this._dropDownTemplate = setting.DropDownTemplate;
             this.httpService = contextProvider.HttpService;
             FormControlSettingsDescriptor = setting;
             this.Title = setting.Title;
+            this.mapper = contextProvider.Mapper;
             GetItemSource();
         }
 
         private readonly IHttpService httpService;
         private readonly DropDownTemplateDescriptor _dropDownTemplate;
         private List<object> _items;
+        private readonly IMapper mapper;
 
         public FormControlSettingsDescriptor FormControlSettingsDescriptor { get; }
         public DropDownTemplateDescriptor DropDownTemplate => _dropDownTemplate;
@@ -103,7 +110,24 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
             }
         }
 
+        public List<object> Items
+        {
+            get => _items;
+            set
+            {
+                _items = value;
+                OnPropertyChanged();
+            }
+        }
+
         private async void GetItemSource()
+        {
+            await GetItems(this.DropDownTemplate.TextAndValueSelector);
+            OnPropertyChanged(nameof(SelectedItem));
+            OnPropertyChanged(nameof(DisplayText));
+        }
+
+        private async Task GetItems(SelectorLambdaOperatorDescriptor selector)
         {
             try
             {
@@ -115,7 +139,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
                         ModelType = this._dropDownTemplate.RequestDetails.ModelType,
                         ModelReturnType = this._dropDownTemplate.RequestDetails.ModelReturnType,
                         DataReturnType = this._dropDownTemplate.RequestDetails.DataReturnType,
-                        Selector = this.DropDownTemplate.TextAndValueSelector
+                        Selector = selector
                     },
                     this._dropDownTemplate.RequestDetails.DataSourceUrl
                 );
@@ -133,16 +157,62 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
                     return;
                 }
 
-                _items = null;
-                _items = ((GetListResponse)response).List.Cast<object>().ToList();
-                OnPropertyChanged(nameof(SelectedItem));
-                OnPropertyChanged(nameof(DisplayText));
+                Items = ((GetListResponse)response).List.Cast<object>().ToList();
             }
             catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine($"{ e.GetType().Name + " : " + e.Message}");
                 throw;
             }
+        }
+
+        public async void Reload(object entity)
+        {
+            await this.uiNotificationService.RunDataFlow
+            (
+                new NewFlowRequest
+                {
+                    InitialModuleName = this._dropDownTemplate.ReloadItemsFlowName
+                }
+            );
+
+            if ((this.uiNotificationService.GetFlowDataCacheItem($"Get_{this.Name}_Selector_Success") ?? false).Equals(false))
+                return;
+
+            SelectorLambdaOperatorDescriptor selector = this.mapper.Map<SelectorLambdaOperatorDescriptor>
+            (
+                this.uiNotificationService.GetFlowDataCacheItem($"{this.Name}_{typeof(SelectorLambdaOperatorParameters).FullName}")
+            );
+
+            this.Title = this._dropDownTemplate.LoadingIndicatorText;
+
+            await GetItems(selector);
+
+            this.Title = FormControlSettingsDescriptor.Title;
+
+            Value = GetExistingValue() ?? default;
+
+            T GetExistingValue()
+            {
+                object existing = Items.FirstOrDefault
+                (
+                    i => EqualityComparer<T>.Default.Equals
+                    (
+                        Value,
+                        i.GetPropertyValue<T>(_dropDownTemplate.ValueField)
+                    )
+                );
+
+                return existing == null
+                    ? default
+                    : existing.GetPropertyValue<T>(_dropDownTemplate.ValueField);
+            }
+        }
+
+        public override void Clear()
+        {
+            Items = null;
+            Value = default;
         }
     }
 }

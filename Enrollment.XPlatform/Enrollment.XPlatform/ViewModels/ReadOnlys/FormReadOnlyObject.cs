@@ -1,24 +1,34 @@
 ﻿using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Services;
+using Enrollment.XPlatform.Validators;
+using System;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
-    public class FormReadOnlyObject<T> : ReadOnlyObjectBase<T> where T : class
+    public class FormReadOnlyObject<T> : ReadOnlyObjectBase<T>, IDisposable where T : class
     {
         public FormReadOnlyObject(string name, IChildFormGroupSettings setting, IContextProvider contextProvider) 
-            : base(name, setting.FormGroupTemplate.TemplateName)
+            : base(name, setting.FormGroupTemplate.TemplateName, contextProvider.UiNotificationService)
         {
             this.FormSettings = setting;
             this.Title = this.FormSettings.Title;
             this.propertiesUpdater = contextProvider.ReadOnlyPropertiesUpdater;
             this.Placeholder = this.FormSettings.Placeholder;
-            FormLayout = contextProvider.ReadOnlyFieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings);
+            FormLayout = contextProvider.ReadOnlyFieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings, typeof(T));
+
+            this.directiveManagers = new ReadOnlyDirectiveManagers<T>
+            (
+                FormLayout.Properties,
+                FormSettings,
+                contextProvider
+            );
         }
 
         public IChildFormGroupSettings FormSettings { get; set; }
         private readonly IReadOnlyPropertiesUpdater propertiesUpdater;
+        private readonly ReadOnlyDirectiveManagers<T> directiveManagers;
 
         public DetailFormLayout FormLayout { get; set; }
 
@@ -115,6 +125,22 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
             (
                 () => App.Current.MainPage.Navigation.PopModalAsync()
             );
+        }
+
+        public virtual void Dispose()
+        {
+            Dispose(this.directiveManagers);
+            foreach (var property in FormLayout.Properties)
+            {
+                if (property is IDisposable disposable)
+                    Dispose(disposable);
+            }
+        }
+
+        protected void Dispose(IDisposable disposable)
+        {
+            if (disposable != null)
+                disposable.Dispose();
         }
     }
 }

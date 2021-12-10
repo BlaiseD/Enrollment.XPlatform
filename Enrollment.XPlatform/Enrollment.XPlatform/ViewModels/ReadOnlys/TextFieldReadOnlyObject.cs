@@ -1,4 +1,5 @@
 ﻿using Enrollment.Forms.Configuration.DataForm;
+using Enrollment.XPlatform.Services;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -6,7 +7,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class TextFieldReadOnlyObject<T> : ReadOnlyObjectBase<T>
     {
-        public TextFieldReadOnlyObject(string name, FormControlSettingsDescriptor setting) : base(name, setting.TextTemplate.TemplateName)
+        public TextFieldReadOnlyObject(string name, FormControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.TextTemplate.TemplateName, contextProvider.UiNotificationService)
         {
             FormControlSettingsDescriptor = setting;
             this.Title = setting.Title;

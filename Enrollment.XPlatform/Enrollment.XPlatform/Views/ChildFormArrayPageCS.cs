@@ -1,7 +1,6 @@
 ﻿using Enrollment.Forms.Configuration;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.Validatables;
-using System;
 using System.Collections.ObjectModel;
 
 using Xamarin.Forms;
@@ -112,7 +111,7 @@ namespace Enrollment.XPlatform.Views
             this.BindingContext = this.formArrayValidatable;
         }
 
-        private IValidatable formArrayValidatable;
-        private FormsCollectionDisplayTemplateDescriptor formsCollectionDisplayTemplateDescriptor;
+        private readonly IValidatable formArrayValidatable;
+        private readonly FormsCollectionDisplayTemplateDescriptor formsCollectionDisplayTemplateDescriptor;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels;
+using System;
 
 namespace Enrollment.XPlatform.Services
 {
@@ -13,7 +14,7 @@ namespace Enrollment.XPlatform.Services
             this.contextProvider = contextProvider;
         }
 
-        public DetailFormLayout CreateFieldsCollection(IFormGroupSettings formSettings)
-            => new ReadOnlyFieldsCollectionHelper(formSettings.FieldSettings, formSettings, this.contextProvider).CreateFields();
+        public DetailFormLayout CreateFieldsCollection(IFormGroupSettings formSettings, Type modelType)
+            => new ReadOnlyFieldsCollectionHelper(formSettings.FieldSettings, formSettings, this.contextProvider, modelType).CreateFields();
     }
 }

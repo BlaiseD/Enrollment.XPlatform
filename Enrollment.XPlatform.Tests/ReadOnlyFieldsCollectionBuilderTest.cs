@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Enrollment.Domain.Entities;
 using Enrollment.XPlatform.Flow;
 using Enrollment.XPlatform.Flow.Cache;
 using Enrollment.XPlatform.Services;
@@ -28,7 +29,8 @@ namespace Enrollment.XPlatform.Tests
         {
             DetailFormLayout formLayout = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                ReadOnlyDescriptors.PersonalFrom
+                ReadOnlyDescriptors.PersonalFrom,
+                typeof(UserModel)
             );
 
             Assert.Equal(3, formLayout.ControlGroupBoxList.Count);
@@ -42,7 +44,8 @@ namespace Enrollment.XPlatform.Tests
         {
             DetailFormLayout formLayout = serviceProvider.GetRequiredService<IReadOnlyFieldsCollectionBuilder>().CreateFieldsCollection
             (
-                ReadOnlyDescriptors.PersonalFromWithDefaultGroupForSomeFields
+                ReadOnlyDescriptors.PersonalFromWithDefaultGroupForSomeFields,
+                typeof(UserModel)
             );
 
             Assert.Equal(3, formLayout.ControlGroupBoxList.Count);

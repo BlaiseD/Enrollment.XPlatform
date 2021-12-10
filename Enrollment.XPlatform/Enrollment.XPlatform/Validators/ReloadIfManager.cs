@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Enrollment.Forms.Configuration.Directives;
-using Enrollment.XPlatform.ViewModels.Validatables;
+using Enrollment.XPlatform.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace Enrollment.XPlatform.Validators
 {
     internal class ReloadIfManager<TModel> : IDisposable
     {
-        public ReloadIfManager(ICollection<IValidatable> currentProperties, List<ReloadIf<TModel>> conditions, IMapper mapper, UiNotificationService uiNotificationService)
+        public ReloadIfManager(IEnumerable<IFormField> currentProperties, List<ReloadIf<TModel>> conditions, IMapper mapper, UiNotificationService uiNotificationService)
         {
             CurrentProperties = currentProperties;
             this.conditions = conditions;
@@ -24,17 +24,17 @@ namespace Enrollment.XPlatform.Validators
         private readonly UiNotificationService uiNotificationService;
         private readonly IDisposable propertyChangedSubscription;
 
-        public ICollection<IValidatable> CurrentProperties { get; }
-        private IDictionary<string, IValidatable> CurrentPropertiesDictionary
+        public IEnumerable<IFormField> CurrentProperties { get; }
+        private IDictionary<string, IFormField> CurrentPropertiesDictionary
             => CurrentProperties.ToDictionary(p => p.Name);
 
         public void Check(ReloadIf<TModel> condition)
         {
             DoCheck(CurrentPropertiesDictionary[condition.Field]);
 
-            void DoCheck(IValidatable currentValidatable)
+            void DoCheck(IFormField currentField)
             {
-                if (currentValidatable is IHasItemsSourceValidatable hasItemsSource)
+                if (currentField is IHasItemsSource hasItemsSource)
                 {
                     TModel entity = mapper.Map<TModel>(CurrentProperties.ToDictionary(p => p.Name, p => p.Value));
                     if

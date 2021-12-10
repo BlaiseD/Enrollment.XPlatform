@@ -6,16 +6,19 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public abstract class ReadOnlyObjectBase<T> : IReadOnly
     {
-        protected ReadOnlyObjectBase(string name, string templateName)
+        protected ReadOnlyObjectBase(string name, string templateName, UiNotificationService uiNotificationService)
         {
             Name = name;
             TemplateName = templateName;
+            this.uiNotificationService = uiNotificationService;
         }
 
         #region Fields
         private T _value;
         private string _name;
         private string _templateName;
+        private bool _isVisible = true;
+        protected UiNotificationService uiNotificationService;
 
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion Fields
@@ -53,15 +56,41 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
             set
             {
                 if (EqualityComparer<T>.Default.Equals(_value, value))
+                {
+                    if (EqualityComparer<T>.Default.Equals(_value, default))
+                    {
+                        this.uiNotificationService.NotifyPropertyChanged(this.Name);
+                    }
+
                     return;
+                }
 
                 _value = value;
+                this.uiNotificationService.NotifyPropertyChanged(this.Name);
                 OnPropertyChanged();
             }
         }
 
-        object IReadOnly.Value { get => Value; set => Value = (T)value; }
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                if (_isVisible == value)
+                    return;
+
+                _isVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        object IFormField.Value { get => Value; set => Value = (T)value; }
         #endregion Properties
+
+        public virtual void Clear()
+        {
+            Value = default;
+        }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

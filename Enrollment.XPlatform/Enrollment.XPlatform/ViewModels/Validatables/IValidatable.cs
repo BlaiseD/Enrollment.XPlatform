@@ -5,21 +5,17 @@ using System.ComponentModel;
 
 namespace Enrollment.XPlatform.ViewModels.Validatables
 {
-    public interface IValidatable : INotifyPropertyChanged
+    public interface IValidatable : INotifyPropertyChanged, IFormField
     {
-        string Name { get; set; }
         string TemplateName { get; set; }
         bool IsValid { get; set; }
         bool IsDirty { get; set; }
-        bool IsVisible { get; set; }
         bool IsEnabled { get; set; }
-        object Value { get; set; }
         Type Type { get; }
 
         List<IValidationRule> Validations { get; }
         Dictionary<string, string> Errors { get; set; }
 
         bool Validate();
-        void Clear();
     }
 }

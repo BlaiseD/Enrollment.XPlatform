@@ -1,7 +1,6 @@
 ﻿namespace Enrollment.XPlatform.ViewModels.Validatables
 {
-    public interface IHasItemsSourceValidatable : IValidatable
+    public interface IHasItemsSourceValidatable : IValidatable, IHasItemsSource
     {
-        void Reload(object entity);
     }
 }

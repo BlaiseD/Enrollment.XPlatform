@@ -14,10 +14,10 @@ using Xamarin.Forms;
 
 namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
-    public class MultiSelectReadOnlyObject<T, E> : ReadOnlyObjectBase<T> where T : ObservableCollection<E>
+    public class MultiSelectReadOnlyObject<T, E> : ReadOnlyObjectBase<T>, IHasItemsSourceReadOnly where T : ObservableCollection<E>
     {
         public MultiSelectReadOnlyObject(string name, MultiSelectFormControlSettingsDescriptor setting, IContextProvider contextProvider) 
-            : base(name, setting.MultiSelectTemplate.TemplateName)
+            : base(name, setting.MultiSelectTemplate.TemplateName, contextProvider.UiNotificationService)
         {
             this._multiSelectDetailControlSettingsDescriptor = setting;
             this._multiSelectTemplate = setting.MultiSelectTemplate;
@@ -171,6 +171,17 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
                 System.Diagnostics.Debug.WriteLine($"{ e.GetType().Name + " : " + e.Message}");
                 throw;
             }
+        }
+
+        public void Reload(object entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Clear()
+        {
+            Items = null;
+            Value = default;
         }
 
         private void UpdateSelectedItems()

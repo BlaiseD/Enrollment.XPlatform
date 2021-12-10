@@ -6,21 +6,31 @@ using Enrollment.Parameters.Expressions;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Utils;
+using Enrollment.XPlatform.Validators;
 using System;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Enrollment.XPlatform.ViewModels.DetailForm
 {
-    public class DetailFormEntityViewModel<TModel> : DetailFormEntityViewModelBase where TModel : Domain.EntityModelBase
+    public class DetailFormEntityViewModel<TModel> : DetailFormEntityViewModelBase, IDisposable where TModel : Domain.EntityModelBase
     {
         public DetailFormEntityViewModel(ScreenSettings<DataFormSettingsDescriptor> screenSettings, IContextProvider contextProvider) 
             : base(screenSettings, contextProvider)
         {
+            FormLayout = contextProvider.ReadOnlyFieldsCollectionBuilder.CreateFieldsCollection(this.FormSettings, typeof(TModel));
             this.httpService = contextProvider.HttpService;
             this.propertiesUpdater = contextProvider.ReadOnlyPropertiesUpdater;
             this.uiNotificationService = contextProvider.UiNotificationService;
             this.getItemFilterBuilder = contextProvider.GetItemFilterBuilder;
+
+            this.directiveManagers = new ReadOnlyDirectiveManagers<TModel>
+            (
+                FormLayout.Properties,
+                FormSettings,
+                contextProvider
+            );
+
             GetEntity();
         }
 
@@ -28,6 +38,7 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
         private readonly IReadOnlyPropertiesUpdater propertiesUpdater;
         private readonly IGetItemFilterBuilder getItemFilterBuilder;
         private readonly UiNotificationService uiNotificationService;
+        private readonly ReadOnlyDirectiveManagers<TModel> directiveManagers;
         private TModel entity;
 
         private ICommand _deleteCommand;
@@ -88,6 +99,22 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
 
                 return _editCommand;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(this.directiveManagers);
+            foreach (var property in FormLayout.Properties)
+            {
+                if (property is IDisposable disposable)
+                    Dispose(disposable);
+            }
+        }
+
+        protected void Dispose(IDisposable disposable)
+        {
+            if (disposable != null)
+                disposable.Dispose();
         }
 
         private void Edit(CommandButtonDescriptor button)

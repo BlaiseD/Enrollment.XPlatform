@@ -1,25 +1,29 @@
 ﻿using Enrollment.Forms.Configuration.DataForm;
-using System.Globalization;
+using Enrollment.XPlatform.Services;
 
 namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class CheckboxReadOnlyObject : ReadOnlyObjectBase<bool>
     {
-        public CheckboxReadOnlyObject(string name, FormControlSettingsDescriptor setting) : base(name, setting.TextTemplate.TemplateName)
+        public CheckboxReadOnlyObject(string name, FormControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.TextTemplate.TemplateName, contextProvider.UiNotificationService)
         {
             FormControlSettingsDescriptor = setting;
+            CheckboxLabel = FormControlSettingsDescriptor.Title;
         }
 
         public FormControlSettingsDescriptor FormControlSettingsDescriptor { get; }
 
-        public string DisplayText
+        private string _checkboxLabel;
+        public string CheckboxLabel
         {
-            get
+            get => _checkboxLabel;
+            set
             {
-                if (string.IsNullOrEmpty(FormControlSettingsDescriptor.StringFormat))
-                    return Value ? "\u2713" : "";
+                if (_checkboxLabel == value)
+                    return;
 
-                return string.Format(CultureInfo.CurrentCulture, FormControlSettingsDescriptor.StringFormat, Value ? "\u2713" : "");
+                _checkboxLabel = value;
+                OnPropertyChanged();
             }
         }
     }

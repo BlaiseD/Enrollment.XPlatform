@@ -1,4 +1,5 @@
-﻿using Enrollment.XPlatform.ViewModels.ReadOnlys;
+﻿using Enrollment.XPlatform.ViewModels;
+using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 
@@ -14,9 +15,10 @@ namespace Enrollment.XPlatform.Utils
                 {
                     Children =
                     {
-                        GetTextFieldControl()
+                        GetCheckboxControl()
                     }
                 }
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             DateTemplate = new DataTemplate
             (
@@ -27,6 +29,7 @@ namespace Enrollment.XPlatform.Utils
                         GetTextFieldControl()
                     }
                 }
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             FormGroupArrayTemplate = new DataTemplate
             (
@@ -37,6 +40,7 @@ namespace Enrollment.XPlatform.Utils
                         GetPopupFormArrayFieldControl()
                     }
                 }
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             HiddenTemplate = new DataTemplate
             (
@@ -55,6 +59,7 @@ namespace Enrollment.XPlatform.Utils
                         GetMultiSelectFieldControl()
                     }
                 }
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             PasswordTemplate = new DataTemplate
             (
@@ -65,6 +70,7 @@ namespace Enrollment.XPlatform.Utils
                         GetPasswordTextFieldControl()
                     }
                 }
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             PopupFormGroupTemplate = new DataTemplate
             (
@@ -75,6 +81,7 @@ namespace Enrollment.XPlatform.Utils
                         GetPopupFormFieldControl()
                     }
                 }
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             PickerTemplate = new DataTemplate
             (
@@ -85,6 +92,7 @@ namespace Enrollment.XPlatform.Utils
                         GetTextFieldControl()
                     }
                 }
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             SwitchTemplate = new DataTemplate
             (
@@ -95,6 +103,7 @@ namespace Enrollment.XPlatform.Utils
                         GetSwitchFieldControl()
                     }
                 }
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             ),
             TextTemplate = new DataTemplate
             (
@@ -105,6 +114,7 @@ namespace Enrollment.XPlatform.Utils
                         GetTextFieldControl()
                     }
                 }
+                .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
             )
         };
 
@@ -114,6 +124,27 @@ namespace Enrollment.XPlatform.Utils
                 nameof(TextFieldReadOnlyObject<string>.Title),
                 nameof(TextFieldReadOnlyObject<string>.DisplayText)
             );
+
+        private static StackLayout GetCheckboxControl()
+            => new StackLayout()
+            {
+                Orientation = StackOrientation.Horizontal,
+                IsEnabled = false,
+                Children =
+                {
+                    new CheckBox
+                    {
+                        IsEnabled = false
+                    }
+                    .AddBinding(CheckBox.IsCheckedProperty, new Binding(nameof(CheckboxReadOnlyObject.Value))),
+                    new Label
+                    {
+                        VerticalOptions = LayoutOptions.Center
+                    }
+                    .AddBinding(Label.TextProperty, new Binding(nameof(CheckboxReadOnlyObject.CheckboxLabel)))
+                    .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
+                }
+            };
 
         private static StackLayout GetSwitchFieldControl()
             => new StackLayout()
@@ -125,12 +156,17 @@ namespace Enrollment.XPlatform.Utils
                     {
                         IsEnabled = false
                     }
-                    .AddBinding(Switch.IsToggledProperty, new Binding(nameof(SwitchReadOnlyObject.Value))),
+                    .AddBinding(Switch.IsToggledProperty, new Binding(nameof(SwitchReadOnlyObject.Value)))
+                    .AssignDynamicResource(Switch.OnColorProperty, "SwitchOnColor")
+                    .AssignDynamicResource(Switch.ThumbColorProperty, "SwitchThumbColor"),
                     new Label
                     {
+                        Margin = new Thickness(2),
+                        Padding = new Thickness(7),
                         VerticalOptions = LayoutOptions.Center
                     }
                     .AddBinding(Label.TextProperty, new Binding(nameof(SwitchReadOnlyObject.SwitchLabel)))
+                    .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)))
                 }
             };
 
@@ -227,11 +263,12 @@ namespace Enrollment.XPlatform.Utils
                             : new Span{ FontAttributes = FontAttributes.Bold }.AddBinding(Span.TextProperty, new Binding(valueBinding))
                     }
                 }
-            };
+            }.AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)));
 
         static Entry GetEntry()
             => new Entry() { Style = LayoutHelpers.GetStaticStyleResource("DetailFormEntryStyle") }
             .AssignDynamicResource(VisualElement.BackgroundColorProperty, "EntryBackgroundColor")
-            .AssignDynamicResource(Entry.TextColorProperty, "PrimaryTextColor");
+            .AssignDynamicResource(Entry.TextColorProperty, "PrimaryTextColor")
+            .AddBinding(VisualElement.IsVisibleProperty, new Binding(nameof(IFormField.IsVisible)));
     }
 }

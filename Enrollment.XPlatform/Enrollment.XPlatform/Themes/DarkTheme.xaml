@@ -27,4 +27,5 @@
     <Color x:Key="SwitchOnColor">#34C759</Color>
     <Color x:Key="CheckBoxColor">#767676</Color>
     <Color x:Key="CheckBoxCheckedColor">#34C759</Color>
+    <Color x:Key="CheckBoxDisabledColor">#B2109CF0</Color>
 </ResourceDictionary>
