@@ -24,13 +24,13 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
     {
         public FormsParameterToFormsDescriptorMappingProfile()
         {
+			CreateMap<DataFormSettingsParameters, DataFormSettingsDescriptor>()
+				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
 			CreateMap<DirectiveArgumentParameters, DirectiveArgumentDescriptor>()
 				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
 			CreateMap<DirectiveDefinitionParameters, DirectiveDefinitionDescriptor>();
 			CreateMap<DirectiveParameters, DirectiveDescriptor>();
 			CreateMap<DropDownTemplateParameters, DropDownTemplateDescriptor>();
-			CreateMap<DataFormSettingsParameters, DataFormSettingsDescriptor>()
-				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
 			CreateMap<FieldValidationSettingsParameters, FieldValidationSettingsDescriptor>();
 			CreateMap<FormattedLabelItemParameters, FormattedLabelItemDescriptor>();
 			CreateMap<FormControlSettingsParameters, FormControlSettingsDescriptor>()
@@ -38,6 +38,7 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 			CreateMap<FormGroupArraySettingsParameters, FormGroupArraySettingsDescriptor>()
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName))
 				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
+			CreateMap<FormGroupBoxSettingsParameters, FormGroupBoxSettingsDescriptor>();
 			CreateMap<FormGroupSettingsParameters, FormGroupSettingsDescriptor>()
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
 			CreateMap<FormGroupTemplateParameters, FormGroupTemplateDescriptor>();
@@ -45,7 +46,6 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName))
 				.ForMember(dest => dest.DataType, opts => opts.MapFrom(x => x.DataType.AssemblyQualifiedName));
 			CreateMap<FormsCollectionDisplayTemplateParameters, FormsCollectionDisplayTemplateDescriptor>();
-			CreateMap<FormGroupBoxSettingsParameters, FormGroupBoxSettingsDescriptor>();
 			CreateMap<HyperLinkLabelItemParameters, HyperLinkLabelItemDescriptor>();
 			CreateMap<HyperLinkSpanItemParameters, HyperLinkSpanItemDescriptor>();
 			CreateMap<ItemBindingParameters, ItemBindingDescriptor>();
@@ -82,8 +82,8 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
             CreateMap<FormItemSettingsParameters, FormItemSettingsDescriptor>()
 				.Include<FormControlSettingsParameters, FormControlSettingsDescriptor>()
 				.Include<FormGroupArraySettingsParameters, FormGroupArraySettingsDescriptor>()
-				.Include<FormGroupSettingsParameters, FormGroupSettingsDescriptor>()
 				.Include<FormGroupBoxSettingsParameters, FormGroupBoxSettingsDescriptor>()
+				.Include<FormGroupSettingsParameters, FormGroupSettingsDescriptor>()
 				.Include<MultiSelectFormControlSettingsParameters, MultiSelectFormControlSettingsDescriptor>();
 
             CreateMap<SearchFilterParametersBase, SearchFilterDescriptorBase>()

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.Bindings;
-using Enrollment.Forms.Configuration.DetailForm;
 using Enrollment.Forms.Configuration.Directives;
 using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.Forms.Configuration.ListForm;
@@ -11,7 +10,6 @@ using Enrollment.Forms.Configuration.TextForm;
 using Enrollment.Forms.Configuration.Validation;
 using Enrollment.Forms.Parameters;
 using Enrollment.Forms.Parameters.Bindings;
-using Enrollment.Forms.Parameters.DetailForm;
 using Enrollment.Forms.Parameters.Directives;
 using Enrollment.Forms.Parameters.DataForm;
 using Enrollment.Forms.Parameters.ListForm;
