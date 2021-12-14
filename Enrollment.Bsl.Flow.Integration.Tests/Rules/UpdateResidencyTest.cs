@@ -86,7 +86,7 @@ namespace Enrollment.Bsl.Flow.Integration.Tests.Rules
             IFlowManager flowManager = serviceProvider.GetRequiredService<IFlowManager>();
             var residency = flowManager.EnrollmentRepository.GetAsync<ResidencyModel, Residency>
             (
-                s => s.UserId == 1,
+                s => s.User.UserName == "DomesticStudent01",
                 null,
                 new LogicBuilder.Expressions.Utils.Expansions.SelectExpandDefinition
                 {
