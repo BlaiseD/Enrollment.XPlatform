@@ -13,12 +13,14 @@ namespace Enrollment.XPlatform.Services
         IFieldsCollectionBuilder FieldsCollectionBuilder { get; }
         IUpdateOnlyFieldsCollectionBuilder UpdateOnlyFieldsCollectionBuilder { get; }
         IReadOnlyFieldsCollectionBuilder ReadOnlyFieldsCollectionBuilder { get; }
+        ICollectionCellItemsBuilder CollectionCellItemsBuilder { get; }
         IGetItemFilterBuilder GetItemFilterBuilder { get; }
         IHttpService HttpService { get; }
         IMapper Mapper { get; }
         ISearchSelectorBuilder SearchSelectorBuilder { get; }
         IPropertiesUpdater PropertiesUpdater { get; }
         IReadOnlyPropertiesUpdater ReadOnlyPropertiesUpdater { get; }
+        IReadOnlyCollectionCellPropertiesUpdater ReadOnlyCollectionCellPropertiesUpdater { get; }
         UiNotificationService UiNotificationService { get; }
     }
 }

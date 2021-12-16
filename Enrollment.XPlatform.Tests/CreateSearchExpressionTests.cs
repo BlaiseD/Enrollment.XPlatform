@@ -130,6 +130,7 @@ namespace Enrollment.XPlatform.Tests
                 .AddTransient<IMapper>(sp => new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService))
                 .AddSingleton<UiNotificationService, UiNotificationService>()
                 .AddSingleton<IFieldsCollectionBuilder, FieldsCollectionBuilder>()
+                .AddSingleton<ICollectionCellItemsBuilder, CollectionCellItemsBuilder>()
                 .AddSingleton<IConditionalValidationConditionsBuilder, ConditionalValidationConditionsBuilder>()
                 .AddSingleton<IHideIfConditionalDirectiveBuilder, HideIfConditionalDirectiveBuilder>()
                 .AddSingleton<IClearIfConditionalDirectiveBuilder, ClearIfConditionalDirectiveBuilder>()

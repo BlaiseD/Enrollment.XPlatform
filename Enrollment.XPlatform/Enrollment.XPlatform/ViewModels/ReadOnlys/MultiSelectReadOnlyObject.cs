@@ -16,22 +16,24 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class MultiSelectReadOnlyObject<T, E> : ReadOnlyObjectBase<T>, IHasItemsSourceReadOnly where T : ObservableCollection<E>
     {
-        public MultiSelectReadOnlyObject(string name, MultiSelectFormControlSettingsDescriptor setting, IContextProvider contextProvider) 
-            : base(name, setting.MultiSelectTemplate.TemplateName, contextProvider.UiNotificationService)
+        public MultiSelectReadOnlyObject(string name, List<string> keyFields, string title, string stringFormat, MultiSelectTemplateDescriptor multiSelectTemplate, IContextProvider contextProvider) 
+            : base(name, multiSelectTemplate.TemplateName, contextProvider.UiNotificationService)
         {
-            this._multiSelectDetailControlSettingsDescriptor = setting;
-            this._multiSelectTemplate = setting.MultiSelectTemplate;
+            this._multiSelectTemplate = multiSelectTemplate;
+            this._keyFields = keyFields;
+            this._stringFormat = stringFormat;
             this.httpService = contextProvider.HttpService;
-            this.Title = setting.Title;
+            this.Title = title;
             this.Placeholder = this._multiSelectTemplate.LoadingIndicatorText;
-            itemComparer = new MultiSelectItemComparer<E>(_multiSelectDetailControlSettingsDescriptor.KeyFields);
+            itemComparer = new MultiSelectItemComparer<E>(this._keyFields);
             SelectedItems = new ObservableCollection<object>();
             GetItemSource();
         }
 
         private readonly IHttpService httpService;
+        private readonly List<string> _keyFields;
+        private readonly string _stringFormat;
         private readonly MultiSelectTemplateDescriptor _multiSelectTemplate;
-        private readonly MultiSelectFormControlSettingsDescriptor _multiSelectDetailControlSettingsDescriptor;
         private readonly MultiSelectItemComparer<E> itemComparer;
 
         public MultiSelectTemplateDescriptor MultiSelectTemplate => _multiSelectTemplate;
@@ -43,13 +45,13 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
                 if (Value == null)
                     return string.Empty;
 
-                if (string.IsNullOrEmpty(_multiSelectDetailControlSettingsDescriptor.StringFormat))
+                if (string.IsNullOrEmpty(this._stringFormat))
                     return GetText();
 
                 return string.Format
                 (
                     CultureInfo.CurrentCulture,
-                    _multiSelectDetailControlSettingsDescriptor.StringFormat,
+                    this._stringFormat,
                     GetText()
                 );
 

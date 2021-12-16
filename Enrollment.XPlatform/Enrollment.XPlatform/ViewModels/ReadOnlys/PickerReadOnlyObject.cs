@@ -3,7 +3,6 @@ using Enrollment.Bsl.Business.Requests;
 using Enrollment.Bsl.Business.Responses;
 using Enrollment.Common.Configuration.ExpressionDescriptors;
 using Enrollment.Forms.Configuration;
-using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.Parameters.Expressions;
 using Enrollment.Utils;
 using Enrollment.XPlatform.Flow.Requests;
@@ -18,12 +17,13 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class PickerReadOnlyObject<T> : ReadOnlyObjectBase<T>, IHasItemsSourceReadOnly
     {
-        public PickerReadOnlyObject(string name, FormControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.DropDownTemplate.TemplateName, contextProvider.UiNotificationService)
+        public PickerReadOnlyObject(string name, string title, string stringFormat, DropDownTemplateDescriptor dropDownTemplate, IContextProvider contextProvider) : base(name, dropDownTemplate.TemplateName, contextProvider.UiNotificationService)
         {
-            this._dropDownTemplate = setting.DropDownTemplate;
+            this._dropDownTemplate = dropDownTemplate;
             this.httpService = contextProvider.HttpService;
-            FormControlSettingsDescriptor = setting;
-            this.Title = setting.Title;
+            _defaultTitle = title;
+            _stringFormat = stringFormat;
+            this.Title = _defaultTitle;
             this.mapper = contextProvider.Mapper;
             GetItemSource();
         }
@@ -32,8 +32,9 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
         private readonly DropDownTemplateDescriptor _dropDownTemplate;
         private List<object> _items;
         private readonly IMapper mapper;
+        private readonly string _defaultTitle;
+        private readonly string _stringFormat;
 
-        public FormControlSettingsDescriptor FormControlSettingsDescriptor { get; }
         public DropDownTemplateDescriptor DropDownTemplate => _dropDownTemplate;
 
         public string DisplayText
@@ -43,13 +44,13 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
                 if (SelectedItem == null)
                     return string.Empty;
 
-                if (string.IsNullOrEmpty(FormControlSettingsDescriptor.StringFormat))
+                if (string.IsNullOrEmpty(_stringFormat))
                     return SelectedItem.GetPropertyValue<string>(_dropDownTemplate.TextField);
 
                 return string.Format
                 (
-                    CultureInfo.CurrentCulture, 
-                    FormControlSettingsDescriptor.StringFormat,
+                    CultureInfo.CurrentCulture,
+                    _stringFormat,
                     SelectedItem.GetPropertyValue<string>(_dropDownTemplate.TextField)
                 );
             }
@@ -188,7 +189,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 
             await GetItems(selector);
 
-            this.Title = FormControlSettingsDescriptor.Title;
+            this.Title = _defaultTitle;
 
             Value = GetExistingValue() ?? default;
 

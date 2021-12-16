@@ -37,6 +37,9 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 
             CreateMap<SpanItemParametersBase, SpanItemDescriptorBase>()
 #SpanItemParametersBaseIncludes#
+
+            CreateMap<ItemBindingParameters, ItemBindingDescriptor>()
+#ItemBindingParametersBaseIncludes#
         }
     }
 }

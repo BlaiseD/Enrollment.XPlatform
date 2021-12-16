@@ -2,7 +2,7 @@
 
 namespace Enrollment.Forms.Parameters.Bindings
 {
-    public class ItemBindingParameters
+    abstract public class ItemBindingParameters
     {
 		public ItemBindingParameters
 		(
@@ -18,6 +18,10 @@ namespace Enrollment.Forms.Parameters.Bindings
 			[NameValue(AttributeNames.PROPERTYSOURCEPARAMETER, "fieldTypeSource")]
 			string property,
 
+			[Comments("Label for the field.")]
+			[NameValue(AttributeNames.DEFAULTVALUE, "Title")]
+			string title,
+
 			[Comments("Specify a format for the binding e.g. 'Value: {0:F2}'")]
 			[NameValue(AttributeNames.DEFAULTVALUE, "{0}")]
 			string stringFormat,
@@ -30,11 +34,13 @@ namespace Enrollment.Forms.Parameters.Bindings
 		{
 			Name = name;
 			Property = property;
+			Title = title;
 			StringFormat = stringFormat;
 		}
 
 		public string Name { get; set; }
 		public string Property { get; set; }
+		public string Title { get; set; }
 		public string StringFormat { get; set; }
     }
 }

@@ -9,11 +9,11 @@ namespace Enrollment.XPlatform.ViewModels
 {
     public class ListPageViewModel : FlyoutDetailViewModelBase
     {
-        private readonly IHttpService httpService;
+        private readonly IContextProvider contextProvider;
 
-        public ListPageViewModel(IHttpService httpService)
+        public ListPageViewModel(IContextProvider contextProvider)
         {
-            this.httpService = httpService;
+            this.contextProvider = contextProvider;
         }
 
         public override void Initialize(ScreenSettingsBase screenSettings)
@@ -39,7 +39,7 @@ namespace Enrollment.XPlatform.ViewModels
                 new object[]
                 {
                     screenSettings,
-                    this.httpService,
+                    this.contextProvider
                 }
             );
 

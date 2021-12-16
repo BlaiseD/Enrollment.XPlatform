@@ -4,7 +4,6 @@ using Enrollment.XPlatform.Flow;
 using Enrollment.XPlatform.Flow.Cache;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Tests.Mocks;
-using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.Validatables;
 using LogicBuilder.RulesDirector;
 using Microsoft.Extensions.DependencyInjection;
@@ -180,6 +179,7 @@ namespace Enrollment.XPlatform.Tests
                 .AddSingleton<IDialogFunctions, DialogFunctions>()
                 .AddSingleton<IActions, Actions>()
                 .AddSingleton<IFieldsCollectionBuilder, FieldsCollectionBuilder>()
+                .AddSingleton<ICollectionCellItemsBuilder, CollectionCellItemsBuilder>()
                 .AddSingleton<IConditionalValidationConditionsBuilder, ConditionalValidationConditionsBuilder>()
                 .AddSingleton<IHideIfConditionalDirectiveBuilder, HideIfConditionalDirectiveBuilder>()
                 .AddSingleton<IClearIfConditionalDirectiveBuilder, ClearIfConditionalDirectiveBuilder>()
@@ -190,6 +190,7 @@ namespace Enrollment.XPlatform.Tests
                 .AddSingleton<IEntityUpdater, EntityUpdater>()
                 .AddSingleton<IPropertiesUpdater, PropertiesUpdater>()
                 .AddSingleton<IReadOnlyPropertiesUpdater, ReadOnlyPropertiesUpdater>()
+                .AddSingleton<IReadOnlyCollectionCellPropertiesUpdater, ReadOnlyCollectionCellPropertiesUpdater>()
                 .AddSingleton<IContextProvider, ContextProvider>()
                 .AddHttpClient()
                 .AddSingleton<IHttpService, HttpServiceMock>()

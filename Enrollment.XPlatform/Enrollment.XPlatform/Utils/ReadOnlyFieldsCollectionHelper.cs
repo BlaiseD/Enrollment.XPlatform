@@ -234,7 +234,7 @@ namespace Enrollment.XPlatform.Utils
             (
                 typeof(HiddenReadOnlyObject<>).MakeGenericType(Type.GetType(setting.Type)),
                 GetFieldName(setting.Field),
-                setting,
+                setting.TextTemplate.TemplateName,
                 this.contextProvider
             );
 
@@ -243,7 +243,8 @@ namespace Enrollment.XPlatform.Utils
             (
                 typeof(CheckboxReadOnlyObject),
                 GetFieldName(setting.Field),
-                setting,
+                setting.TextTemplate.TemplateName,
+                setting.Title,
                 this.contextProvider
             );
 
@@ -252,7 +253,8 @@ namespace Enrollment.XPlatform.Utils
             (
                 typeof(SwitchReadOnlyObject),
                 GetFieldName(setting.Field),
-                setting,
+                setting.TextTemplate.TemplateName,
+                setting.Title,
                 this.contextProvider
             );
 
@@ -261,7 +263,9 @@ namespace Enrollment.XPlatform.Utils
             (
                 typeof(TextFieldReadOnlyObject<>).MakeGenericType(Type.GetType(setting.Type)),
                 GetFieldName(setting.Field),
-                setting,
+                setting.TextTemplate.TemplateName,
+                setting.Title,
+                setting.StringFormat,
                 this.contextProvider
             );
 
@@ -270,7 +274,9 @@ namespace Enrollment.XPlatform.Utils
             (
                 typeof(PickerReadOnlyObject<>).MakeGenericType(Type.GetType(setting.Type)),
                 GetFieldName(setting.Field),
-                setting,
+                setting.Title,
+                setting.StringFormat,
+                setting.DropDownTemplate,
                 this.contextProvider
             );
 
@@ -286,7 +292,10 @@ namespace Enrollment.XPlatform.Utils
                         elementType
                     ),
                     GetFieldName(setting.Field),
-                    setting,
+                    setting.KeyFields,
+                    setting.Title,
+                    setting.StringFormat,
+                    setting.MultiSelectTemplate,
                     this.contextProvider
                 );
         }

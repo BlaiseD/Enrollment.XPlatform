@@ -5,7 +5,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class HiddenReadOnlyObject<T> : ReadOnlyObjectBase<T>
     {
-        public HiddenReadOnlyObject(string name, FormControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.TextTemplate.TemplateName, contextProvider.UiNotificationService)
+        public HiddenReadOnlyObject(string name, string templateName, IContextProvider contextProvider) : base(name, templateName, contextProvider.UiNotificationService)
         {
         }
     }

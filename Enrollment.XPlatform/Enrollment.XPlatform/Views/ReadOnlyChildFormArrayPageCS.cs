@@ -36,7 +36,7 @@ namespace Enrollment.XPlatform.Views
                                         new Label
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupHeaderLabelStyle"),
-                                        }.AddBinding(Label.TextProperty, new Binding("Title"))
+                                        }.AddBinding(Label.TextProperty, new Binding(nameof(FormArrayReadOnlyObject<ObservableCollection<string>, string>.Title)))
                                     }
                                 },
                                 new CollectionView
@@ -48,9 +48,9 @@ namespace Enrollment.XPlatform.Views
                                         this.formsCollectionDisplayTemplateDescriptor.Bindings
                                     )
                                 }
-                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding("Value"))
-                                .AddBinding(SelectableItemsView.SelectionChangedCommandProperty, new Binding("SelectionChangedCommand"))
-                                .AddBinding(SelectableItemsView.SelectedItemProperty, new Binding("SelectedItem")),
+                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding(nameof(FormArrayReadOnlyObject<ObservableCollection<string>, string>.Items)))
+                                .AddBinding(SelectableItemsView.SelectionChangedCommandProperty, new Binding(nameof(FormArrayReadOnlyObject<ObservableCollection<string>, string>.SelectionChangedCommand)))
+                                .AddBinding(SelectableItemsView.SelectedItemProperty, new Binding(nameof(FormArrayReadOnlyObject<ObservableCollection<string>, string>.SelectedItem))),
                                 new BoxView { Style = LayoutHelpers.GetStaticStyleResource("PopupFooterSeparatorStyle") },
                                 new Grid
                                 {
@@ -67,13 +67,13 @@ namespace Enrollment.XPlatform.Views
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupDetailButtonStyle")
                                         }
-                                        .AddBinding(Button.CommandProperty, new Binding("DetailCommand"))
+                                        .AddBinding(Button.CommandProperty, new Binding(nameof(FormArrayReadOnlyObject<ObservableCollection<string>, string>.DetailCommand)))
                                         .SetGridColumn(2),
                                         new Button
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupCancelButtonStyle")
                                         }
-                                        .AddBinding(Button.CommandProperty, new Binding("CancelCommand"))
+                                        .AddBinding(Button.CommandProperty, new Binding(nameof(FormArrayReadOnlyObject<ObservableCollection<string>, string>.CancelCommand)))
                                         .SetGridColumn(3)
                                     }
                                 }

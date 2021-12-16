@@ -5,13 +5,10 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class CheckboxReadOnlyObject : ReadOnlyObjectBase<bool>
     {
-        public CheckboxReadOnlyObject(string name, FormControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.TextTemplate.TemplateName, contextProvider.UiNotificationService)
+        public CheckboxReadOnlyObject(string name, string templateName, string checkboxLabel, IContextProvider contextProvider) : base(name, templateName, contextProvider.UiNotificationService)
         {
-            FormControlSettingsDescriptor = setting;
-            CheckboxLabel = FormControlSettingsDescriptor.Title;
+            CheckboxLabel = checkboxLabel;
         }
-
-        public FormControlSettingsDescriptor FormControlSettingsDescriptor { get; }
 
         private string _checkboxLabel;
         public string CheckboxLabel

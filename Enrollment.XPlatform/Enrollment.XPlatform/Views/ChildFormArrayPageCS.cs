@@ -49,7 +49,7 @@ namespace Enrollment.XPlatform.Views
                                         this.formsCollectionDisplayTemplateDescriptor.Bindings
                                     )
                                 }
-                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.Value)))
+                                .AddBinding(ItemsView.ItemsSourceProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.Items)))
                                 .AddBinding(SelectableItemsView.SelectionChangedCommandProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.SelectionChangedCommand)))
                                 .AddBinding(SelectableItemsView.SelectedItemProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.SelectedItem))),
                                 new BoxView { Style = LayoutHelpers.GetStaticStyleResource("PopupFooterSeparatorStyle") },
@@ -70,30 +70,30 @@ namespace Enrollment.XPlatform.Views
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupAddButtonStyle")
                                         }
-                                        .AddBinding(Button.CommandProperty, new Binding("AddCommand")),
+                                        .AddBinding(Button.CommandProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.AddCommand))),
                                         new Button
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupEditButtonStyle")
                                         }
-                                        .AddBinding(Button.CommandProperty, new Binding("EditCommand"))
+                                        .AddBinding(Button.CommandProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.EditCommand)))
                                         .SetGridColumn(1),
                                         new Button
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupDeleteButtonStyle")
                                         }
-                                        .AddBinding(Button.CommandProperty, new Binding("DeleteCommand"))
+                                        .AddBinding(Button.CommandProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.DeleteCommand)))
                                         .SetGridColumn(2),
                                         new Button
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupCancelButtonStyle")
                                         }
-                                        .AddBinding(Button.CommandProperty, new Binding("CancelCommand"))
+                                        .AddBinding(Button.CommandProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.CancelCommand)))
                                         .SetGridColumn(3),
                                         new Button
                                         {
                                             Style = LayoutHelpers.GetStaticStyleResource("PopupAcceptButtonStyle")
                                         }
-                                        .AddBinding(Button.CommandProperty, new Binding("SubmitCommand"))
+                                        .AddBinding(Button.CommandProperty, new Binding(nameof(FormArrayValidatableObject<ObservableCollection<string>, string>.SubmitCommand)))
                                         .SetGridColumn(4)
                                     }
                                 }

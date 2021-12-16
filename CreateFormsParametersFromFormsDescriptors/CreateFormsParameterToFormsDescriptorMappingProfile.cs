@@ -22,7 +22,8 @@ namespace CreateFormsParametersFromFormsDescriptors
                     {
                         "CommandButtonParameters",
                         "FormItemSettingsParameters",
-                        "DetailItemSettingsParameters"
+                        "DetailItemSettingsParameters",
+                        "ItemBindingParameters"
                     }.Contains(type.Name)
                     && type.FullName.EndsWith("Parameters")
                     && Attribute.GetCustomAttribute(type, typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute)) == null
@@ -121,13 +122,25 @@ namespace CreateFormsParametersFromFormsDescriptors
             )
             .ToList();
 
+            List<string> itemBindingParametersBaseIncludes = types.Where
+            (
+                t => t != typeof(Enrollment.Forms.Parameters.Bindings.ItemBindingParameters)
+                    && typeof(Enrollment.Forms.Parameters.Bindings.ItemBindingParameters).IsAssignableFrom(t)
+            )
+            .Select
+            (
+                type => $"\t\t\t\t.Include<{type.Name}, {type.Name.Replace("Parameters", "Descriptor")}>()"
+            )
+            .ToList();
+
             string text = File.ReadAllText($"{Directory.GetCurrentDirectory()}\\FormsParameterToFormsDescriptorMappingProfileTemplate.txt")
                 .Replace("#Mappings#", string.Join(Environment.NewLine, createMapStatements))
                 .Replace("#FormItemSettingsIncludes#", $"{string.Join(Environment.NewLine, formItemSettingsIncludes)};")
                 .Replace("#SearchFilterParametersBaseIncludes#", $"{string.Join(Environment.NewLine, searchFilterParametersBaseIncludes)};")
                 .Replace("#ItemFilterDescriptorBaseIncludes#", $"{string.Join(Environment.NewLine, itemFilterParametersBaseIncludes)};")
                 .Replace("#LabelItemParametersBaseIncludes#", $"{string.Join(Environment.NewLine, labelItemParametersBaseIncludes)};")
-                .Replace("#SpanItemParametersBaseIncludes#", $"{string.Join(Environment.NewLine, spanItemParametersBaseIncludes)};");
+                .Replace("#SpanItemParametersBaseIncludes#", $"{string.Join(Environment.NewLine, spanItemParametersBaseIncludes)};")
+                .Replace("#ItemBindingParametersBaseIncludes#", $"{string.Join(Environment.NewLine, itemBindingParametersBaseIncludes)};");
 
             using (StreamWriter sr = new StreamWriter($@"{MAPPING_SAVE_PATH}\FormsParameterToFormsDescriptorMappingProfile.cs", false, Encoding.UTF8))
             {

@@ -30,6 +30,7 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
 			CreateMap<DirectiveDefinitionParameters, DirectiveDefinitionDescriptor>();
 			CreateMap<DirectiveParameters, DirectiveDescriptor>();
+			CreateMap<DropDownItemBindingParameters, DropDownItemBindingDescriptor>();
 			CreateMap<DropDownTemplateParameters, DropDownTemplateDescriptor>();
 			CreateMap<FieldValidationSettingsParameters, FieldValidationSettingsDescriptor>();
 			CreateMap<FormattedLabelItemParameters, FormattedLabelItemDescriptor>();
@@ -48,13 +49,13 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 			CreateMap<FormsCollectionDisplayTemplateParameters, FormsCollectionDisplayTemplateDescriptor>();
 			CreateMap<HyperLinkLabelItemParameters, HyperLinkLabelItemDescriptor>();
 			CreateMap<HyperLinkSpanItemParameters, HyperLinkSpanItemDescriptor>();
-			CreateMap<ItemBindingParameters, ItemBindingDescriptor>();
 			CreateMap<LabelItemParameters, LabelItemDescriptor>();
 			CreateMap<ListFormSettingsParameters, ListFormSettingsDescriptor>()
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
 			CreateMap<MultiBindingParameters, MultiBindingDescriptor>();
 			CreateMap<MultiSelectFormControlSettingsParameters, MultiSelectFormControlSettingsDescriptor>()
 				.ForMember(dest => dest.Type, opts => opts.MapFrom(x => x.Type.AssemblyQualifiedName));
+			CreateMap<MultiSelectItemBindingParameters, MultiSelectItemBindingDescriptor>();
 			CreateMap<MultiSelectTemplateParameters, MultiSelectTemplateDescriptor>()
 				.ForMember(dest => dest.ModelType, opts => opts.MapFrom(x => x.ModelType.AssemblyQualifiedName));
 			CreateMap<NavigationBarParameters, NavigationBarDescriptor>();
@@ -72,6 +73,7 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
 			CreateMap<TextFieldTemplateParameters, TextFieldTemplateDescriptor>();
 			CreateMap<TextFormSettingsParameters, TextFormSettingsDescriptor>();
 			CreateMap<TextGroupParameters, TextGroupDescriptor>();
+			CreateMap<TextItemBindingParameters, TextItemBindingDescriptor>();
 			CreateMap<ValidationMessageParameters, ValidationMessageDescriptor>();
 			CreateMap<ValidationRuleParameters, ValidationRuleDescriptor>();
 			CreateMap<ValidatorArgumentParameters, ValidatorArgumentDescriptor>()
@@ -98,6 +100,11 @@ namespace Enrollment.XPlatform.AutoMapperProfiles
             CreateMap<SpanItemParametersBase, SpanItemDescriptorBase>()
 				.Include<HyperLinkSpanItemParameters, HyperLinkSpanItemDescriptor>()
 				.Include<SpanItemParameters, SpanItemDescriptor>();
+
+            CreateMap<ItemBindingParameters, ItemBindingDescriptor>()
+				.Include<DropDownItemBindingParameters, DropDownItemBindingDescriptor>()
+				.Include<MultiSelectItemBindingParameters, MultiSelectItemBindingDescriptor>()
+				.Include<TextItemBindingParameters, TextItemBindingDescriptor>();
         }
     }
 }

@@ -2,7 +2,9 @@
 using Enrollment.Forms.Configuration.Bindings;
 using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Flow.Settings.Screen;
+using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.ViewModels;
+using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using Enrollment.XPlatform.Views;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -107,8 +109,9 @@ namespace Enrollment.XPlatform.Utils
                 );
             }
         }
-
-        internal static DataTemplate GetCollectionViewItemTemplate(string templateName, Dictionary<string, ItemBindingDescriptor> bindings)
+        
+        internal static DataTemplate GetCollectionViewItemTemplate(string templateName,
+            Dictionary<string, ItemBindingDescriptor> bindings)
         {
             switch (templateName)
             {
@@ -126,43 +129,23 @@ namespace Enrollment.XPlatform.Utils
                                     Padding = new Thickness(7),
                                     Children =
                                     {
-                                        new Label
-                                        {
-                                            FontAttributes = FontAttributes.Bold
-                                        }
-                                        .AddBinding
+                                        CollectionCellIViewHelpers.GetCollectionViewItemTemplateItem
                                         (
-                                            Label.TextProperty,
-                                            new Binding
-                                            (
-                                                bindings[BindingNames.Header].Property,
-                                                stringFormat : bindings[BindingNames.Header].StringFormat
-                                            )
+                                            bindings[BindingNames.Header].TemplateName, 
+                                            bindings[BindingNames.Header].Property, 
+                                            FontAttributes.Bold
                                         ),
-                                        new Label
-                                        {
-                                        }
-                                        .AddBinding
+                                        CollectionCellIViewHelpers.GetCollectionViewItemTemplateItem
                                         (
-                                            Label.TextProperty,
-                                            new Binding
-                                            (
-                                                bindings[BindingNames.Text].Property,
-                                                stringFormat : bindings[BindingNames.Text].StringFormat
-                                            )
+                                            bindings[BindingNames.Text].TemplateName, 
+                                            bindings[BindingNames.Text].Property, 
+                                            FontAttributes.None
                                         ),
-                                        new Label
-                                        {
-                                            FontAttributes = FontAttributes.Italic
-                                        }
-                                        .AddBinding
+                                        CollectionCellIViewHelpers.GetCollectionViewItemTemplateItem
                                         (
-                                            Label.TextProperty,
-                                            new Binding
-                                            (
-                                                bindings[BindingNames.Detail].Property,
-                                                stringFormat : bindings[BindingNames.Detail].StringFormat
-                                            )
+                                            bindings[BindingNames.Detail].TemplateName, 
+                                            bindings[BindingNames.Detail].Property, 
+                                            FontAttributes.Italic
                                         )
                                     }
                                 }
@@ -184,32 +167,17 @@ namespace Enrollment.XPlatform.Utils
                                     Padding = new Thickness(7),
                                     Children =
                                     {
-                                        new Label
-                                        {
-                                            FontAttributes = FontAttributes.Bold
-                                        }
-                                        .AddBinding
+                                        CollectionCellIViewHelpers.GetCollectionViewItemTemplateItem
                                         (
-                                            Label.TextProperty,
-                                            new Binding
-                                            (
-                                                bindings[BindingNames.Text].Property,
-                                                stringFormat : bindings[BindingNames.Text].StringFormat
-                                            )
+                                            bindings[BindingNames.Text].TemplateName, 
+                                            bindings[BindingNames.Text].Property, 
+                                            FontAttributes.Bold
                                         ),
-                                        new Label
-                                        {
-                                            FontAttributes = FontAttributes.Italic,
-                                            VerticalOptions = LayoutOptions.Center
-                                        }
-                                        .AddBinding
+                                        CollectionCellIViewHelpers.GetCollectionViewItemTemplateItem
                                         (
-                                            Label.TextProperty,
-                                            new Binding
-                                            (
-                                                bindings[BindingNames.Detail].Property,
-                                                stringFormat : bindings[BindingNames.Detail].StringFormat
-                                            )
+                                            bindings[BindingNames.Detail].TemplateName, 
+                                            bindings[BindingNames.Detail].Property, 
+                                            FontAttributes.Italic
                                         )
                                     }
                                 }
@@ -306,6 +274,29 @@ namespace Enrollment.XPlatform.Utils
 
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Returns a key value pair where the key is a dictionary of the entity's properties and the value is the entity itself.
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="collectionCellItemsBuilder"></param>
+        /// <param name="propertiesUpdater"></param>
+        /// <param name="itemBindings"></param>
+        /// <returns></returns>
+        internal static KeyValuePair<Dictionary<string, IReadOnly>, TModel> GetDictionaryModelPair<TModel>(this TModel entity, IContextProvider contextProvider, List<ItemBindingDescriptor> itemBindings)
+        {
+            ICollection<IReadOnly> properties = contextProvider.CollectionCellItemsBuilder.CreateCellsCollection(itemBindings, typeof(TModel));
+            contextProvider.ReadOnlyCollectionCellPropertiesUpdater.UpdateProperties
+            (
+                properties,
+                typeof(TModel),
+                entity,
+                itemBindings
+            );
+
+            return new KeyValuePair<Dictionary<string, IReadOnly>, TModel>(properties.ToDictionary(p => p.Name.ToBindingDictionaryKey()), entity);
         }
     }
 }

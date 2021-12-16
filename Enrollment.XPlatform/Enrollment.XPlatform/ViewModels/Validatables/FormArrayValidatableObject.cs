@@ -1,10 +1,14 @@
 ﻿using Enrollment.Forms.Configuration;
+using Enrollment.Forms.Configuration.Bindings;
 using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.XPlatform.Services;
+using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.Validators;
+using Enrollment.XPlatform.ViewModels.ReadOnlys;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -17,14 +21,18 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
         {
             this.FormSettings = setting;
             this.formsCollectionDisplayTemplateDescriptor = setting.FormsCollectionDisplayTemplate;
+            this.itemBindings = this.formsCollectionDisplayTemplateDescriptor.Bindings.Values.ToList();
             this.Title = this.FormSettings.Title;
             this.Placeholder = setting.Placeholder;
             this.contextProvider = contextProvider;
             Value = (T)new ObservableCollection<E>();
         }
 
+        private T _initialValue;
         private readonly IContextProvider contextProvider;
         private readonly FormsCollectionDisplayTemplateDescriptor formsCollectionDisplayTemplateDescriptor;
+        private readonly List<ItemBindingDescriptor> itemBindings;
+        private Dictionary<Dictionary<string, IReadOnly>, E> _entitiesDictionary;
         public IChildFormGroupSettings FormSettings { get; set; }
         public FormsCollectionDisplayTemplateDescriptor FormsCollectionDisplayTemplate => formsCollectionDisplayTemplateDescriptor;
 
@@ -58,8 +66,8 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             }
         }
 
-        private E _selectedItem;
-        public E SelectedItem
+        private Dictionary<string, IReadOnly> _selectedItem;
+        public Dictionary<string, IReadOnly> SelectedItem
         {
             get
             {
@@ -73,6 +81,41 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
                     OnPropertyChanged();
                     CheckCanExecute();
                 }
+            }
+        }
+
+        private ObservableCollection<Dictionary<string, IReadOnly>> _items;
+        public ObservableCollection<Dictionary<string, IReadOnly>> Items
+        {
+            get => _items;
+            set
+            {
+                _items = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public override T Value
+        {
+            get => base.Value;
+            set
+            {
+                base.Value = value;
+                _initialValue = (T)new ObservableCollection<E>(value);
+
+                this._entitiesDictionary = base.Value.Select
+                (
+                    item => item.GetDictionaryModelPair
+                    (
+                        this.contextProvider,
+                        this.itemBindings
+                    )
+                ).ToDictionary(k => k.Key, v => v.Value);
+
+                this.Items = new ObservableCollection<Dictionary<string, IReadOnly>>
+                (
+                    this._entitiesDictionary.Keys
+                );
             }
         }
 
@@ -151,6 +194,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
                 (
                     () =>
                     {
+                        Value = _initialValue;
                         Xamarin.Essentials.MainThread.BeginInvokeOnMainThread
                         (
                             () => App.Current.MainPage.Navigation.PopModalAsync()
@@ -189,11 +233,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
                 _deleteCommand = new Command
                 (
-                    () =>
-                    {
-                        Value.Remove(this.SelectedItem);
-                        this.SelectedItem = null;
-                    },
+                    () => RemoveItem(this._entitiesDictionary[this.SelectedItem]),
                     () => SelectedItem != null
                 );
 
@@ -245,13 +285,13 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
         {
             var formValidatable = new FormValidatableObject<E>
             (
-                Value.IndexOf(this.SelectedItem).ToString(),
+                Value.IndexOf(this._entitiesDictionary[this.SelectedItem]).ToString(),
                 this.FormSettings,
                 new IValidationRule[] { },
                 this.contextProvider
             )
             {
-                Value = this.SelectedItem
+                Value = this._entitiesDictionary[this.SelectedItem]
             };
 
             formValidatable.Cancelled += FormValidatable_Cancelled;
@@ -268,9 +308,17 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
         private void Add()
         {
-            E newItem = Activator.CreateInstance<E>();
-            Value.Add(newItem);
-            SelectedItem = newItem;
+            var newItemPair = Activator.CreateInstance<E>().GetDictionaryModelPair
+            (
+                this.contextProvider,
+                this.itemBindings
+            );
+
+            Value.Add(newItemPair.Value);
+            _entitiesDictionary.Add(newItemPair.Key, newItemPair.Value);
+            Items.Add(newItemPair.Key);
+
+            SelectedItem = newItemPair.Key;
 
             var addValidatable = new AddFormValidatableObject<E>
             (
@@ -280,7 +328,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
                 this.contextProvider
             )
             {
-                Value = newItem
+                Value = newItemPair.Value
             };
 
             addValidatable.AddCancelled += AddValidatable_AddCancelled;
@@ -296,10 +344,25 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
             );
         }
 
+        private void RemoveItem(E entity)
+        {
+            var kvp = _entitiesDictionary.Single(item => object.ReferenceEquals(item.Value, entity));
+
+            if (Value.Remove(kvp.Value) == false)
+                throw new InvalidOperationException("{0DA2B9A8-65D5-47BC-9FAA-202341DE9C0E}");
+
+            if (Items.Remove(kvp.Key) == false)
+                throw new InvalidOperationException("{A3C2DCA7-398F-4835-971E-A48C5D1D9F7D}");
+
+            if (_entitiesDictionary.Remove(kvp.Key) == false)
+                throw new InvalidOperationException("{8A8C2E06-89D7-49B3-83AB-9357CB12C3E3}");
+
+            SelectedItem = null;
+        }
+
         private void AddValidatable_AddCancelled(object sender, EventArgs e)
         {
-            Value.Remove(((AddFormValidatableObject<E>)sender).Value);
-            SelectedItem = null;
+            RemoveItem(((AddFormValidatableObject<E>)sender).Value);
         }
 
         private void FormValidatable_Cancelled(object sender, EventArgs e)
@@ -309,6 +372,16 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
         private void FormValidatable_Submitted(object sender, EventArgs e)
         {
+            var kvp = _entitiesDictionary.Single(item => object.ReferenceEquals(item.Value, ((FormValidatableObject<E>)sender).Value));
+
+            this.contextProvider.ReadOnlyCollectionCellPropertiesUpdater.UpdateProperties
+            (
+                kvp.Key.Values,
+                typeof(E),
+                kvp.Value,
+                itemBindings
+            );
+
             ((FormValidatableObject<E>)sender).Dispose();
         }
     }

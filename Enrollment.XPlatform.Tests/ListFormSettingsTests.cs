@@ -2,6 +2,7 @@
 using Enrollment.AutoMapperProfiles;
 using Enrollment.Domain.Entities;
 using Enrollment.Forms.Configuration.ListForm;
+using Enrollment.Forms.Parameters;
 using Enrollment.Forms.Parameters.Bindings;
 using Enrollment.Forms.Parameters.ListForm;
 using Enrollment.XPlatform.AutoMapperProfiles;
@@ -32,11 +33,13 @@ namespace Enrollment.XPlatform.Tests
                 "TextDetailTemplate",
                 new List<ItemBindingParameters>
                 {
-                    new ItemBindingParameters
+                    new TextItemBindingParameters
                     (
                         "Text",
                         "DateTimeValue",
-                        "Enrollment Date: {0:MM/dd/yyyy}"
+                        "Enrollment Date",
+                        "Enrollment Date: {0:MM/dd/yyyy}",
+                        new TextFieldTemplateParameters("TextTemplate")
                     )
                 },
                 null,

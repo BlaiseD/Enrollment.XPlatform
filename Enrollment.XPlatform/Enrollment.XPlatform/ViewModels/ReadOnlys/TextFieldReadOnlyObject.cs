@@ -7,13 +7,13 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 {
     public class TextFieldReadOnlyObject<T> : ReadOnlyObjectBase<T>
     {
-        public TextFieldReadOnlyObject(string name, FormControlSettingsDescriptor setting, IContextProvider contextProvider) : base(name, setting.TextTemplate.TemplateName, contextProvider.UiNotificationService)
+        public TextFieldReadOnlyObject(string name, string templateName, string title, string stringFormat, IContextProvider contextProvider) : base(name, templateName, contextProvider.UiNotificationService)
         {
-            FormControlSettingsDescriptor = setting;
-            this.Title = setting.Title;
+            this.Title = title;
+            this._stringFormat = stringFormat;
         }
 
-        public FormControlSettingsDescriptor FormControlSettingsDescriptor { get; }
+        private readonly string _stringFormat;
 
         public string DisplayText
         {
@@ -22,10 +22,10 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
                 if (EqualityComparer<T>.Default.Equals(Value, default(T)))
                     return string.Empty;
 
-                if (string.IsNullOrEmpty(FormControlSettingsDescriptor.StringFormat))
+                if (string.IsNullOrEmpty(this._stringFormat))
                     return Value.ToString();
 
-                return string.Format(CultureInfo.CurrentCulture, FormControlSettingsDescriptor.StringFormat, Value);
+                return string.Format(CultureInfo.CurrentCulture, this._stringFormat, Value);
             }
         }
 

@@ -28,6 +28,7 @@ namespace Enrollment.XPlatform
             services
                 .AddSingleton<UiNotificationService, UiNotificationService>()
                 .AddSingleton<IFieldsCollectionBuilder, FieldsCollectionBuilder>()
+                .AddSingleton<ICollectionCellItemsBuilder, CollectionCellItemsBuilder>()
                 .AddSingleton<IReadOnlyFieldsCollectionBuilder, ReadOnlyFieldsCollectionBuilder>()
                 .AddSingleton<IConditionalValidationConditionsBuilder, ConditionalValidationConditionsBuilder>()
                 .AddSingleton<IHideIfConditionalDirectiveBuilder, HideIfConditionalDirectiveBuilder>()
@@ -37,6 +38,7 @@ namespace Enrollment.XPlatform
                 .AddSingleton<IEntityUpdater, EntityUpdater>()
                 .AddSingleton<IPropertiesUpdater, PropertiesUpdater>()
                 .AddSingleton<IReadOnlyPropertiesUpdater, ReadOnlyPropertiesUpdater>()
+                .AddSingleton<IReadOnlyCollectionCellPropertiesUpdater, ReadOnlyCollectionCellPropertiesUpdater>()
                 .AddSingleton<AutoMapper.IConfigurationProvider>
                 (
                     new MapperConfiguration(cfg =>
