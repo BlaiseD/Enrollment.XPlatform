@@ -98,7 +98,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
 
                 this._entitiesDictionary = base.Value.Select
                 (
-                    item => item.GetDictionaryModelPair
+                    item => item.GetCollectionCellDictionaryModelPair
                     (
                         this.contextProvider,
                         this.itemBindings

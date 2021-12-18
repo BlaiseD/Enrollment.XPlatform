@@ -66,19 +66,7 @@ namespace Enrollment.XPlatform.ViewModels.ListPage
             (
                 getListResponse.List.Cast<TModel>().Select
                 (
-                    item =>
-                    {
-                        ICollection<IReadOnly> properties = this.contextProvider.CollectionCellItemsBuilder.CreateCellsCollection(itemBindings, typeof(TModel));
-                        this.contextProvider.ReadOnlyCollectionCellPropertiesUpdater.UpdateProperties
-                        (
-                            properties,
-                            typeof(TModel),
-                            item,
-                            itemBindings
-                        );
-
-                        return properties.ToDictionary(p => p.Name.ToBindingDictionaryKey());
-                    }
+                    item => item.GetCollectionCellDictionaryItem(this.contextProvider, itemBindings)
                 )
             );
         }

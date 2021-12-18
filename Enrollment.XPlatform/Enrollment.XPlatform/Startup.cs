@@ -52,14 +52,15 @@ namespace Enrollment.XPlatform
                 .AddSingleton<ISearchSelectorBuilder, SearchSelectorBuilder>()
                 .AddSingleton<IGetItemFilterBuilder, GetItemFilterBuilder>()
                 .AddSingleton<IContextProvider, ContextProvider>()
-                .AddSingleton<IFlowManager, FlowManager>()
-                .AddSingleton<FlowActivityFactory, FlowActivityFactory>()
-                .AddSingleton<DirectorFactory, DirectorFactory>()
-                .AddSingleton<FlowDataCache, FlowDataCache>()
-                .AddSingleton<ScreenData, ScreenData>()
                 .AddSingleton<IRulesLoader, RulesLoader>()
-                .AddSingleton<IDialogFunctions, DialogFunctions>()
-                .AddSingleton<IActions, Actions>()
+                .AddScoped<IFlowManager, FlowManager>()
+                .AddScoped<FlowActivityFactory, FlowActivityFactory>()
+                .AddScoped<DirectorFactory, DirectorFactory>()
+                .AddScoped<FlowDataCache, FlowDataCache>()
+                .AddScoped<ScreenData, ScreenData>()
+                .AddScoped<IDialogFunctions, DialogFunctions>()
+                .AddScoped<IActions, Actions>()
+                .AddTransient<IScopedFlowManagerService, ScopedFlowManagerService>()
                 .AddTransient<IMapper>
                 (
                     sp => new Mapper

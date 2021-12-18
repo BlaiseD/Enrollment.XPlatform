@@ -175,7 +175,7 @@ namespace Enrollment.XPlatform.ViewModels.ReadOnlys
             }
         }
 
-        public void Reload(object entity)
+        public void Reload(object entity, Type entityType)
         {
             throw new NotImplementedException();
         }

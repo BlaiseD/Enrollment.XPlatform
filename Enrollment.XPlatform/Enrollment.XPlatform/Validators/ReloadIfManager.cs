@@ -46,8 +46,7 @@ namespace Enrollment.XPlatform.Validators
                         )
                     )
                     {
-                        this.uiNotificationService.SetFlowDataCacheItem(typeof(TModel).FullName, entity);
-                        hasItemsSource.Reload(entity);
+                        hasItemsSource.Reload(entity, typeof(TModel));
                     }
                 }
             }

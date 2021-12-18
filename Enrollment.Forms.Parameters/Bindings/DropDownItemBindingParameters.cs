@@ -29,6 +29,9 @@ namespace Enrollment.Forms.Parameters.Bindings
 			[Comments("Holds the XAML template name for the field plus additional drop-down related properties (textField, valueField, request details etc.).")]
 			DropDownTemplateParameters dropDownTemplate,
 
+			[Comments("Set to true if the selector depends on another property.  The DropDownTemplate.ReloadItemsFlowName must also be set to define the new selector.")]
+			bool requiresReload,
+
 			[ParameterEditorControl(ParameterControlType.ParameterSourceOnly)]
 			[NameValue(AttributeNames.DEFAULTVALUE, "Enrollment.Domain.Entities")]
 			[Comments("Fully qualified class name for the model type.")]
@@ -36,8 +39,10 @@ namespace Enrollment.Forms.Parameters.Bindings
 		) : base(name, property, title, stringFormat, fieldTypeSource)
 		{
 			DropDownTemplate = dropDownTemplate;
+			RequiresReload = requiresReload;
 		}
 
 		public DropDownTemplateParameters DropDownTemplate { get; set; }
-    }
+		public bool RequiresReload { get; set; }
+	}
 }

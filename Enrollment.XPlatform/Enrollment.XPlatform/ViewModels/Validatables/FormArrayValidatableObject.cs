@@ -105,7 +105,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
                 this._entitiesDictionary = base.Value.Select
                 (
-                    item => item.GetDictionaryModelPair
+                    item => item.GetCollectionCellDictionaryModelPair
                     (
                         this.contextProvider,
                         this.itemBindings
@@ -308,7 +308,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
 
         private void Add()
         {
-            var newItemPair = Activator.CreateInstance<E>().GetDictionaryModelPair
+            var newItemPair = Activator.CreateInstance<E>().GetCollectionCellDictionaryModelPair
             (
                 this.contextProvider,
                 this.itemBindings
@@ -374,13 +374,7 @@ namespace Enrollment.XPlatform.ViewModels.Validatables
         {
             var kvp = _entitiesDictionary.Single(item => object.ReferenceEquals(item.Value, ((FormValidatableObject<E>)sender).Value));
 
-            this.contextProvider.ReadOnlyCollectionCellPropertiesUpdater.UpdateProperties
-            (
-                kvp.Key.Values,
-                typeof(E),
-                kvp.Value,
-                itemBindings
-            );
+            kvp.Value.UpdateCollectionCellProperties(kvp.Key.Values, this.contextProvider, itemBindings);
 
             ((FormValidatableObject<E>)sender).Dispose();
         }

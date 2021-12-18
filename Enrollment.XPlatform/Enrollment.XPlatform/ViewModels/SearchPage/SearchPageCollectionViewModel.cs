@@ -298,7 +298,7 @@ namespace Enrollment.XPlatform.ViewModels.SearchPage
 
             this._entitiesDictionary = getListResponse.List.Cast<TModel>().Select
             (
-                item => item.GetDictionaryModelPair
+                item => item.GetCollectionCellDictionaryModelPair
                 (
                     this.contextProvider, 
                     this.itemBindings
@@ -332,7 +332,7 @@ namespace Enrollment.XPlatform.ViewModels.SearchPage
 
             this._entitiesDictionary = getListResponse.List.Cast<TModel>().Aggregate(this._entitiesDictionary, (list, next) =>
             {
-                var kvp = next.GetDictionaryModelPair
+                var kvp = next.GetCollectionCellDictionaryModelPair
                 (
                     this.contextProvider,
                     this.itemBindings
