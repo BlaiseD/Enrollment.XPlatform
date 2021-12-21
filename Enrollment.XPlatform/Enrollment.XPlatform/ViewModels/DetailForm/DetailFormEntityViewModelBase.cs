@@ -5,6 +5,7 @@ using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -54,12 +55,18 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
         }
 
         protected Task NavigateNext(CommandButtonDescriptor button)
-            => this.UiNotificationService.Next
-            (
-                new CommandButtonRequest
-                {
-                    NewSelection = button.ShortString
-                }
-            );
+        {
+            using (IScopedFlowManagerService flowManagerService = App.ServiceProvider.GetRequiredService<IScopedFlowManagerService>())
+            {
+                flowManagerService.CopyFlowItems();
+                return flowManagerService.Next
+                (
+                    new CommandButtonRequest
+                    {
+                        NewSelection = button.ShortString
+                    }
+                );
+            }
+        }
     }
 }

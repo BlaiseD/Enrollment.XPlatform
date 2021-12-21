@@ -5,6 +5,7 @@ using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.Validatables;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -57,13 +58,19 @@ namespace Enrollment.XPlatform.ViewModels.EditForm
         }
 
         private Task NavigateNext(CommandButtonDescriptor button)
-            => this.UiNotificationService.Next
-            (
-                new CommandButtonRequest
-                {
-                    NewSelection = button.ShortString
-                }
-            );
+        {
+            using (IScopedFlowManagerService flowManagerService = App.ServiceProvider.GetRequiredService<IScopedFlowManagerService>())
+            {
+                flowManagerService.CopyFlowItems();
+                return flowManagerService.Next
+                (
+                    new CommandButtonRequest
+                    {
+                        NewSelection = button.ShortString
+                    }
+                );
+            }
+        }
 
         public bool AreFieldsValid()
             => FormLayout.Properties.Aggregate

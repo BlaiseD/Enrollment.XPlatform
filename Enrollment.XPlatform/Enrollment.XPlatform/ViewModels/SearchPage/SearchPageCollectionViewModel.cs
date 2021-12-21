@@ -9,6 +9,7 @@ using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels.ReadOnlys;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -346,8 +347,7 @@ namespace Enrollment.XPlatform.ViewModels.SearchPage
 
         private void SelectAndNavigate(CommandButtonDescriptor button)
         {
-            SetItemFilter();
-            NavigateNext(button);
+            SetItemFilterAndNavigateNext(button);
         }
 
         private void Add(CommandButtonDescriptor button)
@@ -357,43 +357,66 @@ namespace Enrollment.XPlatform.ViewModels.SearchPage
 
         private void Edit(CommandButtonDescriptor button)
         {
-            SetItemFilter();
-            NavigateNext(button);
+            SetItemFilterAndNavigateNext(button);
         }
 
         private void Delete(CommandButtonDescriptor button)
         {
-            SetItemFilter();
-            NavigateNext(button);
+            SetItemFilterAndNavigateNext(button);
         }
 
         private void Detail(CommandButtonDescriptor button)
         {
-            SetItemFilter();
-            NavigateNext(button);
+            SetItemFilterAndNavigateNext(button);
         }
 
-        private void SetItemFilter()
+        private void SetItemFilterAndNavigateNext(CommandButtonDescriptor button)
         {
-            this.uiNotificationService.SetFlowDataCacheItem
-            (
-                typeof(FilterLambdaOperatorParameters).FullName,
-                this.getItemFilterBuilder.CreateFilter
+            using (IScopedFlowManagerService flowManagerService = App.ServiceProvider.GetRequiredService<IScopedFlowManagerService>())
+            {
+                flowManagerService.CopyFlowItems();
+
+                flowManagerService.SetFlowDataCacheItem
                 (
-                    this.FormSettings.ItemFilterGroup,
-                    typeof(TModel),
+                    typeof(FilterLambdaOperatorParameters).FullName,
+                    this.getItemFilterBuilder.CreateFilter
+                    (
+                        this.FormSettings.ItemFilterGroup,
+                        typeof(TModel),
+                        this._entitiesDictionary[SelectedItem]
+                    )
+                );
+
+                flowManagerService.SetFlowDataCacheItem
+                (
+                    typeof(TModel).FullName,
                     this._entitiesDictionary[SelectedItem]
-                )
-            );
+                );
+
+                flowManagerService.Next
+                (
+                    new CommandButtonRequest
+                    {
+                        NewSelection = button.ShortString
+                    }
+                );
+            }
         }
 
         private Task NavigateNext(CommandButtonDescriptor button)
-            => this.uiNotificationService.Next
-            (
-                new CommandButtonRequest
-                {
-                    NewSelection = button.ShortString
-                }
-            );
+        {
+            using (IScopedFlowManagerService flowManagerService = App.ServiceProvider.GetRequiredService<IScopedFlowManagerService>())
+            {
+                flowManagerService.CopyFlowItems();
+
+                return flowManagerService.Next
+                (
+                    new CommandButtonRequest
+                    {
+                        NewSelection = button.ShortString
+                    }
+                );
+            }
+        }
     }
 }

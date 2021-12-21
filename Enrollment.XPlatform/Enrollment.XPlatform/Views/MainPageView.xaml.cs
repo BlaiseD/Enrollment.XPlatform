@@ -1,6 +1,7 @@
 ﻿using Enrollment.Forms.Configuration.Navigation;
 using Enrollment.XPlatform.Flow;
 using Enrollment.XPlatform.Flow.Settings;
+using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,14 +79,13 @@ namespace Enrollment.XPlatform.Views
         #endregion Properties
 
         #region Methods
-        protected override void OnAppearing()
+        private async void Start()
         {
-            
-
-            base.OnAppearing();
+            using (IScopedFlowManagerService flowManagerService = App.ServiceProvider.GetRequiredService<IScopedFlowManagerService>())
+            {
+                await flowManagerService.Start();
+            }
         }
-
-        private async void Start() => await UiNotificationService.Start();
 
         private void FlowSettingsChanged(FlowSettings flowSettings)
         {
@@ -126,10 +126,14 @@ namespace Enrollment.XPlatform.Views
 
             DisposeCurrentPageBindingContext(Detail);
 
-            await UiNotificationService.NewFlowStart
-            (
-                new Flow.Requests.NewFlowRequest { InitialModuleName = item.InitialModule }
-            );
+            using (IScopedFlowManagerService flowManagerService = App.ServiceProvider.GetRequiredService<IScopedFlowManagerService>())
+            {
+                flowManagerService.CopyPersistentFlowItems();
+                await flowManagerService.NewFlowStart
+                (
+                    new Flow.Requests.NewFlowRequest { InitialModuleName = item.InitialModule }
+                );
+            }
 
             void DisposeCurrentPageBindingContext(Page detail)
             {

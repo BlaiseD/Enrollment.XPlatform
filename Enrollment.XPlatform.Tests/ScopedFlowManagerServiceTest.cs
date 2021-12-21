@@ -56,6 +56,7 @@ namespace Enrollment.XPlatform.Tests
             }
             MapperConfiguration.AssertConfigurationIsValid();
             serviceProvider = new ServiceCollection()
+                .AddSingleton<UiNotificationService, UiNotificationService>()
                 .AddSingleton<AutoMapper.IConfigurationProvider>
                 (
                     MapperConfiguration

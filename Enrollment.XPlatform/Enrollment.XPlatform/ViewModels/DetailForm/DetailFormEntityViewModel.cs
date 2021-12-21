@@ -3,10 +3,12 @@ using Enrollment.Bsl.Business.Responses;
 using Enrollment.Forms.Configuration;
 using Enrollment.Forms.Configuration.DataForm;
 using Enrollment.Parameters.Expressions;
+using Enrollment.XPlatform.Flow.Requests;
 using Enrollment.XPlatform.Flow.Settings.Screen;
 using Enrollment.XPlatform.Services;
 using Enrollment.XPlatform.Utils;
 using Enrollment.XPlatform.Validators;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -119,8 +121,7 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
 
         private void Edit(CommandButtonDescriptor button)
         {
-            SetItemFilter();
-            NavigateNext(button);
+            SetItemFilterAndNavigateNext(button);
         }
 
         private async void GetEntity()
@@ -165,18 +166,31 @@ namespace Enrollment.XPlatform.ViewModels.DetailForm
             );
         }
 
-        private void SetItemFilter()
+        private void SetItemFilterAndNavigateNext(CommandButtonDescriptor button)
         {
-            this.uiNotificationService.SetFlowDataCacheItem
-            (
-                typeof(FilterLambdaOperatorParameters).FullName,
-                this.getItemFilterBuilder.CreateFilter
+            using (IScopedFlowManagerService flowManagerService = App.ServiceProvider.GetRequiredService<IScopedFlowManagerService>())
+            {
+                flowManagerService.CopyFlowItems();
+
+                flowManagerService.SetFlowDataCacheItem
                 (
-                    this.FormSettings.ItemFilterGroup,
-                    typeof(TModel),
-                    this.entity
-                )
-            );
+                    typeof(FilterLambdaOperatorParameters).FullName,
+                    this.getItemFilterBuilder.CreateFilter
+                    (
+                        this.FormSettings.ItemFilterGroup,
+                        typeof(TModel),
+                        this.entity
+                    )
+                );
+
+                flowManagerService.Next
+                (
+                    new CommandButtonRequest
+                    {
+                        NewSelection = button.ShortString
+                    }
+                );
+            }
         }
     }
 }
